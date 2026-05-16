@@ -7,6 +7,9 @@ export function useProjects(tag = null) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    let cancelled = false
+    setError(null)
+
     let query = supabase
       .from('projects')
       .select('id, title, description, tags, cover_url, links, display_order')
@@ -16,10 +19,13 @@ export function useProjects(tag = null) {
     }
 
     query.order('display_order', { ascending: true }).then(({ data, error }) => {
+      if (cancelled) return
       if (error) setError(error.message)
       else setProjects(data ?? [])
       setLoading(false)
     })
+
+    return () => { cancelled = true }
   }, [tag])
 
   return { projects, loading, error }
