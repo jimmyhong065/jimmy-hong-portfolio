@@ -6,6 +6,8 @@ import ProjectDetail from './pages/ProjectDetail'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import About from './pages/About'
+import Login from './pages/Login'
+import ProtectedRoute from './components/ProtectedRoute'
 
 export default function App() {
   return (
@@ -18,8 +20,12 @@ export default function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<div>Login</div>} />
-          <Route path="/admin/*" element={<div>Admin</div>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin/*" element={
+            <ProtectedRoute>
+              <div>Admin Placeholder</div>
+            </ProtectedRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>
