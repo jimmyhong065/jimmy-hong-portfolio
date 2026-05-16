@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminPosts from './pages/admin/AdminPosts'
 import AdminPostEdit from './pages/admin/AdminPostEdit'
+import AdminProjects from './pages/admin/AdminProjects'
+import AdminProjectEdit from './pages/admin/AdminProjectEdit'
 
 export default function App() {
   return (
@@ -32,6 +34,8 @@ export default function App() {
             <Route index element={<Navigate to="/admin/posts" replace />} />
             <Route path="posts" element={<AdminPosts />} />
             <Route path="posts/:id" element={<AdminPostEdit />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="projects/:id" element={<AdminProjectEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>
