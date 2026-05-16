@@ -6,3 +6,8 @@ dist/
 *.log
 .DS_Store
 .playwright-mcp/
+
+# Design reference files
+mockup*.html
+mockup*.png
+alan-cheng-full.png
