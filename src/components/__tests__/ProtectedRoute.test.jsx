@@ -36,4 +36,18 @@ describe('ProtectedRoute', () => {
     expect(screen.getByText('Login Page')).toBeInTheDocument()
     expect(screen.queryByText('Admin Content')).not.toBeInTheDocument()
   })
+
+  it('renders nothing while loading', () => {
+    useAuth.mockReturnValue({ session: null, loading: true })
+    render(
+      <MemoryRouter initialEntries={['/admin']}>
+        <Routes>
+          <Route path="/admin" element={<ProtectedRoute><div>Admin Content</div></ProtectedRoute>} />
+          <Route path="/login" element={<div>Login Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    )
+    expect(screen.queryByText('Admin Content')).not.toBeInTheDocument()
+    expect(screen.queryByText('Login Page')).not.toBeInTheDocument()
+  })
 })

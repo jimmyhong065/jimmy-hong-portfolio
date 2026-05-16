@@ -1,4 +1,6 @@
 export default function TagFilter({ tags, selected, onSelect }) {
+  if (!tags || tags.length === 0) return null
+
   return (
     <div className="flex gap-2 flex-wrap mb-8">
       <button
