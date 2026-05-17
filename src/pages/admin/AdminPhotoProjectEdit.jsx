@@ -1,7 +1,7 @@
-// src/pages/admin/AdminPhotoProjectEdit.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { useUpload } from '../../hooks/useUpload'
 
 export default function AdminPhotoProjectEdit() {
   const { id } = useParams()
@@ -13,6 +13,11 @@ export default function AdminPhotoProjectEdit() {
     cover_url: '', images: '', tags: '', display_order: 0,
   })
   const [saving, setSaving] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 })
+
+  const coverInputRef = useRef(null)
+  const galleryInputRef = useRef(null)
+  const { uploading, uploadError, uploadOne, uploadMany } = useUpload()
 
   useEffect(() => {
     if (!isNew) {
@@ -72,15 +77,67 @@ export default function AdminPhotoProjectEdit() {
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">封面圖片 URL</label>
-          <input name="cover_url" value={form.cover_url} onChange={handleChange}
-            placeholder="https://..."
-            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+          <label className="text-xs text-gray-500 mb-1 block">封面圖片</label>
+          <div className="flex gap-2">
+            <input name="cover_url" value={form.cover_url} onChange={handleChange}
+              placeholder="https://..."
+              className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => coverInputRef.current.click()}
+              className="text-sm border border-gray-200 px-4 py-2.5 rounded-lg hover:border-gray-400 disabled:opacity-50 whitespace-nowrap"
+            >
+              {uploading ? '上傳中…' : '上傳'}
+            </button>
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files[0]
+                if (file) uploadOne(file, url => setForm(f => ({ ...f, cover_url: url })))
+                e.target.value = ''
+              }}
+            />
+          </div>
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">Gallery 圖片 URL（每行一個）</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-xs text-gray-500">Gallery 圖片（每行一個 URL）</label>
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => galleryInputRef.current.click()}
+              className="text-xs border border-gray-200 px-3 py-1.5 rounded-lg hover:border-gray-400 disabled:opacity-50"
+            >
+              {uploading
+                ? `上傳中 ${uploadProgress.done}/${uploadProgress.total}…`
+                : '上傳多張'}
+            </button>
+            <input
+              ref={galleryInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={e => {
+                const files = Array.from(e.target.files)
+                if (!files.length) return
+                setUploadProgress({ done: 0, total: files.length })
+                uploadMany(
+                  files,
+                  url => setForm(f => ({ ...f, images: f.images ? `${f.images}\n${url}` : url })),
+                  (done, total) => setUploadProgress({ done, total })
+                )
+                e.target.value = ''
+              }}
+            />
+          </div>
+          {uploadError && <p className="text-xs text-red-500 mb-1">{uploadError}</p>}
           <textarea name="images" value={form.images} onChange={handleChange} rows={6}
-            placeholder={"https://r2.example.com/photo1.jpg\nhttps://r2.example.com/photo2.jpg"}
+            placeholder={"https://pub-xxx.r2.dev/photo1.jpg\nhttps://pub-xxx.r2.dev/photo2.jpg"}
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 font-mono" />
         </div>
         <div>
