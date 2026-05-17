@@ -89,4 +89,45 @@ describe('useUpload', () => {
       headers: { Authorization: 'Bearer test-secret' },
     }))
   })
+
+  it('uploadMany: calls onProgress with incremental count', async () => {
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/a.jpg' }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/b.jpg' }) })
+
+    const { result } = renderHook(() => useUpload())
+    const onProgress = vi.fn()
+    const files = [
+      new File(['a'], 'a.jpg', { type: 'image/jpeg' }),
+      new File(['b'], 'b.jpg', { type: 'image/jpeg' }),
+    ]
+
+    await act(async () => {
+      await result.current.uploadMany(files, () => {}, onProgress)
+    })
+
+    expect(onProgress).toHaveBeenCalledTimes(2)
+    expect(onProgress).toHaveBeenNthCalledWith(1, 1, 2)
+    expect(onProgress).toHaveBeenNthCalledWith(2, 2, 2)
+  })
+
+  it('uploadMany: stops on first upload error', async () => {
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({ ok: false })
+
+    const { result } = renderHook(() => useUpload())
+    const onEachSuccess = vi.fn()
+    const files = [
+      new File(['a'], 'a.jpg', { type: 'image/jpeg' }),
+      new File(['b'], 'b.jpg', { type: 'image/jpeg' }),
+    ]
+
+    await act(async () => {
+      await result.current.uploadMany(files, onEachSuccess, () => {})
+    })
+
+    expect(onEachSuccess).not.toHaveBeenCalled()
+    expect(result.current.uploadError).toBe('上傳失敗，請重試')
+    expect(fetch).toHaveBeenCalledTimes(1)
+  })
 })
