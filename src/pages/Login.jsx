@@ -5,7 +5,7 @@ import SEOHead from '../components/SEOHead'
 
 export default function Login() {
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -14,20 +14,12 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    if (import.meta.env.VITE_ADMIN_EMAIL && email !== import.meta.env.VITE_ADMIN_EMAIL) {
-      setError('此帳號無法登入後台')
-      setLoading(false)
-      return
-    }
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/admin` },
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
-      setError(error.message)
+      setError('帳號或密碼錯誤')
       setLoading(false)
     } else {
-      setSent(true)
+      navigate('/admin')
     }
   }
 
@@ -37,31 +29,33 @@ export default function Login() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl p-8">
           <h1 className="text-lg font-bold mb-2">管理員登入</h1>
-          <p className="text-xs text-gray-400 mb-6">輸入 email，系統會寄送 magic link。</p>
-          {sent ? (
-            <div className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-4">
-              Magic link 已寄出！請檢查 <strong>{email}</strong> 的信箱。
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 mb-3 focus:outline-none focus:border-gray-400"
-              />
-              {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full text-sm bg-gray-900 text-white py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50"
-              >
-                {loading ? '傳送中…' : '傳送 Magic Link'}
-              </button>
-            </form>
-          )}
+          <p className="text-xs text-gray-400 mb-6">輸入帳號與密碼登入後台。</p>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 mb-3 focus:outline-none focus:border-gray-400"
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="密碼"
+              required
+              className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 mb-3 focus:outline-none focus:border-gray-400"
+            />
+            {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full text-sm bg-gray-900 text-white py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50"
+            >
+              {loading ? '登入中…' : '登入'}
+            </button>
+          </form>
         </div>
       </div>
     </>
