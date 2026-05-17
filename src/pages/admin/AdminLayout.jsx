@@ -31,6 +31,14 @@ export default function AdminLayout() {
           >
             🗂 作品集管理
           </NavLink>
+          <NavLink
+            to="/admin/settings"
+            className={({ isActive }) =>
+              `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+            }
+          >
+            ⚙️ 個人設定
+          </NavLink>
         </nav>
         <button onClick={handleSignOut} className="text-sm text-red-400 px-3 py-2 rounded-md hover:bg-red-50 text-left">
           🔓 登出

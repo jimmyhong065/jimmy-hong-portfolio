@@ -1,6 +1,7 @@
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
+import { useSettings } from '../hooks/useSettings'
 
 const SKILLS = [
   'Appium', 'Playwright', 'pytest', 'Python',
@@ -24,6 +25,8 @@ const SERVICES = [
 ]
 
 export default function About() {
+  const { settings } = useSettings()
+
   return (
     <>
       <SEOHead title="關於我" description="Jimmy Hong — QA Engineer，專注測試流程設計與品質架構。" />
@@ -71,10 +74,10 @@ export default function About() {
             </div>
           ))}
         </div>
-        <a href="mailto:your@email.com" className="inline-block text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">聯絡我</a>
+        {settings.email && <a href={`mailto:${settings.email}`} className="inline-block text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">聯絡我</a>}
         <div className="flex gap-2 mt-4">
-          <a href="https://github.com/" target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">gh</a>
-          <a href="https://linkedin.com/" target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">in</a>
+          {settings.github_url && <a href={settings.github_url} target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">gh</a>}
+          {settings.linkedin_url && <a href={settings.linkedin_url} target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">in</a>}
         </div>
       </main>
       <Footer />

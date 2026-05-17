@@ -5,6 +5,7 @@ import ProjectCard from '../components/ProjectCard'
 import BlogRow from '../components/BlogRow'
 import { usePosts } from '../hooks/usePosts'
 import { useProjects } from '../hooks/useProjects'
+import { useSettings } from '../hooks/useSettings'
 
 const SERVICES = [
   { icon: '🗂', title: 'QA 流程審查', desc: '針對現有測試流程進行健診，找出瓶頸與缺口，提供具體改善建議。' },
@@ -15,6 +16,7 @@ const SERVICES = [
 export default function Home() {
   const { posts } = usePosts()
   const { projects } = useProjects()
+  const { settings } = useSettings()
 
   return (
     <>
@@ -26,7 +28,7 @@ export default function Home() {
           <div>
             <div className="flex gap-7 items-start">
               <div className="w-24 h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2">
-                <img src="/avatar.jpg" alt="Jimmy Hong" className="w-full h-full object-cover" onError={e => { e.target.style.display = 'none' }} />
+                <img src={settings.avatar_url || '/avatar.jpg'} alt="Jimmy Hong" className="w-full h-full object-cover" onError={e => { e.target.style.display = 'none' }} />
               </div>
               <div>
                 <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">QA Engineer / 品質架構師</p>
@@ -46,9 +48,9 @@ export default function Home() {
                   <a href="/projects" className="text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
                   <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">閱讀文章</a>
                   <div className="flex gap-2 ml-1">
-                    <a href="https://github.com/" target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">gh</a>
-                    <a href="https://linkedin.com/" target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">in</a>
-                    <a href="mailto:your@email.com" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">✉</a>
+                    {settings.github_url && <a href={settings.github_url} target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">gh</a>}
+                    {settings.linkedin_url && <a href={settings.linkedin_url} target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">in</a>}
+                    {settings.email && <a href={`mailto:${settings.email}`} className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500 hover:border-gray-400">✉</a>}
                   </div>
                 </div>
               </div>

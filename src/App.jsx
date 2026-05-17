@@ -13,6 +13,7 @@ import AdminPosts from './pages/admin/AdminPosts'
 import AdminPostEdit from './pages/admin/AdminPostEdit'
 import AdminProjects from './pages/admin/AdminProjects'
 import AdminProjectEdit from './pages/admin/AdminProjectEdit'
+import AdminSettings from './pages/admin/AdminSettings'
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="posts/:id" element={<AdminPostEdit />} />
             <Route path="projects" element={<AdminProjects />} />
             <Route path="projects/:id" element={<AdminProjectEdit />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
       </BrowserRouter>
