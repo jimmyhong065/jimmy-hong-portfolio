@@ -19,7 +19,7 @@ export default function PhotoHome() {
     <>
       <SEOHead title="r.bing recording | 攝影作品集" description="用鏡頭記錄真實的瞬間。" />
       <PhotoNav />
-      <main className="max-w-6xl mx-auto px-8">
+      <main className="max-w-6xl mx-auto px-4 md:px-8">
 
         {/* Hero — minimized */}
         <div className="flex items-center gap-4 py-10 border-b border-gray-100 mb-10">
@@ -61,7 +61,7 @@ export default function PhotoHome() {
         ) : projects.length === 0 ? (
           <p className="text-sm text-gray-400 py-8">尚無作品。</p>
         ) : (
-          <div className="columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6 mb-16">
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:break-inside-avoid [&>*]:mb-6 mb-16">
             {projects.map(p => <PhotoCard key={p.id} project={p} />)}
           </div>
         )}
@@ -69,7 +69,7 @@ export default function PhotoHome() {
         {/* Services */}
         <div className="mt-16 mb-20 border-t border-gray-100 pt-12">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-8">Services</p>
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {PHOTO_SERVICES.map(s => (
               <div key={s.title}>
                 <h3 className="text-sm font-semibold mb-2">{s.title}</h3>
