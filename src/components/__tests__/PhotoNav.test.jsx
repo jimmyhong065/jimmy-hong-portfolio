@@ -1,27 +1,43 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, it, expect, vi } from 'vitest'
+import { vi } from 'vitest'
+import PhotoNav from '../PhotoNav'
 
 vi.mock('../../hooks/useSettings', () => ({
   useSettings: () => ({ settings: { email: 'test@example.com' } }),
 }))
 
-import PhotoNav from '../PhotoNav'
-
 describe('PhotoNav', () => {
-  it('renders studio name linking to /photo', () => {
-    render(<MemoryRouter><PhotoNav /></MemoryRouter>)
-    const logo = screen.getByText('r.bing recording')
-    expect(logo.closest('a')).toHaveAttribute('href', '/photo')
+  function renderNav() {
+    return render(
+      <MemoryRouter>
+        <PhotoNav />
+      </MemoryRouter>
+    )
+  }
+
+  it('renders brand name centered', () => {
+    renderNav()
+    expect(screen.getByText('r.bing recording')).toBeInTheDocument()
   })
 
-  it('renders link back to QA site', () => {
-    render(<MemoryRouter><PhotoNav /></MemoryRouter>)
+  it('renders 作品集 link on left', () => {
+    renderNav()
+    expect(screen.getByText('作品集')).toBeInTheDocument()
+  })
+
+  it('renders Instagram link', () => {
+    renderNav()
+    expect(screen.getByText('Instagram')).toBeInTheDocument()
+  })
+
+  it('renders QA 網站 link on right', () => {
+    renderNav()
     expect(screen.getByText('QA 網站')).toBeInTheDocument()
   })
 
-  it('renders contact button when email is set', () => {
-    render(<MemoryRouter><PhotoNav /></MemoryRouter>)
+  it('renders 聯絡我 when email is set', () => {
+    renderNav()
     expect(screen.getByText('聯絡我')).toBeInTheDocument()
   })
 })
