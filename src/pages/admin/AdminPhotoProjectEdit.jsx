@@ -16,8 +16,8 @@ export default function AdminPhotoProjectEdit() {
 
   useEffect(() => {
     if (!isNew) {
-      supabase.from('photo_projects').select('*').eq('id', id).single().then(({ data }) => {
-        if (data) setForm({
+      supabase.from('photo_projects').select('*').eq('id', id).single().then(({ data, error }) => {
+        if (!error && data) setForm({
           ...data,
           tags: (data.tags ?? []).join(', '),
           images: (data.images ?? []).join('\n'),
