@@ -27,4 +27,10 @@ describe('usePhotoProjects', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.projects).toHaveLength(2)
   })
+
+  it('filters projects by tag when tag is provided', async () => {
+    const { result } = renderHook(() => usePhotoProjects('人像'))
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(supabase.from).toHaveBeenCalledWith('photo_projects')
+  })
 })
