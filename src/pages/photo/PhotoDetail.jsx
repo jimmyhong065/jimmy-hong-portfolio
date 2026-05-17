@@ -17,8 +17,8 @@ export default function PhotoDetail() {
       .select('*')
       .eq('id', id)
       .single()
-      .then(({ data }) => {
-        setProject(data)
+      .then(({ data, error }) => {
+        if (!error) setProject(data)
         setLoading(false)
       })
   }, [id])
