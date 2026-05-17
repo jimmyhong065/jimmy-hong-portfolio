@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
+import { useUpload } from '../../hooks/useUpload'
 
 export default function AdminSettings() {
   const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '' })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
+  const avatarInputRef = useRef(null)
+  const { uploading, uploadError, uploadOne } = useUpload()
 
   useEffect(() => {
     supabase.from('settings').select('*').eq('id', 1).single().then(({ data }) => {
@@ -58,8 +61,30 @@ export default function AdminSettings() {
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">頭像圖片網址</label>
-          <input name="avatar_url" value={form.avatar_url} onChange={handleChange}
-            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+          <div className="flex gap-2">
+            <input name="avatar_url" value={form.avatar_url} onChange={handleChange}
+              className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => avatarInputRef.current.click()}
+              className="text-sm border border-gray-200 px-4 py-2.5 rounded-lg hover:border-gray-400 disabled:opacity-50 whitespace-nowrap"
+            >
+              {uploading ? '上傳中…' : '上傳'}
+            </button>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files[0]
+                if (file) uploadOne(file, url => setForm(f => ({ ...f, avatar_url: url })))
+                e.target.value = ''
+              }}
+            />
+          </div>
+          {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
         </div>
         {success && <p className="text-sm text-green-600">已儲存</p>}
         {error && <p className="text-sm text-red-500">{error}</p>}
