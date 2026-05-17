@@ -26,7 +26,7 @@ export default function PhotoDetail() {
   if (loading) return (
     <>
       <PhotoNav />
-      <div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">載入中…</div>
+      <div className="max-w-4xl mx-auto px-8 py-16 text-sm text-gray-400">載入中…</div>
       <Footer />
     </>
   )
@@ -34,32 +34,32 @@ export default function PhotoDetail() {
   if (!project) return (
     <>
       <PhotoNav />
-      <div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">找不到此作品。</div>
+      <div className="max-w-4xl mx-auto px-8 py-16 text-sm text-gray-400">找不到此作品。</div>
       <Footer />
     </>
   )
 
   return (
     <>
-      <SEOHead title={project.title} description={project.description} />
+      <SEOHead title={`${project.title} | r.bing recording`} description={project.description} />
       <PhotoNav />
-      <main className="max-w-3xl mx-auto px-12 py-16">
+      <main className="max-w-4xl mx-auto px-4 md:px-8 py-12">
         <div className="flex gap-2 flex-wrap mb-3">
           {(project.tags ?? []).map(t => (
-            <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
+            <span key={t} className="text-xs text-gray-400">{t}</span>
           ))}
         </div>
-        <h1 className="text-2xl font-bold mb-8">{project.title}</h1>
+        <h1 className="text-2xl font-bold mb-10">{project.title}</h1>
 
-        {/* Image gallery */}
+        {/* Masonry image gallery */}
         {(project.images ?? []).length > 0 && (
-          <div className="grid grid-cols-2 gap-3 mb-10">
+          <div className="columns-1 md:columns-2 gap-4 [&>*]:break-inside-avoid [&>*]:mb-4 mb-12">
             {project.images.map((url, i) => (
               <img
                 key={i}
                 src={url}
                 alt={`${project.title} ${i + 1}`}
-                className="w-full rounded-xl object-cover aspect-[4/3] border border-gray-100"
+                className="w-full h-auto rounded-sm"
               />
             ))}
           </div>
