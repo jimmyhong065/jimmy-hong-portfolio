@@ -14,6 +14,11 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    if (import.meta.env.VITE_ADMIN_EMAIL && email !== import.meta.env.VITE_ADMIN_EMAIL) {
+      setError('此帳號無法登入後台')
+      setLoading(false)
+      return
+    }
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: `${window.location.origin}/admin` },
