@@ -17,6 +17,7 @@ describe('usePhotoProjects', () => {
   beforeEach(() => {
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
+      contains: vi.fn().mockReturnThis(),
       order: vi.fn().mockResolvedValue({ data: mockProjects, error: null }),
     })
   })
