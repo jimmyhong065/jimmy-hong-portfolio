@@ -7,6 +7,8 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import About from './pages/About'
 import Login from './pages/Login'
+import PhotoHome from './pages/photo/PhotoHome'
+import PhotoDetail from './pages/photo/PhotoDetail'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminPosts from './pages/admin/AdminPosts'
@@ -14,6 +16,8 @@ import AdminPostEdit from './pages/admin/AdminPostEdit'
 import AdminProjects from './pages/admin/AdminProjects'
 import AdminProjectEdit from './pages/admin/AdminProjectEdit'
 import AdminSettings from './pages/admin/AdminSettings'
+import AdminPhotoProjects from './pages/admin/AdminPhotoProjects'
+import AdminPhotoProjectEdit from './pages/admin/AdminPhotoProjectEdit'
 
 export default function App() {
   return (
@@ -27,6 +31,8 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/photo" element={<PhotoHome />} />
+          <Route path="/photo/:id" element={<PhotoDetail />} />
           <Route path="/admin" element={
             <ProtectedRoute>
               <AdminLayout />
@@ -38,6 +44,8 @@ export default function App() {
             <Route path="projects" element={<AdminProjects />} />
             <Route path="projects/:id" element={<AdminProjectEdit />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="photo-projects" element={<AdminPhotoProjects />} />
+            <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>
