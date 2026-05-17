@@ -54,11 +54,12 @@ export default function PhotoDetail() {
         {/* Masonry image gallery */}
         {(project.images ?? []).length > 0 && (
           <div className="columns-1 md:columns-2 gap-4 [&>*]:break-inside-avoid [&>*]:mb-4 mb-12">
-            {project.images.map((url, i) => (
+            {project.images.map((url) => (
               <img
-                key={i}
+                key={url}
                 src={url}
-                alt={`${project.title} ${i + 1}`}
+                alt={project.title}
+                loading="lazy"
                 className="w-full h-auto rounded-sm"
               />
             ))}
