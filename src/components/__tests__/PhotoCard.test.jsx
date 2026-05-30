@@ -24,17 +24,16 @@ describe('PhotoCard', () => {
     expect(screen.getByText('人像作品')).toBeInTheDocument()
   })
 
-  it('renders cover image with natural height (no aspect ratio class)', () => {
+  it('renders cover image filling the aspect-ratio container', () => {
     renderCard()
     const img = screen.getByAltText('人像作品')
-    expect(img.className).not.toMatch(/aspect-/)
-    expect(img.className).toMatch(/h-auto/)
+    expect(img.className).toMatch(/h-full/)
+    expect(img.className).toMatch(/w-full/)
   })
 
-  it('renders tags', () => {
+  it('renders tags joined in a single element', () => {
     renderCard()
-    expect(screen.getByText('人像')).toBeInTheDocument()
-    expect(screen.getByText('商業')).toBeInTheDocument()
+    expect(screen.getByText('人像 · 商業')).toBeInTheDocument()
   })
 
   it('links to /photo/:id', () => {
