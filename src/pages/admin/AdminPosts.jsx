@@ -2,6 +2,11 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 
+function readingTime(content) {
+  if (!content) return 1
+  return Math.max(1, Math.ceil(content.replace(/\s/g, '').length / 400))
+}
+
 export default function AdminPosts() {
   const [posts, setPosts] = useState([])
   const [search, setSearch] = useState('')
@@ -11,6 +16,7 @@ export default function AdminPosts() {
   const [sortKey, setSortKey] = useState('published_at')
   const [sortDir, setSortDir] = useState('desc')
   const [page, setPage] = useState(1)
+  const [batchTagInput, setBatchTagInput] = useState('')
   const PAGE_SIZE = 15
 
   function handleSort(key) {
@@ -23,7 +29,7 @@ export default function AdminPosts() {
   async function fetchPosts() {
     const { data } = await supabase
       .from('posts')
-      .select('id, title, tags, published, published_at')
+      .select('id, title, tags, published, published_at, content')
       .order('created_at', { ascending: false })
     setPosts(data ?? [])
     setSelectedIds(new Set())
@@ -94,10 +100,41 @@ export default function AdminPosts() {
     fetchPosts()
   }
 
+  async function handleBatchTag(mode) {
+    const newTags = batchTagInput.split(',').map(t => t.trim()).filter(Boolean)
+    if (!newTags.length) return
+    const selected = posts.filter(p => selectedIds.has(p.id))
+    await Promise.all(selected.map(p => {
+      const tags = mode === 'append'
+        ? [...new Set([...(p.tags ?? []), ...newTags])]
+        : newTags
+      return supabase.from('posts').update({ tags }).eq('id', p.id)
+    }))
+    setBatchTagInput('')
+    fetchPosts()
+  }
+
   async function handleDelete(id) {
     if (!confirm('確定刪除？')) return
     await supabase.from('posts').delete().eq('id', id)
     fetchPosts()
+  }
+
+  async function handleClone(post) {
+    const { data } = await supabase
+      .from('posts')
+      .insert({
+        title: post.title + '（複製）',
+        slug: post.slug + '-copy-' + Date.now(),
+        content: post.content,
+        excerpt: post.excerpt ?? '',
+        tags: post.tags ?? [],
+        published: false,
+        published_at: null,
+      })
+      .select('id')
+      .single()
+    if (data?.id) window.location.href = `/admin/posts/${data.id}`
   }
 
   return (
@@ -141,6 +178,7 @@ export default function AdminPosts() {
                 <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
               </th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('title')}>標題{sortIcon('title')}</th>
+              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">時間</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標籤</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published')}>狀態{sortIcon('published')}</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published_at')}>日期{sortIcon('published_at')}</th>
@@ -155,6 +193,9 @@ export default function AdminPosts() {
                     onChange={() => toggleSelect(post.id)} />
                 </td>
                 <td className="px-4 py-3 text-sm">{post.title}</td>
+                <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
+                  {readingTime(post.content)} 分鐘
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1 flex-wrap">
                     {(post.tags ?? []).map(t => (
@@ -173,6 +214,8 @@ export default function AdminPosts() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
+                    <button onClick={() => handleClone(post)}
+                      className="text-xs border border-gray-200 px-3 py-1 rounded hover:border-gray-400">複製</button>
                     <Link to={`/admin/posts/${post.id}`}
                       className="text-xs border border-gray-200 px-3 py-1 rounded hover:border-gray-400">編輯</Link>
                     <button onClick={() => handleDelete(post.id)}
@@ -235,6 +278,22 @@ export default function AdminPosts() {
           <button onClick={handleBatchDelete}
             className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600">
             刪除
+          </button>
+          <div className="w-px h-4 bg-gray-300 mx-1" />
+          <input
+            type="text"
+            placeholder="標籤，用逗號分隔"
+            value={batchTagInput}
+            onChange={e => setBatchTagInput(e.target.value)}
+            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-gray-400 w-48"
+          />
+          <button onClick={() => handleBatchTag('append')}
+            className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700">
+            追加
+          </button>
+          <button onClick={() => handleBatchTag('replace')}
+            className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700">
+            取代
           </button>
         </div>
       )}
