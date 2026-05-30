@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import mermaid from 'mermaid'
 import MermaidChart from './MermaidChart'
+import { slugify } from '../lib/toc'
 
 const MERMAID_CONFIG = {
   startOnLoad: false,
@@ -35,9 +36,23 @@ function MdCode({ inline, className, children }) {
   return <code className={className}>{children}</code>
 }
 
+function MdH2({ children }) {
+  return <h2 id={slugify(String(children))}>{children}</h2>
+}
+function MdH3({ children }) {
+  return <h3 id={slugify(String(children))}>{children}</h3>
+}
+
 export default function MarkdownContent({ content }) {
   const containerRef = useRef()
   const isHtml = content?.trimStart().startsWith('<')
+
+  function addHeadingIds(html) {
+    return html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/\1>/gi, (_, tag, attrs, inner) => {
+      const text = inner.replace(/<[^>]+>/g, '').trim()
+      return `<${tag}${attrs} id="${slugify(text)}">${inner}</${tag}>`
+    })
+  }
 
   useEffect(() => {
     if (!isHtml || !containerRef.current) return
@@ -63,14 +78,14 @@ export default function MarkdownContent({ content }) {
       <div
         ref={containerRef}
         className="prose prose-gray max-w-none"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content ?? '') }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(addHeadingIds(content ?? '')) }}
       />
     )
     : (
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          components={{ code: MdCode }}
+          components={{ code: MdCode, h2: MdH2, h3: MdH3 }}
         >
           {content ?? ''}
         </ReactMarkdown>
