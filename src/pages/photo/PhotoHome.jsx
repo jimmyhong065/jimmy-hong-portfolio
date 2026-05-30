@@ -38,7 +38,7 @@ export default function PhotoHome() {
 
   return (
     <>
-      <SEOHead title="r.bing recording | 攝影作品集" description="用鏡頭記錄真實的瞬間。" favicon="/favicon-camera.svg" />
+      <SEOHead title="r.bing recording | 攝影作品集" description="給予人們自信魅力，拍出人生作品集。台灣人像攝影品牌，年代MUCH台美的in台灣專題報導。" favicon="/favicon-camera.svg" />
       <PhotoNav />
 
       {/* Page heading */}
@@ -74,7 +74,7 @@ export default function PhotoHome() {
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold">r.bing recording</p>
-            <p className="text-xs text-gray-500">用鏡頭記錄真實的瞬間</p>
+            <p className="text-xs text-gray-500">給予人們自信魅力，拍出人生作品集</p>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={openCalendly}
@@ -88,9 +88,63 @@ export default function PhotoHome() {
           </div>
         </div>
 
+        {/* Brand story */}
+        <div className="py-16 border-b border-gray-100">
+          <p className="text-xs tracking-widest text-gray-400 uppercase mb-10">Our Story</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
+                每個人都值得擁有<br />一張讓自己驕傲的照片
+              </h2>
+              <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                r.bing recording 相信，攝影不只是記錄外貌，而是一場發現自己的旅程。我們專注於人像攝影，從婚紗、寫真到閨蜜、生日紀念，每一次拍攝都是一次對話——用鏡頭說出你說不出口的自信。
+              </p>
+              <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                很多客人在拍攝前說「我不上鏡」，在拍攝後說「這是我看過最好看的自己」。這句話，是我們最大的成就感來源。
+              </p>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                攝影師 r.bing 曾受年代 MUCH 台《美的 in 台灣》專題報導，以「給予人們自信魅力，拍出人生作品集」的理念，持續記錄每一位走進鏡頭前的你。
+              </p>
+            </div>
+            <div className="flex flex-col gap-6">
+              <blockquote className="border-l-2 border-gray-900 pl-5">
+                <p className="text-lg font-medium text-gray-900 leading-relaxed">
+                  「拍照不是為了讓你變成別人，<br />而是讓你看見最好的自己。」
+                </p>
+                <cite className="text-xs text-gray-400 mt-3 block">— r.bing</cite>
+              </blockquote>
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                <div className="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-700">年代 MUCH 台 專題報導</p>
+                  <p className="text-xs text-gray-400">《美的 in 台灣 — 幸福推手》</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900">500+</p>
+                  <p className="text-xs text-gray-400 mt-1">服務客戶</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900">6+</p>
+                  <p className="text-xs text-gray-400 mt-1">拍攝年資</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-gray-900">∞</p>
+                  <p className="text-xs text-gray-400 mt-1">留下的笑容</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Intro video */}
         <div className="py-16 border-b border-gray-100">
-          <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">About Us</p>
+          <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">年代 MUCH 台 — 美的 in 台灣</p>
           <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-xl bg-gray-100">
             <iframe
               className="absolute top-0 left-0 w-full h-full"
