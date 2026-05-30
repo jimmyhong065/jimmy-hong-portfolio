@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import MarkdownContent from '../MarkdownContent'
+
+vi.mock('../MermaidChart', () => ({
+  default: ({ definition }) => <div data-testid="mermaid-chart" data-definition={definition} />
+}))
 
 describe('MarkdownContent', () => {
   it('renders markdown content via react-markdown', () => {
@@ -32,5 +36,19 @@ describe('MarkdownContent', () => {
   it('handles null/undefined content without crashing', () => {
     const { container } = render(<MarkdownContent content={null} />)
     expect(container.firstChild).toBeInTheDocument()
+  })
+
+  it('renders mermaid code block as MermaidChart in markdown mode', () => {
+    const md = '```mermaid\ngraph TD\n  A-->B\n```'
+    render(<MarkdownContent content={md} />)
+    const chart = screen.getByTestId('mermaid-chart')
+    expect(chart).toBeInTheDocument()
+    expect(chart.getAttribute('data-definition')).toContain('graph TD')
+  })
+
+  it('renders non-mermaid code blocks as regular code in markdown mode', () => {
+    render(<MarkdownContent content={'```js\nconsole.log(1)\n```'} />)
+    expect(screen.queryByTestId('mermaid-chart')).toBeNull()
+    expect(screen.getByText(/console\.log/)).toBeInTheDocument()
   })
 })
