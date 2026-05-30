@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import RichTextEditor from '../../components/RichTextEditor'
@@ -11,6 +11,15 @@ function slugify(text) {
     .replace(/\s+/g, '-')
 }
 
+function SaveStatus({ status }) {
+  if (!status || status === 'idle') return null
+  if (status === 'pending') return <span className="text-xs text-gray-400">• 未儲存變更</span>
+  if (status === 'saving') return <span className="text-xs text-gray-400">儲存中…</span>
+  if (status === 'error') return <span className="text-xs text-red-400">自動儲存失敗</span>
+  if (status.startsWith('saved:')) return <span className="text-xs text-gray-400">已自動儲存 {status.slice(6)}</span>
+  return null
+}
+
 export default function AdminPostEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -21,6 +30,8 @@ export default function AdminPostEdit() {
     tags: '', published: false,
   })
   const [saving, setSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState('idle')
+  const autoSaveRef = useRef()
 
   useEffect(() => {
     if (!isNew) {
@@ -29,6 +40,33 @@ export default function AdminPostEdit() {
       })
     }
   }, [id, isNew])
+
+  // Auto-save: 30s debounce, existing posts only
+  useEffect(() => {
+    if (isNew) return
+    setSaveStatus('pending')
+    clearTimeout(autoSaveRef.current)
+    autoSaveRef.current = setTimeout(async () => {
+      const payload = {
+        title: form.title,
+        slug: form.slug,
+        excerpt: form.excerpt,
+        content: form.content,
+        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+      }
+      setSaveStatus('saving')
+      const { error } = await supabase.from('posts').update(payload).eq('id', id)
+      if (error) {
+        setSaveStatus('error')
+      } else {
+        const now = new Date()
+        const hh = now.getHours().toString().padStart(2, '0')
+        const mm = now.getMinutes().toString().padStart(2, '0')
+        setSaveStatus(`saved:${hh}:${mm}`)
+      }
+    }, 30000)
+    return () => clearTimeout(autoSaveRef.current)
+  }, [form, id, isNew])
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target
@@ -57,11 +95,14 @@ export default function AdminPostEdit() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-lg font-bold mb-7">{isNew ? '新增文章' : '編輯文章'}</h1>
+      <div className="flex justify-between items-center mb-7">
+        <h1 className="text-lg font-bold">{isNew ? '新增文章' : '編輯文章'}</h1>
+        <SaveStatus status={saveStatus} />
+      </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
           <label className="text-xs text-gray-500 mb-1 block">標題</label>
-          <input name="title" value={form.title} onChange={handleChange} required
+          <input aria-label="標題" name="title" value={form.title} onChange={handleChange} required
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
@@ -95,6 +136,13 @@ export default function AdminPostEdit() {
             className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
             {saving ? '儲存中…' : '儲存'}
           </button>
+          {!isNew && (
+            <button type="button"
+              onClick={() => window.open(`/blog/${form.slug}`, '_blank')}
+              className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
+              預覽
+            </button>
+          )}
           <button type="button" onClick={() => navigate('/admin/posts')}
             className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
             取消
