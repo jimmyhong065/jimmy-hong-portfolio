@@ -8,7 +8,13 @@ import TableRow from '@tiptap/extension-table-row'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import Placeholder from '@tiptap/extension-placeholder'
+import { marked } from 'marked'
 import RichTextToolbar from './RichTextToolbar'
+
+function toHtml(value) {
+  if (!value) return ''
+  return value.trimStart().startsWith('<') ? value : marked.parse(value)
+}
 
 export default function RichTextEditor({ value, onChange }) {
   const editor = useEditor({
@@ -22,14 +28,15 @@ export default function RichTextEditor({ value, onChange }) {
       TableCell,
       Placeholder.configure({ placeholder: '開始撰寫文章…' }),
     ],
-    content: value ?? '',
+    content: toHtml(value),
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   })
 
   // Sync external value changes (e.g. when existing post loads from Supabase)
   useEffect(() => {
-    if (editor && !editor.isFocused && value !== editor.getHTML()) {
-      editor.commands.setContent(value ?? '')
+    if (editor && !editor.isFocused) {
+      const html = toHtml(value)
+      if (html !== editor.getHTML()) editor.commands.setContent(html)
     }
   }, [editor, value])
 
