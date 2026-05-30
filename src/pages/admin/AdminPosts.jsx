@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState([])
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [tagFilter, setTagFilter] = useState('')
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   async function fetchPosts() {
     const { data } = await supabase
@@ -11,9 +15,55 @@ export default function AdminPosts() {
       .select('id, title, tags, published, published_at')
       .order('created_at', { ascending: false })
     setPosts(data ?? [])
+    setSelectedIds(new Set())
   }
 
   useEffect(() => { fetchPosts() }, [])
+
+  const allTags = useMemo(() => {
+    const tags = new Set()
+    posts.forEach(p => (p.tags ?? []).forEach(t => tags.add(t)))
+    return [...tags].sort()
+  }, [posts])
+
+  const visiblePosts = useMemo(() => posts.filter(p => {
+    const matchSearch = !search || p.title?.toLowerCase().includes(search.toLowerCase())
+    const matchStatus = statusFilter === 'all' ? true
+      : statusFilter === 'published' ? p.published : !p.published
+    const matchTag = !tagFilter || (p.tags ?? []).includes(tagFilter)
+    return matchSearch && matchStatus && matchTag
+  }), [posts, search, statusFilter, tagFilter])
+
+  const allVisibleSelected = visiblePosts.length > 0 && visiblePosts.every(p => selectedIds.has(p.id))
+
+  function toggleSelectAll() {
+    if (allVisibleSelected) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(visiblePosts.map(p => p.id)))
+    }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  async function handleBatchPublish(published) {
+    await supabase.from('posts')
+      .update({ published, published_at: published ? new Date().toISOString() : null })
+      .in('id', [...selectedIds])
+    fetchPosts()
+  }
+
+  async function handleBatchDelete() {
+    if (!confirm(`確定刪除 ${selectedIds.size} 篇文章？`)) return
+    await supabase.from('posts').delete().in('id', [...selectedIds])
+    fetchPosts()
+  }
 
   async function handleDelete(id) {
     if (!confirm('確定刪除？')) return
@@ -23,16 +73,44 @@ export default function AdminPosts() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-7">
+      <div className="flex justify-between items-center mb-5">
         <h1 className="text-lg font-bold">文章管理</h1>
-        <Link to="/admin/posts/new" className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
+        <Link to="/admin/posts/new"
+          className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
           + 新增文章
         </Link>
       </div>
+
+      {/* Filter bar */}
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <input type="text" placeholder="🔍 搜尋標題…" value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400 flex-1 min-w-[160px]" />
+        <div className="flex gap-1">
+          {[['all', '全部'], ['draft', '草稿'], ['published', '已發布']].map(([val, label]) => (
+            <button key={val} onClick={() => setStatusFilter(val)}
+              className={`text-xs px-3 py-2 rounded-lg transition-colors ${
+                statusFilter === val ? 'bg-gray-900 text-white' : 'border border-gray-200 hover:border-gray-400'
+              }`}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <select value={tagFilter} onChange={e => setTagFilter(e.target.value)}
+          className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400">
+          <option value="">全部標籤</option>
+          {allTags.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
+      </div>
+
+      {/* Table */}
       <div className="border border-gray-200 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-4 py-3 w-8">
+                <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
+              </th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標題</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標籤</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">狀態</th>
@@ -41,11 +119,15 @@ export default function AdminPosts() {
             </tr>
           </thead>
           <tbody>
-            {posts.map(post => (
+            {visiblePosts.map(post => (
               <tr key={post.id} className="border-t border-gray-100">
+                <td className="px-4 py-3">
+                  <input type="checkbox" checked={selectedIds.has(post.id)}
+                    onChange={() => toggleSelect(post.id)} />
+                </td>
                 <td className="px-4 py-3 text-sm">{post.title}</td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 flex-wrap">
                     {(post.tags ?? []).map(t => (
                       <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
                     ))}
@@ -62,8 +144,10 @@ export default function AdminPosts() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <Link to={`/admin/posts/${post.id}`} className="text-xs border border-gray-200 px-3 py-1 rounded hover:border-gray-400">編輯</Link>
-                    <button onClick={() => handleDelete(post.id)} className="text-xs border border-red-100 text-red-500 px-3 py-1 rounded hover:border-red-300">刪除</button>
+                    <Link to={`/admin/posts/${post.id}`}
+                      className="text-xs border border-gray-200 px-3 py-1 rounded hover:border-gray-400">編輯</Link>
+                    <button onClick={() => handleDelete(post.id)}
+                      className="text-xs border border-red-100 text-red-500 px-3 py-1 rounded hover:border-red-300">刪除</button>
                   </div>
                 </td>
               </tr>
@@ -71,6 +155,25 @@ export default function AdminPosts() {
           </tbody>
         </table>
       </div>
+
+      {/* Batch action bar */}
+      {selectedIds.size > 0 && (
+        <div className="mt-4 flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
+          <span className="text-sm text-gray-600">已選 {selectedIds.size} 篇</span>
+          <button onClick={() => handleBatchPublish(true)}
+            className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700">
+            發布
+          </button>
+          <button onClick={() => handleBatchPublish(false)}
+            className="text-xs bg-yellow-500 text-white px-3 py-1.5 rounded-lg hover:bg-yellow-600">
+            取消發布
+          </button>
+          <button onClick={handleBatchDelete}
+            className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600">
+            刪除
+          </button>
+        </div>
+      )}
     </div>
   )
 }
