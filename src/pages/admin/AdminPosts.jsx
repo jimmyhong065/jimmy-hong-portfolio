@@ -8,6 +8,15 @@ export default function AdminPosts() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [tagFilter, setTagFilter] = useState('')
   const [selectedIds, setSelectedIds] = useState(new Set())
+  const [sortKey, setSortKey] = useState('published_at')
+  const [sortDir, setSortDir] = useState('desc')
+
+  function handleSort(key) {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortKey(key); setSortDir('asc') }
+  }
+
+  const sortIcon = (col) => sortKey === col ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'
 
   async function fetchPosts() {
     const { data } = await supabase
@@ -26,13 +35,22 @@ export default function AdminPosts() {
     return [...tags].sort()
   }, [posts])
 
-  const visiblePosts = useMemo(() => posts.filter(p => {
-    const matchSearch = !search || p.title?.toLowerCase().includes(search.toLowerCase())
-    const matchStatus = statusFilter === 'all' ? true
-      : statusFilter === 'published' ? p.published : !p.published
-    const matchTag = !tagFilter || (p.tags ?? []).includes(tagFilter)
-    return matchSearch && matchStatus && matchTag
-  }), [posts, search, statusFilter, tagFilter])
+  const visiblePosts = useMemo(() => {
+    const filtered = posts.filter(p => {
+      const matchSearch = !search || p.title?.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFilter === 'all' ? true
+        : statusFilter === 'published' ? p.published : !p.published
+      const matchTag = !tagFilter || (p.tags ?? []).includes(tagFilter)
+      return matchSearch && matchStatus && matchTag
+    })
+    return [...filtered].sort((a, b) => {
+      let av = a[sortKey] ?? '', bv = b[sortKey] ?? ''
+      if (typeof av === 'boolean') { av = av ? 1 : 0; bv = bv ? 1 : 0 }
+      if (av < bv) return sortDir === 'asc' ? -1 : 1
+      if (av > bv) return sortDir === 'asc' ? 1 : -1
+      return 0
+    })
+  }, [posts, search, statusFilter, tagFilter, sortKey, sortDir])
 
   const allVisibleSelected = visiblePosts.length > 0 && visiblePosts.every(p => selectedIds.has(p.id))
 
@@ -111,10 +129,10 @@ export default function AdminPosts() {
               <th className="px-4 py-3 w-8">
                 <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
               </th>
-              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標題</th>
+              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('title')}>標題{sortIcon('title')}</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標籤</th>
-              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">狀態</th>
-              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">日期</th>
+              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published')}>狀態{sortIcon('published')}</th>
+              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published_at')}>日期{sortIcon('published_at')}</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
