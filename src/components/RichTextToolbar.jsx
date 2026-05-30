@@ -85,6 +85,8 @@ export default function RichTextToolbar({ editor }) {
       {/* Insert */}
       <Btn title="連結" active={editor.isActive('link')} onClick={handleLink}>🔗</Btn>
       <Btn title="圖片" active={false} onClick={() => setImageOpen(true)}>🖼</Btn>
+      <Btn title="Mermaid 圖表" active={false}
+        onClick={() => editor.chain().focus().insertMermaidBlock().run()}>⬡</Btn>
       <Btn title="表格" active={editor.isActive('table')}
         onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>⊞</Btn>
       <Btn title="水平線" active={false}

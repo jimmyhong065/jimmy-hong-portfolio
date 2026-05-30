@@ -24,6 +24,7 @@ function makeEditor(runMock) {
       setHorizontalRule: () => ({ run: runMock }),
       undo: () => ({ run: runMock }),
       redo: () => ({ run: runMock }),
+      insertMermaidBlock: () => ({ run: runMock }),
     }),
   })
   return {
@@ -89,6 +90,13 @@ describe('RichTextToolbar', () => {
     fireEvent.click(screen.getByText('URL'))
     fireEvent.change(screen.getByPlaceholderText('https://...'), { target: { value: 'https://example.com/img.jpg' } })
     fireEvent.click(screen.getByText('插入'))
+    expect(run).toHaveBeenCalledTimes(1)
+  })
+
+  it('⬡ 圖表 button calls editor chain run', () => {
+    const run = makeRun()
+    render(<RichTextToolbar editor={makeEditor(run)} />)
+    fireEvent.click(screen.getByTitle('Mermaid 圖表'))
     expect(run).toHaveBeenCalledTimes(1)
   })
 })
