@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import RichTextEditor from '../../components/RichTextEditor'
 
 function slugify(text) {
   return text
@@ -79,9 +80,11 @@ export default function AdminPostEdit() {
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">內容（Markdown）</label>
-          <textarea name="content" value={form.content} onChange={handleChange} rows={16}
-            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 font-mono" />
+          <label className="text-xs text-gray-500 mb-1 block">內容</label>
+          <RichTextEditor
+            value={form.content}
+            onChange={html => setForm(f => ({ ...f, content: html }))}
+          />
         </div>
         <label className="flex items-center gap-2 text-sm text-gray-600">
           <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
