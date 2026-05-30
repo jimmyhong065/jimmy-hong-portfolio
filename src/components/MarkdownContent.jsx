@@ -5,10 +5,24 @@ import remarkGfm from 'remark-gfm'
 import mermaid from 'mermaid'
 import MermaidChart from './MermaidChart'
 
+const MERMAID_CONFIG = {
+  startOnLoad: false,
+  theme: 'base',
+  themeVariables: {
+    background: '#ffffff',
+    primaryColor: '#dbeafe',
+    primaryBorderColor: '#3b82f6',
+    primaryTextColor: '#1e293b',
+    lineColor: '#64748b',
+    edgeLabelBackground: '#f8fafc',
+    fontSize: '14px',
+  },
+}
+
 let mermaidInitialized = false
 function initMermaid() {
   if (mermaidInitialized) return
-  mermaid.initialize({ startOnLoad: false, theme: 'default' })
+  mermaid.initialize(MERMAID_CONFIG)
   mermaidInitialized = true
 }
 

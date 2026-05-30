@@ -5,7 +5,19 @@ let initialized = false
 
 function initMermaid() {
   if (initialized) return
-  mermaid.initialize({ startOnLoad: false, theme: 'default' })
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      background: '#ffffff',
+      primaryColor: '#dbeafe',
+      primaryBorderColor: '#3b82f6',
+      primaryTextColor: '#1e293b',
+      lineColor: '#64748b',
+      edgeLabelBackground: '#f8fafc',
+      fontSize: '14px',
+    },
+  })
   initialized = true
 }
 
