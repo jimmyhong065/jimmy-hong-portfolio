@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoNav from '../../components/PhotoNav'
 import Footer from '../../components/Footer'
@@ -7,10 +8,33 @@ import { usePhotoProjects } from '../../hooks/usePhotoProjects'
 import { useSettings } from '../../hooks/useSettings'
 import { useServices } from '../../hooks/useServices'
 
+const CALENDLY_URL = 'https://calendly.com/pklaz0078/30min'
+
+function openCalendly() {
+  window.Calendly?.initPopupWidget({ url: CALENDLY_URL })
+}
+
 export default function PhotoHome() {
   const { projects, loading } = usePhotoProjects()
   const { settings } = useSettings()
   const { services } = useServices('photo')
+
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://assets.calendly.com/assets/external/widget.css'
+    document.head.appendChild(link)
+
+    const script = document.createElement('script')
+    script.src = 'https://assets.calendly.com/assets/external/widget.js'
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      document.head.removeChild(link)
+      document.body.removeChild(script)
+    }
+  }, [])
 
   return (
     <>
@@ -53,11 +77,10 @@ export default function PhotoHome() {
             <p className="text-xs text-gray-500">用鏡頭記錄真實的瞬間</p>
           </div>
           <div className="flex items-center gap-3">
-            {settings.email && (
-              <a href={`mailto:${settings.email}`} className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-                預約洽詢
-              </a>
-            )}
+            <button onClick={openCalendly}
+              className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
+              預約諮詢
+            </button>
             <a href="https://www.instagram.com/r.bing_recording/" target="_blank" rel="noreferrer"
               className="text-xs text-gray-500 hover:text-gray-900 border border-gray-200 px-3 py-2 rounded-md">
               Instagram
