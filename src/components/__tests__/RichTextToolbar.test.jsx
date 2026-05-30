@@ -81,4 +81,14 @@ describe('RichTextToolbar', () => {
     fireEvent.click(screen.getByText('取消'))
     expect(screen.queryByText('插入圖片')).toBeNull()
   })
+
+  it('URL tab insert button calls editor chain run', () => {
+    const run = makeRun()
+    render(<RichTextToolbar editor={makeEditor(run)} />)
+    fireEvent.click(screen.getByTitle('圖片'))
+    fireEvent.click(screen.getByText('URL'))
+    fireEvent.change(screen.getByPlaceholderText('https://...'), { target: { value: 'https://example.com/img.jpg' } })
+    fireEvent.click(screen.getByText('插入'))
+    expect(run).toHaveBeenCalledTimes(1)
+  })
 })

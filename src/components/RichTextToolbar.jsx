@@ -25,6 +25,7 @@ export default function RichTextToolbar({ editor }) {
   if (!editor) return null
 
   function insertImage(url) {
+    if (!url) return
     editor.chain().focus().setImage({ src: url }).run()
     setImageOpen(false)
     setImageUrl('')
