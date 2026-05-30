@@ -31,9 +31,21 @@ export default function ProjectDetail() {
       <SEOHead title={project.title} description={project.description} />
       <Nav />
       <main className="max-w-3xl mx-auto px-12 py-16">
-        {project.cover_url && (
+        {(project.images?.length > 0) ? (
+          <div className="mb-8 flex flex-col gap-4">
+            {project.images.map((img, i) => (
+              <figure key={i}>
+                <img src={img.url} alt={img.caption || project.title}
+                  className="w-full rounded-xl border border-gray-100" />
+                {img.caption && (
+                  <figcaption className="text-xs text-gray-400 mt-2 text-center">{img.caption}</figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        ) : project.cover_url ? (
           <img src={project.cover_url} alt={project.title} className="w-full rounded-xl mb-8 border border-gray-100" />
-        )}
+        ) : null}
         <div className="flex gap-2 flex-wrap mb-3">
           {(project.tags ?? []).map(t => (
             <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
