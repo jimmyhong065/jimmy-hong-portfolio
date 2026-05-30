@@ -63,7 +63,7 @@ describe('AdminPostEdit — auto-save and preview', () => {
     renderEdit('abc')
     await waitFor(() => screen.getByText('預覽'))
     fireEvent.click(screen.getByText('預覽'))
-    expect(open).toHaveBeenCalledWith('/blog/test-article', '_blank')
+    expect(open).toHaveBeenCalledWith('/blog/test-article?preview=1', '_blank')
     open.mockRestore()
   })
 

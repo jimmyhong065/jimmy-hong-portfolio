@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
@@ -8,21 +8,19 @@ import { supabase } from '../lib/supabase'
 
 export default function BlogPost() {
   const { slug } = useParams()
+  const [searchParams] = useSearchParams()
+  const isPreview = searchParams.get('preview') === '1'
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase
-      .from('posts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('published', true)
-      .single()
-      .then(({ data }) => {
-        setPost(data)
-        setLoading(false)
-      })
-  }, [slug])
+    let query = supabase.from('posts').select('*').eq('slug', slug)
+    if (!isPreview) query = query.eq('published', true)
+    query.single().then(({ data }) => {
+      setPost(data)
+      setLoading(false)
+    })
+  }, [slug, isPreview])
 
   if (loading) return <><Nav /><div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">載入中…</div><Footer /></>
   if (!post) return <><Nav /><div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">找不到此文章。</div><Footer /></>

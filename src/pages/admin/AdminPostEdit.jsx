@@ -138,7 +138,7 @@ export default function AdminPostEdit() {
           </button>
           {!isNew && (
             <button type="button"
-              onClick={() => window.open(`/blog/${form.slug}`, '_blank')}
+              onClick={() => window.open(`/blog/${form.slug}?preview=1`, '_blank')}
               className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
               預覽
             </button>
