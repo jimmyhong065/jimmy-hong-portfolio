@@ -10,6 +10,8 @@ export default function AdminPosts() {
   const [selectedIds, setSelectedIds] = useState(new Set())
   const [sortKey, setSortKey] = useState('published_at')
   const [sortDir, setSortDir] = useState('desc')
+  const [page, setPage] = useState(1)
+  const PAGE_SIZE = 15
 
   function handleSort(key) {
     if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
@@ -52,13 +54,22 @@ export default function AdminPosts() {
     })
   }, [posts, search, statusFilter, tagFilter, sortKey, sortDir])
 
-  const allVisibleSelected = visiblePosts.length > 0 && visiblePosts.every(p => selectedIds.has(p.id))
+  const totalPages = Math.ceil(visiblePosts.length / PAGE_SIZE)
+  const pagedPosts = visiblePosts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  useEffect(() => { setPage(1) }, [search, statusFilter, tagFilter, sortKey, sortDir])
+
+  const allVisibleSelected = pagedPosts.length > 0 && pagedPosts.every(p => selectedIds.has(p.id))
 
   function toggleSelectAll() {
     if (allVisibleSelected) {
-      setSelectedIds(new Set())
+      setSelectedIds(prev => {
+        const next = new Set(prev)
+        pagedPosts.forEach(p => next.delete(p.id))
+        return next
+      })
     } else {
-      setSelectedIds(new Set(visiblePosts.map(p => p.id)))
+      setSelectedIds(prev => new Set([...prev, ...pagedPosts.map(p => p.id)]))
     }
   }
 
@@ -137,7 +148,7 @@ export default function AdminPosts() {
             </tr>
           </thead>
           <tbody>
-            {visiblePosts.map(post => (
+            {pagedPosts.map(post => (
               <tr key={post.id} className="border-t border-gray-100">
                 <td className="px-4 py-3">
                   <input type="checkbox" checked={selectedIds.has(post.id)}
@@ -173,6 +184,41 @@ export default function AdminPosts() {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xs text-gray-400">
+            第 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, visiblePosts.length)} 篇，共 {visiblePosts.length} 篇
+          </span>
+          <div className="flex gap-1">
+            <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
+              className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
+              ←
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
+              .reduce((acc, n, i, arr) => {
+                if (i > 0 && n - arr[i - 1] > 1) acc.push('…')
+                acc.push(n)
+                return acc
+              }, [])
+              .map((n, i) => n === '…'
+                ? <span key={`ellipsis-${i}`} className="text-xs px-2 py-1.5 text-gray-400">…</span>
+                : <button key={n} onClick={() => setPage(n)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                      page === n ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 hover:border-gray-400'
+                    }`}>
+                    {n}
+                  </button>
+              )}
+            <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}
+              className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
+              →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Batch action bar */}
       {selectedIds.size > 0 && (
