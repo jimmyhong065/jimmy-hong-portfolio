@@ -124,20 +124,6 @@ export default function PhotoHome() {
                   <p className="text-xs text-gray-400">《美的 in 台灣 — 幸福推手》</p>
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">500+</p>
-                  <p className="text-xs text-gray-400 mt-1">服務客戶</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">6+</p>
-                  <p className="text-xs text-gray-400 mt-1">拍攝年資</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">∞</p>
-                  <p className="text-xs text-gray-400 mt-1">留下的笑容</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
