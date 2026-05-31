@@ -31,6 +31,9 @@ export default function BlogPost() {
 
   const headings = post?.content ? parseHeadings(post.content) : []
   const activeId = useActiveHeading(headings)
+  const readingMin = post?.content
+    ? Math.max(1, Math.ceil(post.content.replace(/\s/g, '').length / 400))
+    : null
 
   if (loading) return (
     <>
@@ -53,6 +56,7 @@ export default function BlogPost() {
   const shareUrl = encodeURIComponent(postUrl)
   const linkedInShare = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`
   const xShare = `https://x.com/intent/tweet?text=${shareText}&url=${shareUrl}`
+  const lineShare = `https://social-plugins.line.me/lineit/share?url=${shareUrl}`
 
   return (
     <>
@@ -78,8 +82,14 @@ export default function BlogPost() {
               ))}
             </div>
             <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
-            <p className="text-xs text-gray-400 mb-10">
+            <p className="text-xs text-gray-400 mb-10 flex items-center gap-3">
               {post.published_at ? new Date(post.published_at).toISOString().slice(0, 10) : ''}
+              {readingMin && (
+                <span className="text-gray-300">·</span>
+              )}
+              {readingMin && (
+                <span>{readingMin} 分鐘閱讀</span>
+              )}
             </p>
             {headings.length >= 2 && (
               <div className="lg:hidden mb-8">
@@ -89,13 +99,17 @@ export default function BlogPost() {
             <MarkdownContent content={post.content} />
             <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-4">
               <span className="text-xs text-gray-400">分享：</span>
+              <a href={lineShare} target="_blank" rel="noreferrer"
+                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
+                Line
+              </a>
               <a href={linkedInShare} target="_blank" rel="noreferrer"
                 className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
                 LinkedIn
               </a>
               <a href={xShare} target="_blank" rel="noreferrer"
                 className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
-                X (Twitter)
+                X
               </a>
             </div>
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />

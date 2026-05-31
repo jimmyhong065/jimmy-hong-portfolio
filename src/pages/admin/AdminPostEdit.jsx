@@ -127,10 +127,24 @@ export default function AdminPostEdit() {
             onChange={html => setForm(f => ({ ...f, content: html }))}
           />
         </div>
-        <label className="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
-          發布
-        </label>
+        <div className="flex flex-col gap-3">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
+            <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
+            發布
+          </label>
+          {form.published && (
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">發布日期</label>
+              <input
+                type="date"
+                name="published_at"
+                value={form.published_at ? form.published_at.slice(0, 10) : new Date().toISOString().slice(0, 10)}
+                onChange={e => setForm(f => ({ ...f, published_at: e.target.value ? new Date(e.target.value).toISOString() : null }))}
+                className="text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400"
+              />
+            </div>
+          )}
+        </div>
         <div className="flex gap-3">
           <button type="submit" disabled={saving}
             className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
@@ -140,7 +154,7 @@ export default function AdminPostEdit() {
             <button type="button"
               onClick={() => window.open(`/blog/${form.slug}?preview=1`, '_blank')}
               className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
-              預覽
+              預覽 ↗
             </button>
           )}
           <button type="button" onClick={() => navigate('/admin/posts')}
