@@ -8,6 +8,7 @@ export default function PhotoCard({ project }) {
           src={project.cover_url}
           alt={project.title}
           draggable="false"
+          loading="lazy"
           onContextMenu={e => e.preventDefault()}
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04] pointer-events-none select-none"
         />

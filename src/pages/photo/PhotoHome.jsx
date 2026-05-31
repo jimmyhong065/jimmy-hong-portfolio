@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoNav from '../../components/PhotoNav'
 import Footer from '../../components/Footer'
@@ -18,6 +18,16 @@ export default function PhotoHome() {
   const { projects, loading } = usePhotoProjects()
   const { settings } = useSettings()
   const { services } = useServices('photo')
+  const [selectedTag, setSelectedTag] = useState(null)
+
+  const allTags = useMemo(() => {
+    const set = new Set(projects.flatMap(p => p.tags ?? []))
+    return [...set]
+  }, [projects])
+
+  const visible = useMemo(() =>
+    selectedTag ? projects.filter(p => (p.tags ?? []).includes(selectedTag)) : projects
+  , [projects, selectedTag])
 
   useEffect(() => {
     const link = document.createElement('link')
@@ -49,14 +59,32 @@ export default function PhotoHome() {
         </div>
       </div>
 
+      {/* Tag filter */}
+      {!loading && allTags.length > 0 && (
+        <div className="flex gap-2 px-4 md:px-8 pb-6 flex-wrap">
+          <button
+            onClick={() => setSelectedTag(null)}
+            className={`text-xs px-3 py-1.5 rounded-full transition-colors ${!selectedTag ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+            全部
+          </button>
+          {allTags.map(tag => (
+            <button key={tag}
+              onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+              className={`text-xs px-3 py-1.5 rounded-full transition-colors ${selectedTag === tag ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Full-width 3-col grid */}
       {loading ? (
         <p className="text-sm text-gray-400 px-8 pb-16">載入中…</p>
-      ) : projects.length === 0 ? (
-        <p className="text-sm text-gray-400 px-8 pb-16">尚無作品。</p>
+      ) : visible.length === 0 ? (
+        <p className="text-sm text-gray-400 px-8 pb-16">沒有符合的作品。</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
-          {projects.map(p => (
+          {visible.map(p => (
             <div key={p.id} className="bg-white">
               <PhotoCard project={p} />
             </div>

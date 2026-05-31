@@ -21,6 +21,7 @@ import AdminPhotoProjectEdit from './pages/admin/AdminPhotoProjectEdit'
 import AdminServices from './pages/admin/AdminServices'
 import AdminServiceEdit from './pages/admin/AdminServiceEdit'
 import Services from './pages/Services'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="services" element={<AdminServices />} />
             <Route path="services/:id" element={<AdminServiceEdit />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>

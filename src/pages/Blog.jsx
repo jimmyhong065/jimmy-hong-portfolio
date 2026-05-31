@@ -24,7 +24,7 @@ export default function Blog() {
     if (query.trim()) {
       const q = query.trim().toLowerCase()
       result = result.filter(p =>
-        p.title?.toLowerCase().includes(q) || p.content?.toLowerCase().includes(q)
+        p.title?.toLowerCase().includes(q) || p.excerpt?.toLowerCase().includes(q)
       )
     }
     return result
@@ -46,7 +46,7 @@ export default function Blog() {
           type="search"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="搜尋文章標題或內文關鍵字..."
+          placeholder="搜尋文章標題或摘要..."
           className="w-full text-sm border border-gray-200 rounded-full px-5 py-3 mb-6 focus:outline-none focus:border-gray-400 placeholder:text-gray-300"
         />
         <TagFilter tags={allTags} selected={selectedTag} onSelect={setSelectedTag} />
