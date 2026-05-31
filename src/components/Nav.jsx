@@ -11,6 +11,7 @@ export default function Nav() {
         <ul className="flex gap-8 list-none">
           <li><Link to="/projects" className="text-sm text-gray-500 hover:text-gray-900">作品集</Link></li>
           <li><Link to="/blog" className="text-sm text-gray-500 hover:text-gray-900">部落格</Link></li>
+          <li><Link to="/services" className="text-sm text-gray-500 hover:text-gray-900">合作方式</Link></li>
           <li><Link to="/about" className="text-sm text-gray-500 hover:text-gray-900">關於我</Link></li>
         </ul>
         <div className="flex items-center gap-3">
