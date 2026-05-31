@@ -3,8 +3,22 @@ import DOMPurify from 'dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import mermaid from 'mermaid'
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
+import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
+import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash'
+import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml'
 import MermaidChart from './MermaidChart'
 import { slugify } from '../lib/toc'
+
+SyntaxHighlighter.registerLanguage('javascript', js)
+SyntaxHighlighter.registerLanguage('js', js)
+SyntaxHighlighter.registerLanguage('python', python)
+SyntaxHighlighter.registerLanguage('bash', bash)
+SyntaxHighlighter.registerLanguage('sh', bash)
+SyntaxHighlighter.registerLanguage('yaml', yaml)
+SyntaxHighlighter.registerLanguage('yml', yaml)
 
 const MERMAID_CONFIG = {
   startOnLoad: false,
@@ -30,8 +44,17 @@ function initMermaid() {
 let htmlMermaidCounter = 0
 
 function MdCode({ inline, className, children }) {
-  if (!inline && className === 'language-mermaid') {
+  const lang = className?.replace('language-', '') ?? ''
+  if (!inline && lang === 'mermaid') {
     return <MermaidChart definition={String(children).trim()} />
+  }
+  if (!inline && lang) {
+    return (
+      <SyntaxHighlighter language={lang} style={githubGist} PreTag="div"
+        customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0' }}>
+        {String(children).trim()}
+      </SyntaxHighlighter>
+    )
   }
   return <code className={className}>{children}</code>
 }

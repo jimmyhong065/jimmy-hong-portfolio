@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 import MarkdownContent from '../components/MarkdownContent'
 import TableOfContents from '../components/TableOfContents'
 import RelatedPosts from '../components/RelatedPosts'
+import ScrollToTop from '../components/ScrollToTop'
 import { useReadingProgress } from '../hooks/useReadingProgress'
 import { useActiveHeading } from '../hooks/useActiveHeading'
 import { parseHeadings } from '../lib/toc'
@@ -18,22 +19,57 @@ export default function BlogPost() {
   const isPreview = searchParams.get('preview') === '1'
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [adjacent, setAdjacent] = useState({ prev: null, next: null })
+  const [copied, setCopied] = useState(false)
+  const [seriesPosts, setSeriesPosts] = useState([])
   const progress = useReadingProgress()
 
   useEffect(() => {
-    let query = supabase.from('posts').select('*').eq('slug', slug)
-    if (!isPreview) query = query.eq('published', true)
-    query.single().then(({ data }) => {
+    let q = supabase.from('posts').select('*').eq('slug', slug)
+    if (!isPreview) q = q.eq('published', true)
+    q.single().then(({ data }) => {
       setPost(data)
       setLoading(false)
     })
   }, [slug, isPreview])
+
+  // Prev/next
+  useEffect(() => {
+    if (!post?.published_at) return
+    Promise.all([
+      supabase.from('posts').select('title, slug').eq('published', true)
+        .lt('published_at', post.published_at).order('published_at', { ascending: false }).limit(1),
+      supabase.from('posts').select('title, slug').eq('published', true)
+        .gt('published_at', post.published_at).order('published_at', { ascending: true }).limit(1),
+    ]).then(([prev, next]) => {
+      setAdjacent({ prev: prev.data?.[0] ?? null, next: next.data?.[0] ?? null })
+    })
+  }, [post?.published_at])
+
+  // Series
+  useEffect(() => {
+    if (!post?.tags?.length) return
+    const seriesTag = post.tags.find(t => t.includes('系列'))
+    if (!seriesTag) return
+    supabase.from('posts').select('title, slug, published_at')
+      .eq('published', true).contains('tags', [seriesTag])
+      .order('published_at', { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 1) setSeriesPosts(data)
+      })
+  }, [post?.tags])
 
   const headings = post?.content ? parseHeadings(post.content) : []
   const activeId = useActiveHeading(headings)
   const readingMin = post?.content
     ? Math.max(1, Math.ceil(post.content.replace(/\s/g, '').length / 400))
     : null
+
+  async function copyLink(url) {
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   if (loading) return (
     <>
@@ -70,12 +106,11 @@ export default function BlogPost() {
     url: postUrl,
   }
 
+  const seriesTag = post.tags?.find(t => t.includes('系列'))
+
   return (
     <>
-      <div
-        className="fixed top-0 left-0 h-[3px] bg-gray-900 z-50 transition-none"
-        style={{ width: `${progress}%` }}
-      />
+      <div className="fixed top-0 left-0 h-[3px] bg-gray-900 z-50 transition-none" style={{ width: `${progress}%` }} />
       <Helmet>
         <title>{post.title} | Jimmy Hong</title>
         <meta name="description" content={post.excerpt ?? ''} />
@@ -94,47 +129,95 @@ export default function BlogPost() {
       <main className="max-w-5xl mx-auto px-6 sm:px-12 py-16">
         <div className={headings.length >= 2 ? 'lg:grid lg:grid-cols-[1fr_220px] lg:gap-12' : ''}>
           <article>
+            {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">
               {(post.tags ?? []).map(t => (
                 <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
               ))}
             </div>
+
+            {/* Title + meta */}
             <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
             <p className="text-xs text-gray-400 mb-10 flex items-center gap-3">
               {post.published_at ? new Date(post.published_at).toISOString().slice(0, 10) : ''}
-              {readingMin && (
-                <span className="text-gray-300">·</span>
-              )}
-              {readingMin && (
-                <span>{readingMin} 分鐘閱讀</span>
-              )}
+              {readingMin && <span className="text-gray-300">·</span>}
+              {readingMin && <span>{readingMin} 分鐘閱讀</span>}
             </p>
+
+            {/* Series navigation */}
+            {seriesPosts.length > 1 && (
+              <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <p className="text-xs font-medium text-gray-500 mb-3 uppercase tracking-widest">{seriesTag}</p>
+                <ol className="flex flex-col gap-1.5">
+                  {seriesPosts.map((p, i) => (
+                    <li key={p.slug} className="flex items-baseline gap-2">
+                      <span className="text-xs text-gray-300 w-4 flex-shrink-0">{i + 1}.</span>
+                      {p.slug === slug
+                        ? <span className="text-xs font-medium text-gray-900">{p.title}</span>
+                        : <Link to={`/blog/${p.slug}`} className="text-xs text-gray-500 hover:text-gray-900">{p.title}</Link>
+                      }
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Mobile TOC */}
             {headings.length >= 2 && (
               <div className="lg:hidden mb-8">
                 <TableOfContents headings={headings} activeId={activeId} mobile />
               </div>
             )}
+
+            {/* Content */}
             <MarkdownContent content={post.content} />
-            <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-4">
+
+            {/* Share */}
+            <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-3 flex-wrap">
               <span className="text-xs text-gray-400">分享：</span>
+              <button onClick={() => copyLink(postUrl)}
+                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400 transition-colors">
+                {copied ? '✓ 已複製' : '複製連結'}
+              </button>
               <a href={lineShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
-                Line
-              </a>
+                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">Line</a>
               <a href={linkedInShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
-                LinkedIn
-              </a>
+                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">LinkedIn</a>
               <a href={xShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">
-                X
-              </a>
+                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">X</a>
             </div>
+
+            {/* Related posts */}
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />
+
+            {/* Prev / Next */}
+            {(adjacent.prev || adjacent.next) && (
+              <div className="mt-10 pt-8 border-t border-gray-100 grid grid-cols-2 gap-4">
+                <div>
+                  {adjacent.prev && (
+                    <Link to={`/blog/${adjacent.prev.slug}`} className="block group">
+                      <p className="text-xs text-gray-400 mb-1">← 上一篇</p>
+                      <p className="text-sm text-gray-600 group-hover:text-gray-900 line-clamp-2">{adjacent.prev.title}</p>
+                    </Link>
+                  )}
+                </div>
+                <div className="text-right">
+                  {adjacent.next && (
+                    <Link to={`/blog/${adjacent.next.slug}`} className="block group">
+                      <p className="text-xs text-gray-400 mb-1">下一篇 →</p>
+                      <p className="text-sm text-gray-600 group-hover:text-gray-900 line-clamp-2">{adjacent.next.title}</p>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="mt-8">
               <Link to="/blog" className="text-xs text-gray-400 hover:text-gray-700">← 回文章列表</Link>
             </div>
           </article>
+
+          {/* Desktop TOC */}
           {headings.length >= 2 && (
             <aside className="hidden lg:block">
               <div className="sticky top-24">
@@ -145,6 +228,7 @@ export default function BlogPost() {
         </div>
       </main>
       <Footer />
+      <ScrollToTop />
     </>
   )
 }

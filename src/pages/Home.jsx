@@ -132,7 +132,15 @@ export default function Home() {
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
           <h2 className="text-xl font-bold mb-2">部落格</h2>
           <div>
-            {posts.slice(0, 3).map(p => <BlogRow key={p.id} post={p} />)}
+            {(posts.filter(p => p.tags?.includes('精選')).length > 0
+              ? posts.filter(p => p.tags?.includes('精選')).slice(0, 3)
+              : posts.slice(0, 3)
+            ).map(p => <BlogRow key={p.id} post={p} />)}
+          </div>
+          <div className="mt-6">
+            <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">
+              看全部文章 →
+            </a>
           </div>
         </section>
 
