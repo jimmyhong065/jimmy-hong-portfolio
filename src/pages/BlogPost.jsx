@@ -132,7 +132,10 @@ export default function BlogPost() {
             {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">
               {(post.tags ?? []).map(t => (
-                <span key={t} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
+                <Link key={t} to={`/blog?tag=${encodeURIComponent(t)}`}
+                  className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded hover:bg-gray-200 transition-colors">
+                  {t}
+                </Link>
               ))}
             </div>
 

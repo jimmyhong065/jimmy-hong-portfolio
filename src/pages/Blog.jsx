@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
@@ -9,10 +10,17 @@ import { usePosts } from '../hooks/usePosts'
 const PAGE_SIZE = 12
 
 export default function Blog() {
-  const [selectedTag, setSelectedTag] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const { posts, loading } = usePosts()
+
+  const selectedTag = searchParams.get('tag') || null
+
+  function setSelectedTag(tag) {
+    if (tag) setSearchParams({ tag })
+    else setSearchParams({})
+  }
 
   const allTags = useMemo(() => {
     const set = new Set(posts.flatMap(p => p.tags ?? []))

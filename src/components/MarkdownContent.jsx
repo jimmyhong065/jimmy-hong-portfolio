@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import DOMPurify from 'dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -11,6 +11,7 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash'
 import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml'
 import MermaidChart from './MermaidChart'
 import { slugify } from '../lib/toc'
+import Lightbox from './Lightbox'
 
 SyntaxHighlighter.registerLanguage('javascript', js)
 SyntaxHighlighter.registerLanguage('js', js)
@@ -43,17 +44,36 @@ function initMermaid() {
 
 let htmlMermaidCounter = 0
 
+function CopyButton({ text }) {
+  const [copied, setCopied] = useState(false)
+  async function copy() {
+    await navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+  return (
+    <button onClick={copy}
+      className="absolute top-2 right-2 text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors opacity-0 group-hover:opacity-100">
+      {copied ? '✓' : '複製'}
+    </button>
+  )
+}
+
 function MdCode({ inline, className, children }) {
   const lang = className?.replace('language-', '') ?? ''
   if (!inline && lang === 'mermaid') {
     return <MermaidChart definition={String(children).trim()} />
   }
   if (!inline && lang) {
+    const code = String(children).trim()
     return (
-      <SyntaxHighlighter language={lang} style={githubGist} PreTag="div"
-        customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0' }}>
-        {String(children).trim()}
-      </SyntaxHighlighter>
+      <div className="relative group">
+        <CopyButton text={code} />
+        <SyntaxHighlighter language={lang} style={githubGist} PreTag="div"
+          customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0' }}>
+          {code}
+        </SyntaxHighlighter>
+      </div>
     )
   }
   return <code className={className}>{children}</code>
@@ -64,6 +84,21 @@ function MdH2({ children }) {
 }
 function MdH3({ children }) {
   return <h3 id={slugify(String(children))}>{children}</h3>
+}
+
+function MdImg({ src, alt }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <img src={src} alt={alt ?? ''} loading="lazy"
+        className="cursor-zoom-in rounded-lg hover:opacity-95 transition-opacity"
+        onClick={() => setOpen(true)} />
+      {open && (
+        <Lightbox images={[src]} index={0} onClose={() => setOpen(false)}
+          onPrev={() => {}} onNext={() => {}} />
+      )}
+    </>
+  )
 }
 
 export default function MarkdownContent({ content }) {
@@ -108,7 +143,7 @@ export default function MarkdownContent({ content }) {
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          components={{ code: MdCode, h2: MdH2, h3: MdH3 }}
+          components={{ code: MdCode, h2: MdH2, h3: MdH3, img: MdImg }}
         >
           {content ?? ''}
         </ReactMarkdown>
