@@ -63,7 +63,11 @@ export default function AdminSettings() {
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">頭像圖片網址</label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            {form.avatar_url && (
+              <img src={form.avatar_url} alt="頭像預覽"
+                className="w-10 h-10 rounded-full object-cover border border-gray-200 flex-shrink-0" />
+            )}
             <input name="avatar_url" value={form.avatar_url} onChange={handleChange}
               className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
             <button
@@ -90,7 +94,11 @@ export default function AdminSettings() {
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">攝影站大頭貼網址</label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            {form.photo_avatar_url && (
+              <img src={form.photo_avatar_url} alt="攝影大頭貼預覽"
+                className="w-10 h-10 rounded-full object-cover border border-gray-200 flex-shrink-0" />
+            )}
             <input name="photo_avatar_url" value={form.photo_avatar_url} onChange={handleChange}
               className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
             <button
