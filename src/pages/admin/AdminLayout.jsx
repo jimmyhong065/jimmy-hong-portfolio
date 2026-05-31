@@ -42,6 +42,14 @@ export default function AdminLayout() {
             📷 攝影作品
           </NavLink>
           <NavLink
+            to="/admin/photos"
+            className={({ isActive }) =>
+              `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+            }
+          >
+            🖼 相簿管理
+          </NavLink>
+          <NavLink
             to="/admin/services"
             className={({ isActive }) =>
               `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
