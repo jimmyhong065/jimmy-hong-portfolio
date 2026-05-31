@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import RichTextEditor from '../../components/RichTextEditor'
+import MarkdownEditorPane from '../../components/MarkdownEditorPane'
 
 function slugify(text) {
   return text
@@ -38,6 +39,10 @@ export default function AdminPostEdit() {
   const [saveStatus, setSaveStatus] = useState('idle')
   const [slugError, setSlugError] = useState('')
   const [currentId, setCurrentId] = useState(isNew ? null : id)
+  const [editorMode, setEditorMode] = useState(() => {
+    const saved = localStorage.getItem(`editor-mode-${id}`)
+    return saved || 'wysiwyg'
+  })
   const autoSaveRef = useRef()
   const formRef = useRef(form)
   formRef.current = form
@@ -101,6 +106,28 @@ export default function AdminPostEdit() {
       return updated
     })
     if (name === 'slug') setSlugError('')
+  }
+
+  async function switchMode(newMode) {
+    if (newMode === editorMode) return
+    if (form.content?.trim()) {
+      try {
+        if (newMode === 'markdown' && form.content.trimStart().startsWith('<')) {
+          const { default: TurndownService } = await import('turndown')
+          const td = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' })
+          const md = td.turndown(form.content)
+          setForm(f => ({ ...f, content: md }))
+        } else if (newMode === 'wysiwyg' && !form.content.trimStart().startsWith('<')) {
+          const { marked } = await import('marked')
+          const html = await marked(form.content)
+          setForm(f => ({ ...f, content: html }))
+        }
+      } catch {
+        // conversion failed, just switch mode without converting
+      }
+    }
+    setEditorMode(newMode)
+    localStorage.setItem(`editor-mode-${currentId ?? 'new'}`, newMode)
   }
 
   async function checkSlug(slug, skipId) {
@@ -179,11 +206,30 @@ export default function AdminPostEdit() {
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">內容</label>
-          <RichTextEditor
-            value={form.content}
-            onChange={html => setForm(f => ({ ...f, content: html }))}
-          />
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-xs text-gray-500">內容</label>
+            <div className="flex gap-1">
+              <button type="button" onClick={() => switchMode('wysiwyg')}
+                className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'wysiwyg' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+                視覺編輯
+              </button>
+              <button type="button" onClick={() => switchMode('markdown')}
+                className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'markdown' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+                Markdown
+              </button>
+            </div>
+          </div>
+          {editorMode === 'wysiwyg' ? (
+            <RichTextEditor
+              value={form.content}
+              onChange={html => setForm(f => ({ ...f, content: html }))}
+            />
+          ) : (
+            <MarkdownEditorPane
+              value={form.content}
+              onChange={md => setForm(f => ({ ...f, content: md }))}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-3">
           <label className="flex items-center gap-2 text-sm text-gray-600">
