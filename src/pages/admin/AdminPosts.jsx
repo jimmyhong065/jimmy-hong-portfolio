@@ -120,6 +120,15 @@ export default function AdminPosts() {
     fetchPosts()
   }
 
+  async function handleTogglePublish(post) {
+    const published = !post.published
+    await supabase.from('posts').update({
+      published,
+      published_at: published ? (post.published_at || new Date().toISOString()) : null,
+    }).eq('id', post.id)
+    fetchPosts()
+  }
+
   async function handleClone(post) {
     const { data } = await supabase
       .from('posts')
@@ -204,10 +213,13 @@ export default function AdminPosts() {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  {post.published
-                    ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">已發布</span>
-                    : <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">草稿</span>
-                  }
+                  <button onClick={() => handleTogglePublish(post)}
+                    title="點擊切換發布狀態"
+                    className={`text-xs px-2 py-0.5 rounded cursor-pointer transition-opacity hover:opacity-70 ${
+                      post.published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                    {post.published ? '已發布' : '草稿'}
+                  </button>
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-400">
                   {post.published_at ? new Date(post.published_at).toISOString().slice(0, 10) : '—'}

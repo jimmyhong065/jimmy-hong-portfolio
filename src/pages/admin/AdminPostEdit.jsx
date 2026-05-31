@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import RichTextEditor from '../../components/RichTextEditor'
@@ -11,12 +11,17 @@ function slugify(text) {
     .replace(/\s+/g, '-')
 }
 
+function wordCount(html) {
+  const text = html?.replace(/<[^>]+>/g, '') ?? ''
+  return text.replace(/\s/g, '').length
+}
+
 function SaveStatus({ status }) {
   if (!status || status === 'idle') return null
-  if (status === 'pending') return <span className="text-xs text-gray-400">• 未儲存變更</span>
+  if (status === 'pending') return <span className="text-xs text-gray-400">• 未儲存</span>
   if (status === 'saving') return <span className="text-xs text-gray-400">儲存中…</span>
   if (status === 'error') return <span className="text-xs text-red-400">自動儲存失敗</span>
-  if (status.startsWith('saved:')) return <span className="text-xs text-gray-400">已自動儲存 {status.slice(6)}</span>
+  if (status.startsWith('saved:')) return <span className="text-xs text-gray-400">已儲存 {status.slice(6)}</span>
   return null
 }
 
@@ -27,11 +32,15 @@ export default function AdminPostEdit() {
 
   const [form, setForm] = useState({
     title: '', slug: '', content: '', excerpt: '',
-    tags: '', published: false,
+    tags: '', published: false, published_at: null,
   })
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('idle')
+  const [slugError, setSlugError] = useState('')
+  const [currentId, setCurrentId] = useState(isNew ? null : id)
   const autoSaveRef = useRef()
+  const formRef = useRef(form)
+  formRef.current = form
 
   useEffect(() => {
     if (!isNew) {
@@ -41,32 +50,48 @@ export default function AdminPostEdit() {
     }
   }, [id, isNew])
 
-  // Auto-save: 30s debounce, existing posts only
+  const doSave = useCallback(async (explicitId) => {
+    const f = formRef.current
+    const targetId = explicitId ?? currentId
+    if (!targetId) return
+    const payload = {
+      title: f.title,
+      slug: f.slug,
+      excerpt: f.excerpt,
+      content: f.content,
+      tags: f.tags.split(',').map(t => t.trim()).filter(Boolean),
+    }
+    setSaveStatus('saving')
+    const { error } = await supabase.from('posts').update(payload).eq('id', targetId)
+    if (error) {
+      setSaveStatus('error')
+    } else {
+      const now = new Date()
+      setSaveStatus(`saved:${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`)
+    }
+  }, [currentId])
+
+  // Auto-save 5s debounce
   useEffect(() => {
-    if (isNew) return
+    if (!currentId) return
     setSaveStatus('pending')
     clearTimeout(autoSaveRef.current)
-    autoSaveRef.current = setTimeout(async () => {
-      const payload = {
-        title: form.title,
-        slug: form.slug,
-        excerpt: form.excerpt,
-        content: form.content,
-        tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-      }
-      setSaveStatus('saving')
-      const { error } = await supabase.from('posts').update(payload).eq('id', id)
-      if (error) {
-        setSaveStatus('error')
-      } else {
-        const now = new Date()
-        const hh = now.getHours().toString().padStart(2, '0')
-        const mm = now.getMinutes().toString().padStart(2, '0')
-        setSaveStatus(`saved:${hh}:${mm}`)
-      }
-    }, 30000)
+    autoSaveRef.current = setTimeout(() => doSave(), 5000)
     return () => clearTimeout(autoSaveRef.current)
-  }, [form, id, isNew])
+  }, [form, currentId, doSave])
+
+  // Ctrl+S
+  useEffect(() => {
+    function onKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault()
+        clearTimeout(autoSaveRef.current)
+        doSave()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [doSave])
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target
@@ -75,29 +100,61 @@ export default function AdminPostEdit() {
       if (name === 'title' && isNew) updated.slug = slugify(value)
       return updated
     })
+    if (name === 'slug') setSlugError('')
+  }
+
+  async function checkSlug(slug, skipId) {
+    const { data } = await supabase.from('posts').select('id').eq('slug', slug)
+    const conflict = (data ?? []).filter(p => p.id !== skipId)
+    return conflict.length > 0
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
+    setSlugError('')
+
+    const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean)
     const payload = {
       ...form,
-      tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+      tags,
       published_at: form.published ? (form.published_at || new Date().toISOString()) : null,
     }
+
     if (isNew) {
-      await supabase.from('posts').insert(payload)
+      const conflict = await checkSlug(form.slug, null)
+      if (conflict) {
+        setSlugError('此 slug 已被使用，請修改')
+        setSaving(false)
+        return
+      }
+      const { data, error } = await supabase.from('posts').insert(payload).select('id').single()
+      if (error) { setSaving(false); return }
+      setCurrentId(data.id)
+      navigate(`/admin/posts/${data.id}`, { replace: true })
     } else {
-      await supabase.from('posts').update(payload).eq('id', id)
+      const conflict = await checkSlug(form.slug, currentId)
+      if (conflict) {
+        setSlugError('此 slug 已被使用，請修改')
+        setSaving(false)
+        return
+      }
+      await supabase.from('posts').update(payload).eq('id', currentId)
+      setSaveStatus(`saved:${new Date().getHours().toString().padStart(2,'0')}:${new Date().getMinutes().toString().padStart(2,'0')}`)
     }
-    navigate('/admin/posts')
+    setSaving(false)
   }
 
+  const wc = wordCount(form.content)
+
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-4xl">
       <div className="flex justify-between items-center mb-7">
         <h1 className="text-lg font-bold">{isNew ? '新增文章' : '編輯文章'}</h1>
-        <SaveStatus status={saveStatus} />
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-gray-300">{wc} 字</span>
+          <SaveStatus status={saveStatus} />
+        </div>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
@@ -108,7 +165,8 @@ export default function AdminPostEdit() {
         <div>
           <label className="text-xs text-gray-500 mb-1 block">Slug（URL）</label>
           <input name="slug" value={form.slug} onChange={handleChange} required
-            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+            className={`w-full text-sm border rounded-lg px-4 py-2.5 focus:outline-none ${slugError ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-gray-400'}`} />
+          {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">摘要</label>
@@ -145,12 +203,19 @@ export default function AdminPostEdit() {
             </div>
           )}
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <button type="submit" disabled={saving}
             className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
-            {saving ? '儲存中…' : '儲存'}
+            {saving ? '儲存中…' : isNew ? '建立文章' : '儲存'}
           </button>
-          {!isNew && (
+          {currentId && (
+            <button type="button"
+              onClick={() => { clearTimeout(autoSaveRef.current); doSave() }}
+              className="text-sm border border-gray-200 px-4 py-2.5 rounded-lg hover:border-gray-400 text-gray-500">
+              ⌘S 立即儲存
+            </button>
+          )}
+          {currentId && (
             <button type="button"
               onClick={() => window.open(`/blog/${form.slug}?preview=1`, '_blank')}
               className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
@@ -159,9 +224,12 @@ export default function AdminPostEdit() {
           )}
           <button type="button" onClick={() => navigate('/admin/posts')}
             className="text-sm border border-gray-200 px-6 py-2.5 rounded-lg hover:border-gray-400">
-            取消
+            離開
           </button>
         </div>
+        {currentId && (
+          <p className="text-xs text-gray-300">Ctrl/⌘ + S 快速儲存</p>
+        )}
       </form>
     </div>
   )
