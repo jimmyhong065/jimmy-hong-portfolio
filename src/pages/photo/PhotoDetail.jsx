@@ -4,12 +4,19 @@ import PhotoNav from '../../components/PhotoNav'
 import Footer from '../../components/Footer'
 import SEOHead from '../../components/SEOHead'
 import MarkdownContent from '../../components/MarkdownContent'
+import Lightbox from '../../components/Lightbox'
 import { supabase } from '../../lib/supabase'
 
 export default function PhotoDetail() {
   const { id } = useParams()
   const [project, setProject] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+
+  function openLightbox(i) { setLightboxIndex(i) }
+  function closeLightbox() { setLightboxIndex(null) }
+  function prevImage() { setLightboxIndex(i => (i - 1 + (project?.images?.length ?? 1)) % (project?.images?.length ?? 1)) }
+  function nextImage() { setLightboxIndex(i => (i + 1) % (project?.images?.length ?? 1)) }
 
   useEffect(() => {
     supabase
@@ -41,7 +48,7 @@ export default function PhotoDetail() {
 
   return (
     <>
-      <SEOHead title={`${project.title} | r.bing recording`} description={project.description} />
+      <SEOHead title={`${project.title} | r.bing recording`} description={project.description} favicon="/favicon-camera.svg" />
       <PhotoNav />
       <main className="max-w-4xl mx-auto px-4 md:px-8 py-12">
         <div className="flex gap-2 flex-wrap mb-3">
@@ -54,16 +61,33 @@ export default function PhotoDetail() {
         {/* Masonry image gallery */}
         {(project.images ?? []).length > 0 && (
           <div className="columns-1 md:columns-2 gap-4 [&>*]:break-inside-avoid [&>*]:mb-4 mb-12">
-            {project.images.map((url) => (
-              <img
-                key={url}
-                src={url}
-                alt={project.title}
-                loading="lazy"
-                className="w-full h-auto rounded-sm"
-              />
+            {project.images.map((url, i) => (
+              <div key={typeof url === 'string' ? url : url.url + i}
+                className="relative select-none cursor-zoom-in"
+                onClick={() => openLightbox(i)}
+              >
+                <img
+                  src={typeof url === 'string' ? url : url.url}
+                  alt={project.title}
+                  loading="lazy"
+                  draggable="false"
+                  onContextMenu={e => e.preventDefault()}
+                  className="w-full h-auto rounded-sm pointer-events-none hover:opacity-90 transition-opacity"
+                />
+                <div className="absolute inset-0" onContextMenu={e => e.preventDefault()} />
+              </div>
             ))}
           </div>
+        )}
+
+        {lightboxIndex !== null && (
+          <Lightbox
+            images={project.images}
+            index={lightboxIndex}
+            onClose={closeLightbox}
+            onPrev={prevImage}
+            onNext={nextImage}
+          />
         )}
 
         <MarkdownContent content={project.content} />
