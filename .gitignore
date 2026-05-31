@@ -11,3 +11,11 @@ dist/
 mockup*.html
 mockup*.png
 alan-cheng-full.png
+i-totem*.png
+i-totem*.jpg
+
+# Local photo source files (uploaded to R2, no need in git)
+docs/pictures/
+*.mjs
+generate-article.sh
+data/
