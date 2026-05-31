@@ -3,11 +3,12 @@ import { supabase } from '../../lib/supabase'
 import { useUpload } from '../../hooks/useUpload'
 
 export default function AdminSettings() {
-  const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '' })
+  const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '', photo_avatar_url: '' })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
   const avatarInputRef = useRef(null)
+  const photoAvatarInputRef = useRef(null)
   const { uploading, uploadError, uploadOne } = useUpload()
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function AdminSettings() {
       github_url: form.github_url,
       linkedin_url: form.linkedin_url,
       avatar_url: form.avatar_url,
+      photo_avatar_url: form.photo_avatar_url,
     }).eq('id', 1)
     setSaving(false)
     if (saveError) {
@@ -85,6 +87,32 @@ export default function AdminSettings() {
             />
           </div>
           {uploadError && <p className="text-xs text-red-500 mt-1">{uploadError}</p>}
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">攝影站大頭貼網址</label>
+          <div className="flex gap-2">
+            <input name="photo_avatar_url" value={form.photo_avatar_url} onChange={handleChange}
+              className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => photoAvatarInputRef.current.click()}
+              className="text-sm border border-gray-200 px-4 py-2.5 rounded-lg hover:border-gray-400 disabled:opacity-50 whitespace-nowrap"
+            >
+              {uploading ? '上傳中…' : '上傳'}
+            </button>
+            <input
+              ref={photoAvatarInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files[0]
+                if (file) uploadOne(file, url => setForm(f => ({ ...f, photo_avatar_url: url })))
+                e.target.value = ''
+              }}
+            />
+          </div>
         </div>
         {success && <p className="text-sm text-green-600">已儲存</p>}
         {error && <p className="text-sm text-red-500">{error}</p>}

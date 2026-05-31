@@ -1,0 +1,230 @@
+{
+  "main": {
+    "id": "493d5b952cbf736f",
+    "type": "split",
+    "children": [
+      {
+        "id": "d813c48c9f548ba1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0d2cbfa7ae72d731",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "drafts/proxyman-mitm-principle.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "proxyman-mitm-principle"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "847080a67de3e790",
+    "type": "split",
+    "children": [
+      {
+        "id": "f5e73045af4a966a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "12172ee8ed19979e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "檔案瀏覽器"
+            }
+          },
+          {
+            "id": "6e44271531118c23",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜尋"
+            }
+          },
+          {
+            "id": "b1ab4892fdd8338d",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "書籤"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1d3d6e615a097fbd",
+    "type": "split",
+    "children": [
+      {
+        "id": "654a1ddeadbe824c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "17d6b251aadadd3c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "drafts/proxyman-for-qa.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "proxyman-for-qa 的反向連結"
+            }
+          },
+          {
+            "id": "4d1c5111dfe20d81",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "drafts/proxyman-for-qa.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "proxyman-for-qa 的對外連結"
+            }
+          },
+          {
+            "id": "981633f7c491b948",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "標籤"
+            }
+          },
+          {
+            "id": "78dc6a296483d243",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "所有屬性"
+            }
+          },
+          {
+            "id": "40339ce019e4b305",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "drafts/proxyman-for-qa.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "proxyman-for-qa 的大綱"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:開啟快速切換": false,
+      "graph:查看關聯圖": false,
+      "canvas:建立新畫布": false,
+      "daily-notes:開啟今天的每日筆記": false,
+      "templates:插入模板": false,
+      "command-palette:開啟命令面板": false,
+      "bases:建立新的 base": false
+    }
+  },
+  "active": "0d2cbfa7ae72d731",
+  "lastOpenFiles": [
+    "pictures/時尚西裝寫真/冬夜x黑_9.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_8.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_7.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_6.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_5.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_4.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_3.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_27.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_26.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_23.jpg",
+    "pictures/時尚西裝寫真/冬夜x黑_25.jpg",
+    "pictures/時尚西裝寫真",
+    "pictures/糖果女孩寫真",
+    "pictures/閨蜜寫真",
+    "pictures/時尚寫真",
+    "pictures",
+    "superpowers/plans/2026-05-30-blog-feature-expansion.md",
+    "superpowers/specs/2026-05-30-blog-feature-expansion-design.md",
+    "drafts/qa-communication-skills.md",
+    "drafts/bug-report-clarity.md",
+    "roadmap.md",
+    "superpowers/plans/2026-05-30-admin-posts-enhancements.md",
+    "superpowers/specs/2026-05-30-admin-posts-enhancements-design.md",
+    "superpowers/plans/2026-05-30-mermaid-diagrams.md",
+    "superpowers/specs/2026-05-30-mermaid-diagrams-design.md",
+    "superpowers/plans/2026-05-30-rich-text-editor.md",
+    "superpowers/specs/2026-05-30-rich-text-editor-design.md",
+    "drafts/proxyman-for-qa.md",
+    "drafts/slack-command-for-qa.md",
+    "drafts/qa-brain.md",
+    "drafts/qa-portal.md",
+    "drafts/visual-regression-testing.md",
+    "drafts/when-to-ship.md",
+    "drafts/ai-test-case-design.md",
+    "drafts/playwright-vs-appium.md",
+    "drafts/database-migration-testing.md",
+    "drafts/push-notification-testing.md",
+    "drafts/cache-testing.md",
+    "drafts/deep-link-testing.md",
+    "drafts/qa-from-zero-startup.md",
+    "drafts/opentelemetry-for-qa.md"
+  ]
+}

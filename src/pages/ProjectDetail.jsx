@@ -23,14 +23,14 @@ export default function ProjectDetail() {
       })
   }, [id])
 
-  if (loading) return <><Nav /><div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">載入中…</div><Footer /></>
-  if (!project) return <><Nav /><div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">找不到此作品。</div><Footer /></>
+  if (loading) return <><Nav /><div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">載入中…</div><Footer /></>
+  if (!project) return <><Nav /><div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">找不到此作品。</div><Footer /></>
 
   return (
     <>
       <SEOHead title={project.title} description={project.description} />
       <Nav />
-      <main className="max-w-3xl mx-auto px-12 py-16">
+      <main className="max-w-3xl mx-auto px-4 md:px-12 py-16">
         {(project.images?.length > 0) ? (
           <div className="mb-8 flex flex-col gap-4">
             {project.images.map((img, i) => (

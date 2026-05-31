@@ -35,7 +35,7 @@ export default function Services() {
         description="QA 測試顧問諮詢、自動化導入、攝影接案服務。歡迎洽談合作。"
       />
       <Nav />
-      <main className="max-w-5xl mx-auto px-12 py-16">
+      <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">Services</p>
         <h1 className="text-xl font-bold mb-2">合作方式</h1>
         <p className="text-sm text-gray-500 mb-14">

@@ -4,7 +4,7 @@ export default function ProjectCard({ project }) {
   return (
     <Link to={`/projects/${project.id}`} className="block border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
       {project.cover_url ? (
-        <img src={project.cover_url} alt={project.title} className="w-full h-40 object-cover" />
+        <img src={project.cover_url} alt={project.title} loading="lazy" className="w-full h-40 object-cover" />
       ) : (
         <div className="w-full h-40 bg-gray-50 flex items-center justify-center text-gray-300 text-4xl">🗂</div>
       )}

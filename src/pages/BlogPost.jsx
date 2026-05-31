@@ -39,24 +39,36 @@ export default function BlogPost() {
     <>
       <div className="fixed top-0 left-0 h-[3px] bg-gray-900 z-50" style={{ width: `${progress}%` }} />
       <Nav />
-      <div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">載入中…</div>
+      <div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">載入中…</div>
       <Footer />
     </>
   )
   if (!post) return (
     <>
       <Nav />
-      <div className="max-w-3xl mx-auto px-12 py-16 text-sm text-gray-400">找不到此文章。</div>
+      <div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">找不到此文章。</div>
       <Footer />
     </>
   )
 
-  const postUrl = `${window.location.origin}/blog/${slug}`
+  const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+  const postUrl = `${SITE_URL}/blog/${slug}`
   const shareText = encodeURIComponent(post.title)
   const shareUrl = encodeURIComponent(postUrl)
   const linkedInShare = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`
   const xShare = `https://x.com/intent/tweet?text=${shareText}&url=${shareUrl}`
   const lineShare = `https://social-plugins.line.me/lineit/share?url=${shareUrl}`
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt ?? '',
+    datePublished: post.published_at,
+    author: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
+    publisher: { '@type': 'Person', name: 'Jimmy Hong' },
+    url: postUrl,
+  }
 
   return (
     <>
@@ -67,10 +79,16 @@ export default function BlogPost() {
       <Helmet>
         <title>{post.title} | Jimmy Hong</title>
         <meta name="description" content={post.excerpt ?? ''} />
+        <link rel="canonical" href={postUrl} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt ?? ''} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={postUrl} />
+        <meta property="article:published_time" content={post.published_at} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt ?? ''} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <Nav />
       <main className="max-w-5xl mx-auto px-6 sm:px-12 py-16">

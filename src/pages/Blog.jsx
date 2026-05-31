@@ -39,7 +39,7 @@ export default function Blog() {
     <>
       <SEOHead title="部落格" description="Jimmy Hong 關於 QA 流程、測試策略、自動化的技術文章。" />
       <Nav />
-      <main className="max-w-5xl mx-auto px-12 py-16">
+      <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">Blog</p>
         <h1 className="text-xl font-bold mb-8">文章</h1>
         <input

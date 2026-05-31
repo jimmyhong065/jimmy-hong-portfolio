@@ -20,7 +20,7 @@ export default function Home() {
       <Nav />
       <main>
         {/* Hero */}
-        <div className="max-w-5xl mx-auto px-12 py-20 grid grid-cols-2 gap-16 items-center">
+        <div className="max-w-5xl mx-auto px-4 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
             <div className="flex gap-7 items-start">
               <div className="w-24 h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2">
@@ -88,7 +88,7 @@ export default function Home() {
         <hr className="border-gray-100 mx-12" />
 
         {/* Dual identity */}
-        <section className="max-w-5xl mx-auto px-12 py-16">
+        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">兩個身份，一個視角</p>
           <h2 className="text-xl font-bold mb-2">用 QA 的嚴謹對待細節，<br className="hidden sm:block" />用攝影的眼光捕捉瞬間</h2>
           <p className="text-sm text-gray-500 mb-10">工程師的理性與攝影師的感性，在同一個人身上找到平衡。</p>
@@ -117,7 +117,7 @@ export default function Home() {
         <hr className="border-gray-100 mx-12" />
 
         {/* Featured projects */}
-        <section className="max-w-5xl mx-auto px-12 py-16">
+        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
           <h2 className="text-xl font-bold mb-8">QA 作品集</h2>
           <div className="grid grid-cols-3 gap-5">
@@ -128,7 +128,7 @@ export default function Home() {
         <hr className="border-gray-100 mx-12" />
 
         {/* Recent posts */}
-        <section className="max-w-5xl mx-auto px-12 py-16">
+        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
           <h2 className="text-xl font-bold mb-2">部落格</h2>
           <div>
@@ -139,7 +139,7 @@ export default function Home() {
         <hr className="border-gray-100 mx-12" />
 
         {/* Services */}
-        <section className="max-w-5xl mx-auto px-12 py-16">
+        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">合作方式</p>
           <h2 className="text-xl font-bold mb-8">Services</h2>
           <div className="grid grid-cols-3 gap-4">
