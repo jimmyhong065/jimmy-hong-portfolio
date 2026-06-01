@@ -19,3 +19,9 @@ docs/pictures/
 *.mjs
 generate-article.sh
 data/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
