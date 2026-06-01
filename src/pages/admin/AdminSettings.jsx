@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 import { useUpload } from '../../hooks/useUpload'
 
 export default function AdminSettings() {
-  const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '', photo_avatar_url: '', seo_keywords: '', seo_description: '' })
+  const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '', photo_avatar_url: '', seo_keywords: '', seo_description: '', seo_photo_keywords: '', seo_photo_description: '' })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
@@ -35,6 +35,8 @@ export default function AdminSettings() {
       photo_avatar_url: form.photo_avatar_url,
       seo_keywords: form.seo_keywords,
       seo_description: form.seo_description,
+      seo_photo_keywords: form.seo_photo_keywords,
+      seo_photo_description: form.seo_photo_description,
     }).eq('id', 1)
     setSaving(false)
     if (saveError) {
@@ -125,7 +127,7 @@ export default function AdminSettings() {
           </div>
         </div>
         <hr className="border-gray-100" />
-        <p className="text-xs tracking-widest text-gray-400 uppercase -mb-2">SEO 設定</p>
+        <p className="text-xs tracking-widest text-gray-400 uppercase -mb-2">QA 網站 SEO</p>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">首頁 Meta Description</label>
           <textarea name="seo_description" value={form.seo_description} onChange={handleChange} rows={2}
@@ -133,9 +135,24 @@ export default function AdminSettings() {
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">SEO 關鍵字（逗號分隔）</label>
+          <label className="text-xs text-gray-500 mb-1 block">關鍵字（逗號分隔）</label>
           <input name="seo_keywords" value={form.seo_keywords} onChange={handleChange}
             placeholder="QA engineer, 測試自動化, Appium, CI/CD"
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+          <p className="text-xs text-gray-400 mt-1">用於 &lt;meta name="keywords"&gt;，以逗號分隔</p>
+        </div>
+        <hr className="border-gray-100" />
+        <p className="text-xs tracking-widest text-gray-400 uppercase -mb-2">攝影網站 SEO</p>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">攝影站 Meta Description</label>
+          <textarea name="seo_photo_description" value={form.seo_photo_description} onChange={handleChange} rows={2}
+            placeholder="留空則使用預設描述"
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">攝影站關鍵字（逗號分隔）</label>
+          <input name="seo_photo_keywords" value={form.seo_photo_keywords} onChange={handleChange}
+            placeholder="人像攝影, 台灣攝影師, 品牌攝影, r.bing recording"
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
           <p className="text-xs text-gray-400 mt-1">用於 &lt;meta name="keywords"&gt;，以逗號分隔</p>
         </div>
