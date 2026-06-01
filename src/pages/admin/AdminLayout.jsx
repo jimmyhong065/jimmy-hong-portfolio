@@ -50,6 +50,14 @@ export default function AdminLayout() {
             🖼 相簿管理
           </NavLink>
           <NavLink
+            to="/admin/announcements"
+            className={({ isActive }) =>
+              `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+            }
+          >
+            📢 最新消息
+          </NavLink>
+          <NavLink
             to="/admin/services"
             className={({ isActive }) =>
               `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`

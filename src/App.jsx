@@ -20,6 +20,8 @@ import AdminPhotoProjects from './pages/admin/AdminPhotoProjects'
 import AdminPhotoProjectEdit from './pages/admin/AdminPhotoProjectEdit'
 import AdminServices from './pages/admin/AdminServices'
 import AdminServiceEdit from './pages/admin/AdminServiceEdit'
+import AdminAnnouncements from './pages/admin/AdminAnnouncements'
+import AdminAnnouncementEdit from './pages/admin/AdminAnnouncementEdit'
 import AdminPhotos from './pages/admin/AdminPhotos'
 import Services from './pages/Services'
 import NotFound from './pages/NotFound'
@@ -54,6 +56,8 @@ export default function App() {
             <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
             <Route path="services" element={<AdminServices />} />
             <Route path="services/:id" element={<AdminServiceEdit />} />
+            <Route path="announcements" element={<AdminAnnouncements />} />
+            <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
             <Route path="photos" element={<AdminPhotos />} />
           </Route>
           <Route path="*" element={<NotFound />} />
