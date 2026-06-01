@@ -32,23 +32,22 @@ describe('Nav', () => {
 
   it('marks /projects tab active when on projects route', () => {
     renderNav('/projects')
-    // The tab bar link (second instance) should have text-gray-900
     const tabLinks = screen.getAllByText('作品集')
     const tabBarLink = tabLinks[1].closest('a')
-    expect(tabBarLink.className).toContain('text-gray-900')
+    expect(tabBarLink).toHaveAttribute('aria-current', 'page')
   })
 
   it('marks /projects tab active for nested routes like /projects/1', () => {
     renderNav('/projects/1')
     const tabLinks = screen.getAllByText('作品集')
     const tabBarLink = tabLinks[1].closest('a')
-    expect(tabBarLink.className).toContain('text-gray-900')
+    expect(tabBarLink).toHaveAttribute('aria-current', 'page')
   })
 
   it('inactive tabs use text-gray-400', () => {
     renderNav('/projects')
     const blogLinks = screen.getAllByText('部落格')
     const tabBarLink = blogLinks[1].closest('a')
-    expect(tabBarLink.className).toContain('text-gray-400')
+    expect(tabBarLink).not.toHaveAttribute('aria-current')
   })
 })
