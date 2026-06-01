@@ -8,36 +8,43 @@ vi.mock('../../hooks/useSettings', () => ({
 }))
 
 describe('PhotoNav', () => {
-  function renderNav() {
+  function renderNav(initialPath = '/photo') {
     return render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[initialPath]}>
         <PhotoNav />
       </MemoryRouter>
     )
   }
 
-  it('renders brand name centered', () => {
+  it('renders brand name', () => {
     renderNav()
     expect(screen.getByText('r.bing recording')).toBeInTheDocument()
   })
 
-  it('renders 作品集 link on left', () => {
+  it('renders 作品集 in both desktop nav and tab bar', () => {
     renderNav()
-    expect(screen.getByText('作品集')).toBeInTheDocument()
+    expect(screen.getAllByText('作品集')).toHaveLength(2)
   })
 
-  it('renders Instagram link', () => {
+  it('renders Instagram in both desktop nav and tab bar', () => {
     renderNav()
-    expect(screen.getByText('Instagram')).toBeInTheDocument()
+    expect(screen.getAllByText('Instagram')).toHaveLength(2)
   })
 
-  it('renders QA 網站 link on right', () => {
+  it('renders QA 網站 in both desktop nav and tab bar', () => {
     renderNav()
-    expect(screen.getByText('QA 網站')).toBeInTheDocument()
+    expect(screen.getAllByText('QA 網站')).toHaveLength(2)
   })
 
-  it('renders 聯絡我 when email is set', () => {
+  it('renders 聯絡我 in both desktop nav and tab bar when email is set', () => {
     renderNav()
-    expect(screen.getByText('聯絡我')).toBeInTheDocument()
+    expect(screen.getAllByText('聯絡我')).toHaveLength(2)
+  })
+
+  it('marks 作品集 tab active when on /photo route', () => {
+    renderNav('/photo')
+    const links = screen.getAllByText('作品集')
+    const tabBarLink = links[1].closest('a')
+    expect(tabBarLink).toHaveAttribute('aria-current', 'page')
   })
 })
