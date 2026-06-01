@@ -54,7 +54,7 @@ export default function PhotoNav() {
         className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <ul className="grid grid-cols-4 list-none m-0 p-0">
+        <ul className={`grid ${settings.email ? 'grid-cols-4' : 'grid-cols-3'} list-none m-0 p-0`}>
           {/* 作品集 */}
           <li>
             <Link
