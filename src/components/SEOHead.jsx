@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async'
 const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/avatar.jpg`
 
-export default function SEOHead({ title, description, ogImage, favicon, canonical, type = 'website', publishedAt }) {
+export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, type = 'website', publishedAt }) {
   const siteTitle = title ? `${title} | Jimmy Hong` : 'Jimmy Hong — QA Engineer'
   const metaDesc = description ?? '專注測試流程設計與品質架構的 QA Engineer。'
   const image = ogImage ?? DEFAULT_OG_IMAGE
@@ -13,6 +13,7 @@ export default function SEOHead({ title, description, ogImage, favicon, canonica
     <Helmet>
       <title>{siteTitle}</title>
       <meta name="description" content={metaDesc} />
+      {keywords && <meta name="keywords" content={keywords} />}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 
       {/* Open Graph */}

@@ -18,7 +18,10 @@ export default function Home() {
 
   return (
     <>
-      <SEOHead />
+      <SEOHead
+        description={settings.seo_description || undefined}
+        keywords={settings.seo_keywords || undefined}
+      />
       <Nav />
       <main>
         {/* Hero */}
