@@ -88,17 +88,22 @@ export default function Home() {
         </div>
 
         {announcements.length > 0 && (
-          <div className="max-w-5xl mx-auto px-4 md:px-12 pb-12">
-            <div className="flex flex-col gap-3">
-              {announcements.slice(0, 3).map(a => (
-                <div key={a.id} className="flex gap-3 items-start bg-gray-50 border border-gray-100 rounded-xl px-5 py-4">
-                  <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-gray-400" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{a.title}</p>
-                    {a.content && <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{a.content}</p>}
-                  </div>
-                </div>
-              ))}
+          <div className="border-t border-b border-gray-100 overflow-hidden flex items-stretch">
+            {/* 固定標籤 */}
+            <div className="flex-shrink-0 flex items-center gap-2 px-5 py-3 bg-gray-900 text-white z-10">
+              <span className="text-[10px] font-semibold tracking-widest uppercase">News</span>
+            </div>
+            {/* 跑馬燈區域 */}
+            <div className="flex-1 overflow-hidden relative">
+              <div className="animate-marquee flex items-center whitespace-nowrap">
+                {/* 內容 ×2 讓滾動無縫 */}
+                {[...announcements, ...announcements].map((a, i) => (
+                  <span key={i} className="inline-flex items-center gap-4 px-8 py-3 text-sm text-gray-700">
+                    {a.title}
+                    <span className="text-gray-300 select-none">·</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         )}
