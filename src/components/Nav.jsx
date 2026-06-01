@@ -88,6 +88,7 @@ export default function Nav() {
               <li key={tab.to}>
                 <Link
                   to={tab.to}
+                  aria-current={active ? 'page' : undefined}
                   className={`flex flex-col items-center py-2 gap-0.5 text-[10px] leading-none ${active ? 'text-gray-900' : 'text-gray-400'}`}
                 >
                   {tab.icon}
