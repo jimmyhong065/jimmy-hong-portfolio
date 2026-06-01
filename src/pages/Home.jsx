@@ -120,7 +120,7 @@ export default function Home() {
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
           <h2 className="text-xl font-bold mb-8">QA 作品集</h2>
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {projects.slice(0, 3).map(p => <ProjectCard key={p.id} project={p} />)}
           </div>
         </section>
@@ -150,7 +150,7 @@ export default function Home() {
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">合作方式</p>
           <h2 className="text-xl font-bold mb-8">Services</h2>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {services.map(s => (
               <div key={s.id} className="border border-gray-200 rounded-xl p-6">
                 <h3 className="text-sm font-semibold mb-2">{s.title}</h3>

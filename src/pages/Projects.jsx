@@ -30,7 +30,7 @@ export default function Projects() {
         {loading ? (
           <p className="text-sm text-gray-400">載入中…</p>
         ) : (
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {filtered.map(p => <ProjectCard key={p.id} project={p} />)}
           </div>
         )}
