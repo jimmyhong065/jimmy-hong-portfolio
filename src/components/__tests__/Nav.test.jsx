@@ -1,0 +1,54 @@
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
+import Nav from '../Nav'
+
+vi.mock('../../hooks/useSettings', () => ({
+  useSettings: () => ({ settings: { email: 'test@example.com' } }),
+}))
+
+function renderNav(initialPath = '/') {
+  return render(
+    <MemoryRouter initialEntries={[initialPath]}>
+      <Nav />
+    </MemoryRouter>
+  )
+}
+
+describe('Nav', () => {
+  it('renders brand link', () => {
+    renderNav()
+    expect(screen.getByText('Jimmy Hong')).toBeInTheDocument()
+  })
+
+  it('renders all 4 tab labels in bottom bar', () => {
+    renderNav()
+    // Each label appears twice: once in hidden desktop nav, once in tab bar
+    expect(screen.getAllByText('作品集')).toHaveLength(2)
+    expect(screen.getAllByText('部落格')).toHaveLength(2)
+    expect(screen.getAllByText('合作方式')).toHaveLength(2)
+    expect(screen.getAllByText('關於我')).toHaveLength(2)
+  })
+
+  it('marks /projects tab active when on projects route', () => {
+    renderNav('/projects')
+    // The tab bar link (second instance) should have text-gray-900
+    const tabLinks = screen.getAllByText('作品集')
+    const tabBarLink = tabLinks[1].closest('a')
+    expect(tabBarLink.className).toContain('text-gray-900')
+  })
+
+  it('marks /projects tab active for nested routes like /projects/1', () => {
+    renderNav('/projects/1')
+    const tabLinks = screen.getAllByText('作品集')
+    const tabBarLink = tabLinks[1].closest('a')
+    expect(tabBarLink.className).toContain('text-gray-900')
+  })
+
+  it('inactive tabs use text-gray-400', () => {
+    renderNav('/projects')
+    const blogLinks = screen.getAllByText('部落格')
+    const tabBarLink = blogLinks[1].closest('a')
+    expect(tabBarLink.className).toContain('text-gray-400')
+  })
+})
