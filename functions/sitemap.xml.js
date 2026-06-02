@@ -12,11 +12,13 @@ const STATIC_PAGES = [
 ]
 
 export async function onRequest() {
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`,
-    { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
-  )
-  const posts = await res.json()
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+
+  const [postsRes, photosRes] = await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers }),
+    fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers }),
+  ])
+  const [posts, photos] = await Promise.all([postsRes.json(), photosRes.json()])
 
   const staticUrls = STATIC_PAGES.map(p => `
   <url>
@@ -33,8 +35,15 @@ export async function onRequest() {
     <priority>0.6</priority>
   </url>`).join('')
 
+  const photoUrls = Array.isArray(photos) ? photos.map(p => `
+  <url>
+    <loc>${SITE_URL}/photo/${p.id}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>`).join('') : ''
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}${photoUrls}
 </urlset>`
 
   return new Response(xml, {
