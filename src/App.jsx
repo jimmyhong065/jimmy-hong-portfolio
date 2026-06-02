@@ -23,7 +23,11 @@ import AdminServiceEdit from './pages/admin/AdminServiceEdit'
 import AdminAnnouncements from './pages/admin/AdminAnnouncements'
 import AdminAnnouncementEdit from './pages/admin/AdminAnnouncementEdit'
 import AdminPhotos from './pages/admin/AdminPhotos'
+import AdminFAQs from './pages/admin/AdminFAQs'
+import AdminFAQEdit from './pages/admin/AdminFAQEdit'
+import AdminSubmissions from './pages/admin/AdminSubmissions'
 import Services from './pages/Services'
+import FAQ from './pages/FAQ'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -38,6 +42,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/login" element={<Login />} />
           <Route path="/photo" element={<PhotoHome />} />
           <Route path="/photo/:id" element={<PhotoDetail />} />
@@ -59,6 +64,9 @@ export default function App() {
             <Route path="announcements" element={<AdminAnnouncements />} />
             <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
             <Route path="photos" element={<AdminPhotos />} />
+            <Route path="faqs" element={<AdminFAQs />} />
+            <Route path="faqs/:id" element={<AdminFAQEdit />} />
+            <Route path="submissions" element={<AdminSubmissions />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

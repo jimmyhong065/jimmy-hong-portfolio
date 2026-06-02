@@ -66,6 +66,22 @@ export default function AdminLayout() {
             🤝 合作方式
           </NavLink>
           <NavLink
+            to="/admin/faqs"
+            className={({ isActive }) =>
+              `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+            }
+          >
+            ❓ FAQ 管理
+          </NavLink>
+          <NavLink
+            to="/admin/submissions"
+            className={({ isActive }) =>
+              `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+            }
+          >
+            📬 提問收件匣
+          </NavLink>
+          <NavLink
             to="/admin/settings"
             className={({ isActive }) =>
               `text-sm px-3 py-2 rounded-md ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
