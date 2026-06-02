@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import PhotoNav from '../../components/PhotoNav'
-import Footer from '../../components/Footer'
+import PhotoFooter from '../../components/PhotoFooter'
 import SEOHead from '../../components/SEOHead'
 import PhotoCard from '../../components/PhotoCard'
 import { usePhotoProjects } from '../../hooks/usePhotoProjects'
@@ -192,7 +192,7 @@ export default function PhotoHome() {
 
       </div>
 
-      <Footer />
+      <PhotoFooter />
     </>
   )
 }

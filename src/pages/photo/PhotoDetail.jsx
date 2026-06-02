@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import PhotoNav from '../../components/PhotoNav'
-import Footer from '../../components/Footer'
+import PhotoFooter from '../../components/PhotoFooter'
 import SEOHead from '../../components/SEOHead'
 import MarkdownContent from '../../components/MarkdownContent'
 import Lightbox from '../../components/Lightbox'
@@ -34,7 +34,7 @@ export default function PhotoDetail() {
     <>
       <PhotoNav />
       <div className="max-w-4xl mx-auto px-8 py-16 text-sm text-gray-400">載入中…</div>
-      <Footer />
+      <PhotoFooter />
     </>
   )
 
@@ -42,7 +42,7 @@ export default function PhotoDetail() {
     <>
       <PhotoNav />
       <div className="max-w-4xl mx-auto px-8 py-16 text-sm text-gray-400">找不到此作品。</div>
-      <Footer />
+      <PhotoFooter />
     </>
   )
 
@@ -96,7 +96,7 @@ export default function PhotoDetail() {
           <Link to="/photo" className="text-xs text-gray-400 hover:text-gray-700">← 返回作品集</Link>
         </div>
       </main>
-      <Footer />
+      <PhotoFooter />
     </>
   )
 }
