@@ -257,8 +257,15 @@ export default function AdminPostEdit() {
           {currentId && (
             <button type="button"
               onClick={() => { clearTimeout(autoSaveRef.current); doSave() }}
-              className="text-sm border border-gray-200 px-4 py-2.5 rounded-lg hover:border-gray-400 text-gray-500">
-              ⌘S 立即儲存
+              disabled={saveStatus === 'saving'}
+              className={`text-sm border px-4 py-2.5 rounded-lg transition-colors ${
+                saveStatus === 'saving'
+                  ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                  : saveStatus.startsWith('saved:')
+                    ? 'border-green-300 text-green-600 hover:border-green-400'
+                    : 'border-gray-200 text-gray-500 hover:border-gray-400'
+              }`}>
+              {saveStatus === 'saving' ? '儲存中…' : saveStatus.startsWith('saved:') ? `✓ 已儲存 ${saveStatus.slice(6)}` : '⌘S 立即儲存'}
             </button>
           )}
           {currentId && (
