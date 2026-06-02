@@ -21,6 +21,7 @@ export default function Home() {
       <SEOHead
         description={settings.seo_description || undefined}
         keywords={settings.seo_keywords || undefined}
+        ogImage={settings.avatar_url || undefined}
       />
       <Nav />
       <main>
