@@ -70,7 +70,7 @@ function MdCode({ inline, className, children }) {
       <div className="relative group">
         <CopyButton text={code} />
         <SyntaxHighlighter language={lang} style={githubGist} PreTag="div"
-          customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0' }}>
+          customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0', overflowX: 'auto' }}>
           {code}
         </SyntaxHighlighter>
       </div>
@@ -91,7 +91,7 @@ function MdImg({ src, alt }) {
   return (
     <>
       <img src={src} alt={alt ?? ''} loading="lazy"
-        className="cursor-zoom-in rounded-lg hover:opacity-95 transition-opacity"
+        className="cursor-zoom-in rounded-lg hover:opacity-95 transition-opacity w-full"
         onClick={() => setOpen(true)} />
       {open && (
         <Lightbox images={[src]} index={0} onClose={() => setOpen(false)}
@@ -135,7 +135,7 @@ export default function MarkdownContent({ content }) {
     ? (
       <div
         ref={containerRef}
-        className="prose prose-gray max-w-none"
+        className="prose prose-gray max-w-none [&_pre]:overflow-x-auto"
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(addHeadingIds(content ?? '')) }}
       />
     )

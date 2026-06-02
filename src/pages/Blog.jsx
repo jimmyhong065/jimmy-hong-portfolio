@@ -50,13 +50,19 @@ export default function Blog() {
       <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">Blog</p>
         <h1 className="text-xl font-bold mb-8">文章</h1>
-        <input
-          type="search"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="搜尋文章標題或摘要..."
-          className="w-full text-sm border border-gray-200 rounded-full px-5 py-3 mb-6 focus:outline-none focus:border-gray-400 placeholder:text-gray-300"
-        />
+        <div className="relative mb-6">
+          <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="search"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="搜尋文章標題或摘要..."
+            className="w-full text-sm border border-gray-200 rounded-full pl-10 pr-5 py-3 focus:outline-none focus:border-gray-400 placeholder:text-gray-300"
+          />
+        </div>
         <TagFilter tags={allTags} selected={selectedTag} onSelect={setSelectedTag} />
         {loading ? (
           <p className="text-sm text-gray-400">載入中…</p>

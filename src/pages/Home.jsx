@@ -28,7 +28,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
             <div className="flex gap-7 items-start">
-              <div className="w-24 h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2">
+              <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2">
                 {settings.avatar_url && <img src={settings.avatar_url} alt="Jimmy Hong" className="w-full h-full object-cover" />}
               </div>
               <div>
@@ -70,9 +70,9 @@ export default function Home() {
             </div>
           </div>
           {/* Services card */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-7">
-            <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
-            <div className="grid grid-cols-2 gap-2.5 mb-5">
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 md:p-7">
+            <p className="hidden md:block text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
+            <div className="hidden md:grid grid-cols-2 gap-2.5 mb-5">
               {services.map(s => (
                 <div key={s.id} className="bg-white border border-gray-200 rounded-lg p-3">
                   <div className="text-xs text-gray-600">{s.title}</div>
@@ -98,7 +98,10 @@ export default function Home() {
                 <div key={a.id} className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors">
                   <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full bg-gray-900" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-900 mb-0.5">{a.title}</p>
+                    <div className="flex items-baseline gap-2 mb-0.5">
+                      <p className="text-sm font-semibold text-gray-900">{a.title}</p>
+                      <span className="text-xs text-gray-300 flex-shrink-0">{new Date(a.created_at).toISOString().slice(0, 10)}</span>
+                    </div>
                     {a.content && <p className="text-xs text-gray-500 leading-relaxed">{a.content}</p>}
                   </div>
                 </div>

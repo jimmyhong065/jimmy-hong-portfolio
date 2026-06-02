@@ -88,7 +88,7 @@ export default function PhotoHome() {
       ) : visible.length === 0 ? (
         <p className="text-sm text-gray-400 px-8 pb-16">沒有符合的作品。</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
           {visible.map(p => (
             <div key={p.id} className="bg-white">
               <PhotoCard project={p} />

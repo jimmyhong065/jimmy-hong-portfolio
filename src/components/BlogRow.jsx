@@ -24,9 +24,9 @@ export default function BlogRow({ post }) {
         {readingMin && (
           <span className="text-xs text-gray-300 hidden sm:inline">{readingMin} 分</span>
         )}
-        <div className="flex gap-1 flex-wrap">
+        <div className="flex gap-1 overflow-x-auto scrollbar-hide">
           {(post.tags ?? []).map(tag => (
-            <span key={tag} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">{tag}</span>
+            <span key={tag} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded flex-shrink-0">{tag}</span>
           ))}
         </div>
       </div>
