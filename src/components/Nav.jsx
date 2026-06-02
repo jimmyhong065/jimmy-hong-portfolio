@@ -33,6 +33,17 @@ const TABS = [
     ),
   },
   {
+    to: '/faq',
+    label: 'FAQ',
+    icon: (
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
+      </svg>
+    ),
+  },
+  {
     to: '/about',
     label: '關於我',
     icon: (
@@ -58,6 +69,7 @@ export default function Nav() {
             <li><Link to="/projects" className="text-sm text-gray-500 hover:text-gray-900">作品集</Link></li>
             <li><Link to="/blog" className="text-sm text-gray-500 hover:text-gray-900">部落格</Link></li>
             <li><Link to="/services" className="text-sm text-gray-500 hover:text-gray-900">合作方式</Link></li>
+            <li><Link to="/faq" className="text-sm text-gray-500 hover:text-gray-900">FAQ</Link></li>
             <li><Link to="/about" className="text-sm text-gray-500 hover:text-gray-900">關於我</Link></li>
           </ul>
           {/* Desktop CTA — hidden on mobile */}
@@ -81,7 +93,7 @@ export default function Nav() {
         className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <ul className="grid grid-cols-4 list-none m-0 p-0">
+        <ul className="grid grid-cols-5 list-none m-0 p-0">
           {TABS.map(tab => {
             const active = location.pathname === tab.to || location.pathname.startsWith(tab.to + '/')
             return (
