@@ -24,7 +24,8 @@ export default function Home() {
       />
       <Nav />
       <main>
-        {/* Hero */}
+
+        {/* ── Hero — white ── */}
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
             <div className="flex gap-7 items-start">
@@ -69,7 +70,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {/* Services card */}
           <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 md:p-7">
             <p className="hidden md:block text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
             <div className="hidden md:grid grid-cols-2 gap-2.5 mb-5">
@@ -90,29 +90,30 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── Announcements — slate-50 ── */}
         {announcements.length > 0 && (
-          <div className="max-w-5xl mx-auto px-4 md:px-12 pb-12">
-            <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">最新消息</p>
-            <div className="flex flex-col divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
-              {announcements.slice(0, 3).map(a => (
-                <div key={a.id} className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors">
-                  <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full bg-gray-900" />
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-0.5">
-                      <p className="text-sm font-semibold text-gray-900">{a.title}</p>
-                      <span className="text-xs text-gray-300 flex-shrink-0">{new Date(a.created_at).toISOString().slice(0, 10)}</span>
+          <div className="bg-slate-50">
+            <div className="max-w-5xl mx-auto px-4 md:px-12 py-12">
+              <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">最新消息</p>
+              <div className="flex flex-col divide-y divide-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
+                {announcements.slice(0, 3).map(a => (
+                  <div key={a.id} className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors">
+                    <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full bg-gray-900" />
+                    <div>
+                      <div className="flex items-baseline gap-2 mb-0.5">
+                        <p className="text-sm font-semibold text-gray-900">{a.title}</p>
+                        <span className="text-xs text-gray-300 flex-shrink-0">{new Date(a.created_at).toISOString().slice(0, 10)}</span>
+                      </div>
+                      {a.content && <p className="text-xs text-gray-500 leading-relaxed">{a.content}</p>}
                     </div>
-                    {a.content && <p className="text-xs text-gray-500 leading-relaxed">{a.content}</p>}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )}
 
-        <hr className="border-gray-100 mx-12" />
-
-        {/* Dual identity */}
+        {/* ── Dual identity — white ── */}
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">兩個身份，一個視角</p>
           <h2 className="text-xl font-bold mb-2">用 QA 的嚴謹對待細節，<br className="hidden sm:block" />用攝影的眼光捕捉瞬間</h2>
@@ -139,20 +140,18 @@ export default function Home() {
           </div>
         </section>
 
-        <hr className="border-gray-100 mx-12" />
+        {/* ── Featured projects — slate-50 ── */}
+        <div className="bg-slate-50">
+          <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+            <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
+            <h2 className="text-xl font-bold mb-8">QA 作品集</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {projects.slice(0, 3).map(p => <ProjectCard key={p.id} project={p} />)}
+            </div>
+          </section>
+        </div>
 
-        {/* Featured projects */}
-        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
-          <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
-          <h2 className="text-xl font-bold mb-8">QA 作品集</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {projects.slice(0, 3).map(p => <ProjectCard key={p.id} project={p} />)}
-          </div>
-        </section>
-
-        <hr className="border-gray-100 mx-12" />
-
-        {/* Recent posts */}
+        {/* ── Recent posts — white ── */}
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
           <h2 className="text-xl font-bold mb-2">部落格</h2>
@@ -169,21 +168,27 @@ export default function Home() {
           </div>
         </section>
 
-        <hr className="border-gray-100 mx-12" />
+        {/* ── Services — gray-900 dark ── */}
+        <div className="bg-gray-900">
+          <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+            <p className="text-xs tracking-widest text-gray-500 uppercase mb-2">合作方式</p>
+            <h2 className="text-xl font-bold mb-8 text-white">Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {services.map(s => (
+                <div key={s.id} className="border border-gray-700 bg-gray-800 rounded-xl p-6">
+                  <h3 className="text-sm font-semibold mb-2 text-white">{s.title}</h3>
+                  <p className="text-xs text-gray-400 leading-relaxed">{s.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-10">
+              <a href="/services" className="text-xs text-gray-400 border-b border-gray-600 pb-px hover:text-white transition-colors">
+                查看所有服務 →
+              </a>
+            </div>
+          </section>
+        </div>
 
-        {/* Services */}
-        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
-          <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">合作方式</p>
-          <h2 className="text-xl font-bold mb-8">Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {services.map(s => (
-              <div key={s.id} className="border border-gray-200 rounded-xl p-6">
-                <h3 className="text-sm font-semibold mb-2">{s.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{s.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       </main>
       <Footer />
     </>
