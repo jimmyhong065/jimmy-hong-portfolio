@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { writeFileSync, readFileSync } from 'fs'
 
-// Load .env manually (no dotenv dep needed)
+// Load .env.local for local development
 const env = {}
 try {
   readFileSync('.env.local', 'utf8').split('\n').forEach(line => {
@@ -13,8 +13,6 @@ try {
 const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
 const supabaseUrl = process.env.VITE_SUPABASE_URL ?? env.VITE_SUPABASE_URL
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY
-
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 const staticRoutes = [
   { path: '/',         changefreq: 'daily',   priority: '1.0' },
@@ -38,29 +36,37 @@ function urlEntry({ loc, lastmod, changefreq, priority }) {
 }
 
 async function generate() {
-  const [{ data: posts, error: e1 }, { data: projects, error: e2 }] = await Promise.all([
-    supabase.from('posts').select('slug, published_at, created_at').eq('published', true),
-    supabase.from('projects').select('id, created_at'),
-  ])
-  if (e1) { console.error('posts error:', e1); process.exit(1) }
-  if (e2) { console.error('projects error:', e2); process.exit(1) }
+  const staticEntries = staticRoutes.map(r => urlEntry({ loc: `${SITE_URL}${r.path}`, ...r }))
 
-  const entries = [
-    ...staticRoutes.map(r => urlEntry({ loc: `${SITE_URL}${r.path}`, ...r })),
-    ...(posts ?? []).map(p => urlEntry({
-      loc: `${SITE_URL}/blog/${p.slug}`,
-      lastmod: p.published_at ?? p.created_at,
-      changefreq: 'weekly',
-      priority: '0.8',
-    })),
-    ...(projects ?? []).map(p => urlEntry({
-      loc: `${SITE_URL}/projects/${p.id}`,
-      lastmod: p.created_at,
-      changefreq: 'monthly',
-      priority: '0.7',
-    })),
-  ]
+  let dynamicEntries = []
+  if (supabaseUrl && supabaseKey) {
+    const supabase = createClient(supabaseUrl, supabaseKey)
+    const [{ data: posts, error: e1 }, { data: projects, error: e2 }] = await Promise.all([
+      supabase.from('posts').select('slug, published_at, created_at').eq('published', true),
+      supabase.from('projects').select('id, created_at'),
+    ])
+    if (e1) console.warn('posts fetch failed:', e1.message)
+    if (e2) console.warn('projects fetch failed:', e2.message)
 
+    dynamicEntries = [
+      ...(posts ?? []).map(p => urlEntry({
+        loc: `${SITE_URL}/blog/${p.slug}`,
+        lastmod: p.published_at ?? p.created_at,
+        changefreq: 'weekly',
+        priority: '0.8',
+      })),
+      ...(projects ?? []).map(p => urlEntry({
+        loc: `${SITE_URL}/projects/${p.id}`,
+        lastmod: p.created_at,
+        changefreq: 'monthly',
+        priority: '0.7',
+      })),
+    ]
+  } else {
+    console.warn('No Supabase credentials — generating static-only sitemap')
+  }
+
+  const entries = [...staticEntries, ...dynamicEntries]
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
