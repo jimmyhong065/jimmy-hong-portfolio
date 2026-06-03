@@ -17,8 +17,8 @@ self.addEventListener('notificationclick', event => {
   event.notification.close()
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      const target = '/blog/' + event.notification.data.slug
-      const existing = list.find(c => c.url.includes(target))
+      const target = self.location.origin + '/blog/' + event.notification.data.slug
+      const existing = list.find(c => c.url.includes('/blog/' + event.notification.data.slug))
       if (existing) return existing.focus()
       return clients.openWindow(target)
     })

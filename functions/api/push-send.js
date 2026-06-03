@@ -18,6 +18,16 @@ export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS })
 }
 
+function stripMarkdown(text) {
+  return (text ?? '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, '')
+    .replace(/[*_~`#>]/g, '')
+    .replace(/^\s*[-*+\d.]+\s+/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export async function onRequestPost({ request, env }) {
   const auth = request.headers.get('Authorization') ?? ''
   if (auth !== `Bearer ${env.PUSH_SECRET}`) {
@@ -39,7 +49,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   const privateKeyJwk = JSON.parse(env.VAPID_PRIVATE_KEY_JWK)
-  const payload = JSON.stringify({ title, body: (excerpt ?? '').slice(0, 120), slug })
+  const payload = JSON.stringify({ title, body: stripMarkdown(excerpt).slice(0, 120), slug })
 
   let sent = 0
   const toRemove = []
