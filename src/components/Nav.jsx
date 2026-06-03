@@ -66,6 +66,32 @@ export default function Nav() {
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
           <Link to="/" className="text-sm font-semibold tracking-wide">Jimmy Hong</Link>
+          {/* Mobile bell — hidden on desktop */}
+          {(state === 'unsubscribed' || state === 'subscribed') && (
+            <div className="relative md:hidden">
+              <button
+                onClick={state === 'subscribed' ? unsubscribe : subscribe}
+                title={state === 'subscribed' ? '取消通知訂閱' : '訂閱新文章通知'}
+                className="text-gray-400 hover:text-gray-700 transition-colors p-1"
+              >
+                {state === 'subscribed' ? (
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                  </svg>
+                ) : (
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                )}
+              </button>
+              {error && (
+                <div className="absolute left-0 top-8 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                  {error}
+                </div>
+              )}
+            </div>
+          )}
           {/* Desktop nav — hidden on mobile */}
           <ul className="hidden md:flex gap-8 list-none">
             <li><Link to="/projects" className="text-sm text-gray-500 hover:text-gray-900">作品集</Link></li>
