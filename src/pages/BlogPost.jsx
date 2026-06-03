@@ -101,9 +101,12 @@ export default function BlogPost() {
     headline: post.title,
     description: post.excerpt ?? '',
     datePublished: post.published_at,
+    ...(post.updated_at && { dateModified: post.updated_at }),
     author: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
-    publisher: { '@type': 'Person', name: 'Jimmy Hong' },
+    publisher: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
     url: postUrl,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+    ...(post.tags?.length && { keywords: post.tags.join(', ') }),
   }
 
   const seriesTag = post.tags?.find(t => t.includes('系列'))

@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
-export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, type = 'website', publishedAt }) {
+export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, type = 'website', publishedAt, jsonLd }) {
   const siteTitle = title ? `${title} | Jimmy Hong` : 'Jimmy Hong — QA Engineer'
   const metaDesc = description ?? '專注測試流程設計與品質架構的 QA Engineer。'
   const image = ogImage ?? null
@@ -36,6 +36,7 @@ export default function SEOHead({ title, description, keywords, ogImage, favicon
 
       {favicon && <link rel="icon" type="image/svg+xml" href={favicon} />}
       <link rel="alternate" type="application/rss+xml" title="Jimmy Hong | QA Blog" href="/rss.xml" />
+      {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
     </Helmet>
   )
 }
