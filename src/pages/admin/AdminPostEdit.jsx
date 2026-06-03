@@ -37,6 +37,7 @@ export default function AdminPostEdit() {
   })
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('idle')
+  const [pushResult, setPushResult] = useState(null)
   const [slugError, setSlugError] = useState('')
   const [currentId, setCurrentId] = useState(isNew ? null : id)
   const [editorMode, setEditorMode] = useState(() => {
@@ -172,6 +173,29 @@ export default function AdminPostEdit() {
     setSaving(false)
   }
 
+  async function sendPushNotification() {
+    setPushResult('sending')
+    try {
+      const res = await fetch('/api/push-send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_PUSH_SECRET}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: form.title,
+          excerpt: form.excerpt,
+          slug: form.slug,
+        }),
+      })
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      setPushResult(data)
+    } catch {
+      setPushResult('error')
+    }
+  }
+
   const wc = wordCount(form.content)
 
   return (
@@ -249,6 +273,31 @@ export default function AdminPostEdit() {
             </div>
           )}
         </div>
+        {form.published && currentId && (
+          <div className="border border-gray-100 rounded-xl p-4 bg-gray-50">
+            <p className="text-xs font-medium text-gray-500 mb-2">推播通知</p>
+            <p className="text-xs text-gray-400 mb-1">標題：{form.title}</p>
+            <p className="text-xs text-gray-400 mb-3">摘要：{(form.excerpt ?? '').slice(0, 80)}{form.excerpt?.length > 80 ? '…' : ''}</p>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={sendPushNotification}
+                disabled={pushResult === 'sending'}
+                className="text-xs bg-gray-900 text-white px-4 py-1.5 rounded-md hover:bg-gray-700 disabled:opacity-50"
+              >
+                {pushResult === 'sending' ? '送出中…' : '送出通知給所有訂閱者'}
+              </button>
+              {pushResult && pushResult !== 'sending' && (
+                <span className={`text-xs ${pushResult === 'error' ? 'text-red-500' : 'text-gray-500'}`}>
+                  {pushResult === 'error'
+                    ? '送出失敗'
+                    : `已送出 ${pushResult.sent} 人${pushResult.removed > 0 ? `，清理 ${pushResult.removed} 個過期訂閱` : ''}`
+                  }
+                </span>
+              )}
+            </div>
+          </div>
+        )}
         <div className="flex gap-3 flex-wrap">
           <button type="submit" disabled={saving}
             className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
