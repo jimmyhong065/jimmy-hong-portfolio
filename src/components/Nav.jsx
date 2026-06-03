@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useSettings } from '../hooks/useSettings'
+import { usePushSubscription } from '../hooks/usePushSubscription'
 
 const TABS = [
   {
@@ -58,6 +59,7 @@ const TABS = [
 export default function Nav() {
   const { settings } = useSettings()
   const location = useLocation()
+  const { state, error, subscribe, unsubscribe } = usePushSubscription()
 
   return (
     <>
@@ -80,6 +82,31 @@ export default function Nav() {
                 <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
               </svg>
             </a>
+            {(state === 'unsubscribed' || state === 'subscribed') && (
+              <div className="relative">
+                <button
+                  onClick={state === 'subscribed' ? unsubscribe : subscribe}
+                  title={state === 'subscribed' ? '取消通知訂閱' : '訂閱新文章通知'}
+                  className="text-gray-400 hover:text-gray-700 transition-colors"
+                >
+                  {state === 'subscribed' ? (
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                  ) : (
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                  )}
+                </button>
+                {error && (
+                  <div className="absolute right-0 top-7 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                    {error}
+                  </div>
+                )}
+              </div>
+            )}
             {settings.email && (
               <a href={`mailto:${settings.email}`} className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
                 聯絡我
