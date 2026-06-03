@@ -11,15 +11,12 @@ const STATIC_PAGES = [
   { url: '/photo', priority: '0.8', changefreq: 'weekly' },
 ]
 
-export async function onRequest() {
-  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+const XML_HEADERS = {
+  'Content-Type': 'application/xml; charset=utf-8',
+  'Cache-Control': 'public, max-age=3600',
+}
 
-  const [postsRes, photosRes] = await Promise.all([
-    fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers }),
-    fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers }),
-  ])
-  const [posts, photos] = await Promise.all([postsRes.json(), photosRes.json()])
-
+function buildXml(posts, photos) {
   const staticUrls = STATIC_PAGES.map(p => `
   <url>
     <loc>${SITE_URL}${p.url}</loc>
@@ -27,13 +24,13 @@ export async function onRequest() {
     <priority>${p.priority}</priority>
   </url>`).join('')
 
-  const postUrls = posts.map(p => `
+  const postUrls = Array.isArray(posts) ? posts.map(p => `
   <url>
     <loc>${SITE_URL}/blog/${p.slug}</loc>
     <lastmod>${p.published_at ? p.published_at.slice(0, 10) : ''}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>`).join('')
+  </url>`).join('') : ''
 
   const photoUrls = Array.isArray(photos) ? photos.map(p => `
   <url>
@@ -42,14 +39,23 @@ export async function onRequest() {
     <priority>0.5</priority>
   </url>`).join('') : ''
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}${photoUrls}
 </urlset>`
+}
 
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
-    },
-  })
+export async function onRequest() {
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+
+  try {
+    const [postsRes, photosRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers }),
+    ])
+    const [posts, photos] = await Promise.all([postsRes.json(), photosRes.json()])
+    return new Response(buildXml(posts, photos), { headers: XML_HEADERS })
+  } catch {
+    // Supabase unavailable — return static pages only
+    return new Response(buildXml([], []), { headers: XML_HEADERS })
+  }
 }
