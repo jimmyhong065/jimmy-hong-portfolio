@@ -108,7 +108,8 @@ export default function MarkdownContent({ content }) {
   const isHtml = content?.trimStart().startsWith('<')
 
   function addHeadingIds(html) {
-    return html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/\1>/gi, (_, tag, attrs, inner) => {
+    return html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/\1>/gi, (match, tag, attrs, inner) => {
+      if (/\bid=/.test(attrs)) return match
       const text = inner.replace(/<[^>]+>/g, '').trim()
       return `<${tag}${attrs} id="${slugify(text)}">${inner}</${tag}>`
     })
