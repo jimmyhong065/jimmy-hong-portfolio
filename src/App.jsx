@@ -1,5 +1,19 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+
+function PushNavigationHandler() {
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    const handler = event => {
+      if (event.data?.type === 'push-navigate') navigate(event.data.url)
+    }
+    navigator.serviceWorker.addEventListener('message', handler)
+    return () => navigator.serviceWorker.removeEventListener('message', handler)
+  }, [navigate])
+  return null
+}
 import Home from './pages/Home'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
@@ -34,6 +48,7 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <PushNavigationHandler />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />

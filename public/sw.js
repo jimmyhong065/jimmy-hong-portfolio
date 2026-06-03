@@ -15,11 +15,16 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close()
+  const slug = event.notification.data?.slug ?? ''
+  const path = '/blog/' + slug
+  const target = self.location.origin + path
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      const target = self.location.origin + '/blog/' + event.notification.data.slug
-      const existing = list.find(c => c.url.includes('/blog/' + event.notification.data.slug))
-      if (existing) return existing.focus()
+      if (list.length > 0) {
+        list[0].postMessage({ type: 'push-navigate', url: path })
+        return list[0].focus()
+      }
       return clients.openWindow(target)
     })
   )
