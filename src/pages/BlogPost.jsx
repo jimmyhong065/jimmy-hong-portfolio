@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 import MarkdownContent from '../components/MarkdownContent'
 import TableOfContents from '../components/TableOfContents'
 import RelatedPosts from '../components/RelatedPosts'
+import EmailSubscribeForm from '../components/EmailSubscribeForm'
 import ScrollToTop from '../components/ScrollToTop'
 import { useReadingProgress } from '../hooks/useReadingProgress'
 import { useActiveHeading } from '../hooks/useActiveHeading'
@@ -192,6 +193,8 @@ export default function BlogPost() {
               <a href={xShare} target="_blank" rel="noreferrer"
                 className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">X</a>
             </div>
+
+            <EmailSubscribeForm />
 
             {/* Related posts */}
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />

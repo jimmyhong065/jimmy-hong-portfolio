@@ -38,6 +38,7 @@ export default function AdminPostEdit() {
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('idle')
   const [pushResult, setPushResult] = useState(null)
+  const [emailResult, setEmailResult] = useState(null)
   const [slugError, setSlugError] = useState('')
   const [currentId, setCurrentId] = useState(isNew ? null : id)
   const [editorMode, setEditorMode] = useState(() => {
@@ -173,6 +174,24 @@ export default function AdminPostEdit() {
     setSaving(false)
   }
 
+  async function sendEmailNotification() {
+    setEmailResult('sending')
+    try {
+      const res = await fetch('/api/email-send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_PUSH_SECRET}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: form.title, excerpt: form.excerpt, slug: form.slug }),
+      })
+      if (!res.ok) throw new Error()
+      setEmailResult(await res.json())
+    } catch {
+      setEmailResult('error')
+    }
+  }
+
   async function sendPushNotification() {
     setPushResult('sending')
     try {
@@ -274,8 +293,28 @@ export default function AdminPostEdit() {
           )}
         </div>
         {form.published && currentId && (
-          <div className="border border-gray-100 rounded-xl p-4 bg-gray-50">
-            <p className="text-xs font-medium text-gray-500 mb-2">推播通知</p>
+          <div className="border border-gray-100 rounded-xl p-4 bg-gray-50 flex flex-col gap-4">
+            <div>
+              <p className="text-xs font-medium text-gray-500 mb-2">Email 通知</p>
+              <p className="text-xs text-gray-400 mb-3">標題：{form.title}</p>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={sendEmailNotification}
+                  disabled={emailResult === 'sending'}
+                  className="text-xs bg-gray-900 text-white px-4 py-1.5 rounded-md hover:bg-gray-700 disabled:opacity-50"
+                >
+                  {emailResult === 'sending' ? '送出中…' : '發送 Email 給所有訂閱者'}
+                </button>
+                {emailResult && emailResult !== 'sending' && (
+                  <span className={`text-xs ${emailResult === 'error' ? 'text-red-500' : 'text-gray-500'}`}>
+                    {emailResult === 'error' ? '發送失敗' : `已送出 ${emailResult.sent} 封`}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-500 mb-2">推播通知</p>
             <p className="text-xs text-gray-400 mb-1">標題：{form.title}</p>
             <p className="text-xs text-gray-400 mb-3">摘要：{(form.excerpt ?? '').slice(0, 80)}{form.excerpt?.length > 80 ? '…' : ''}</p>
             <div className="flex items-center gap-3">
@@ -295,6 +334,7 @@ export default function AdminPostEdit() {
                   }
                 </span>
               )}
+            </div>
             </div>
           </div>
         )}

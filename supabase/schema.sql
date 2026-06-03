@@ -47,3 +47,14 @@ CREATE POLICY "anon read projects"
 CREATE POLICY "auth full access projects"
   ON projects FOR ALL TO authenticated
   USING (true) WITH CHECK (true);
+
+-- Email subscribers table
+CREATE TABLE email_subscribers (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  email      text UNIQUE NOT NULL,
+  token      uuid NOT NULL DEFAULT gen_random_uuid(),
+  confirmed  boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+ALTER TABLE email_subscribers ENABLE ROW LEVEL SECURITY;
+-- No anon policies; service key only
