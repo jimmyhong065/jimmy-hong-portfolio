@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSettings } from '../hooks/useSettings'
 import { usePushSubscription } from '../hooks/usePushSubscription'
@@ -60,6 +61,12 @@ export default function Nav() {
   const { settings } = useSettings()
   const location = useLocation()
   const { state, error, subscribe, unsubscribe } = usePushSubscription()
+  const [hint, setHint] = useState(null)
+
+  function showHint(msg) {
+    setHint(msg)
+    setTimeout(() => setHint(null), 3000)
+  }
 
   return (
     <>
@@ -67,12 +74,22 @@ export default function Nav() {
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
           <Link to="/" className="text-sm font-semibold tracking-wide">Jimmy Hong</Link>
           {/* Mobile bell — hidden on desktop */}
-          {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied') && (
+          {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied' || state === 'unsupported') && (
             <div className="relative md:hidden">
               <button
-                onClick={state === 'subscribed' ? unsubscribe : state === 'denied' ? () => {} : subscribe}
-                title={state === 'subscribed' ? '取消通知訂閱' : state === 'denied' ? '請至瀏覽器設定開啟通知權限' : '訂閱新文章通知'}
-                className={`transition-colors p-1 ${state === 'denied' ? 'text-gray-300 cursor-default' : 'text-gray-400 hover:text-gray-700'}`}
+                onClick={
+                  state === 'subscribed' ? unsubscribe
+                  : state === 'denied' ? () => showHint('請至瀏覽器設定開啟通知權限')
+                  : state === 'unsupported' ? () => showHint('需將網站加入主畫面才能訂閱通知')
+                  : subscribe
+                }
+                title={
+                  state === 'subscribed' ? '取消通知訂閱'
+                  : state === 'denied' ? '請至瀏覽器設定開啟通知權限'
+                  : state === 'unsupported' ? '需將網站加入主畫面才能訂閱通知'
+                  : '訂閱新文章通知'
+                }
+                className={`transition-colors p-1 ${(state === 'denied' || state === 'unsupported') ? 'text-gray-300 cursor-default' : 'text-gray-400 hover:text-gray-700'}`}
               >
                 {state === 'subscribed' ? (
                   <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -91,9 +108,9 @@ export default function Nav() {
                   </svg>
                 )}
               </button>
-              {error && (
+              {(error || hint) && (
                 <div className="absolute left-0 top-8 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
-                  {error}
+                  {error || hint}
                 </div>
               )}
             </div>
@@ -114,12 +131,22 @@ export default function Nav() {
                 <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
               </svg>
             </a>
-            {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied') && (
+            {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied' || state === 'unsupported') && (
               <div className="relative">
                 <button
-                  onClick={state === 'subscribed' ? unsubscribe : state === 'denied' ? () => {} : subscribe}
-                  title={state === 'subscribed' ? '取消通知訂閱' : state === 'denied' ? '請至瀏覽器設定開啟通知權限' : '訂閱新文章通知'}
-                  className={`transition-colors ${state === 'denied' ? 'text-gray-300 cursor-default' : 'text-gray-400 hover:text-gray-700'}`}
+                  onClick={
+                    state === 'subscribed' ? unsubscribe
+                    : state === 'denied' ? () => showHint('請至瀏覽器設定開啟通知權限')
+                    : state === 'unsupported' ? () => showHint('需將網站加入主畫面才能訂閱通知')
+                    : subscribe
+                  }
+                  title={
+                    state === 'subscribed' ? '取消通知訂閱'
+                    : state === 'denied' ? '請至瀏覽器設定開啟通知權限'
+                    : state === 'unsupported' ? '需將網站加入主畫面才能訂閱通知'
+                    : '訂閱新文章通知'
+                  }
+                  className={`transition-colors ${(state === 'denied' || state === 'unsupported') ? 'text-gray-300 cursor-default' : 'text-gray-400 hover:text-gray-700'}`}
                 >
                   {state === 'subscribed' ? (
                     <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -138,9 +165,9 @@ export default function Nav() {
                     </svg>
                   )}
                 </button>
-                {error && (
+                {(error || hint) && (
                   <div className="absolute right-0 top-7 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
-                    {error}
+                    {error || hint}
                   </div>
                 )}
               </div>
