@@ -16,12 +16,27 @@ export default function Home() {
   const { services } = useServices('qa')
   const { announcements } = useAnnouncements()
 
+  const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Jimmy Hong',
+    url: SITE_URL,
+    jobTitle: 'QA Engineer',
+    description: settings.seo_description || '專注測試流程設計與品質架構的 QA Engineer。',
+    ...(settings.avatar_url && { image: settings.avatar_url }),
+    sameAs: [settings.github_url, settings.linkedin_url].filter(Boolean),
+    ...(settings.email && { email: settings.email }),
+  }
+
   return (
     <>
       <SEOHead
         description={settings.seo_description || undefined}
         keywords={settings.seo_keywords || undefined}
         ogImage={settings.avatar_url || undefined}
+        jsonLd={personJsonLd}
+        canonical="/"
       />
       <Nav />
       <main>

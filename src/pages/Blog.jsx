@@ -45,7 +45,7 @@ export default function Blog() {
 
   return (
     <>
-      <SEOHead title="部落格" description="Jimmy Hong 關於 QA 流程、測試策略、自動化的技術文章。" />
+      <SEOHead title="部落格" description="Jimmy Hong 關於 QA 流程、測試策略、自動化的技術文章。" canonical="/blog" />
       <Nav />
       <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">Blog</p>

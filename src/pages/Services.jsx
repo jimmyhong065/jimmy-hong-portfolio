@@ -33,6 +33,7 @@ export default function Services() {
       <SEOHead
         title="合作方式"
         description="QA 測試顧問諮詢、自動化導入、攝影接案服務。歡迎洽談合作。"
+        canonical="/services"
       />
       <Nav />
       <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">

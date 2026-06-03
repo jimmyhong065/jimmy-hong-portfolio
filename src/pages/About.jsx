@@ -60,7 +60,7 @@ export default function About() {
 
   return (
     <>
-      <SEOHead title="關於我" description="洪裕彬 — QA Engineer，具備自動化、API、性能測試與後端開發背景。" />
+      <SEOHead title="關於我" description="洪裕彬 — QA Engineer，具備自動化、API、性能測試與後端開發背景。" canonical="/about" />
       <Nav />
       <main className="max-w-2xl mx-auto px-4 md:px-12 py-16">
 

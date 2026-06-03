@@ -49,7 +49,7 @@ export default function FAQ() {
 
   return (
     <>
-      <SEOHead title="常見問題" description="Jimmy Hong QA 工程師的常見問題與諮詢表單。" />
+      <SEOHead title="常見問題" description="Jimmy Hong QA 工程師的常見問題與諮詢表單。" canonical="/faq" />
       <Nav />
       <main className="max-w-3xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">FAQ</p>
