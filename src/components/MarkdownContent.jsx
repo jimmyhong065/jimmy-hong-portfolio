@@ -10,7 +10,7 @@ import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
 import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash'
 import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml'
 import MermaidChart from './MermaidChart'
-import { slugify } from '../lib/toc'
+import { slugify, headingId, headingText } from '../lib/toc'
 import Lightbox from './Lightbox'
 
 SyntaxHighlighter.registerLanguage('javascript', js)
@@ -80,10 +80,12 @@ function MdCode({ inline, className, children }) {
 }
 
 function MdH2({ children }) {
-  return <h2 id={slugify(String(children))}>{children}</h2>
+  const raw = String(children)
+  return <h2 id={headingId(raw)}>{headingText(raw)}</h2>
 }
 function MdH3({ children }) {
-  return <h3 id={slugify(String(children))}>{children}</h3>
+  const raw = String(children)
+  return <h3 id={headingId(raw)}>{headingText(raw)}</h3>
 }
 
 function MdImg({ src, alt }) {
