@@ -47,15 +47,19 @@ function buildXml(posts, photos) {
 export async function onRequest() {
   const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
 
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 8000)
+
   try {
     const [postsRes, photosRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal }),
+      fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers, signal: controller.signal }),
     ])
+    clearTimeout(timer)
     const [posts, photos] = await Promise.all([postsRes.json(), photosRes.json()])
     return new Response(buildXml(posts, photos), { headers: XML_HEADERS })
   } catch {
-    // Supabase unavailable — return static pages only
+    clearTimeout(timer)
     return new Response(buildXml([], []), { headers: XML_HEADERS })
   }
 }
