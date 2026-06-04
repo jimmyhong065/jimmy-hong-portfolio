@@ -13,6 +13,9 @@ import { useReadingProgress } from '../hooks/useReadingProgress'
 import { useActiveHeading } from '../hooks/useActiveHeading'
 import { parseHeadings } from '../lib/toc'
 import { supabase } from '../lib/supabase'
+import { useArticleSettings } from '../hooks/useArticleSettings'
+import { useSwipeNav } from '../hooks/useSwipeNav'
+import ArticleToolbar from '../components/ArticleToolbar'
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -24,6 +27,13 @@ export default function BlogPost() {
   const [copied, setCopied] = useState(false)
   const [seriesPosts, setSeriesPosts] = useState([])
   const progress = useReadingProgress()
+  const { fontSize, dark, incFontSize, decFontSize, toggleDark } = useArticleSettings()
+  const swipeRef = useSwipeNav({
+    prevSlug: adjacent.prev?.slug ?? null,
+    nextSlug: adjacent.next?.slug ?? null,
+  })
+
+  const fontSizeMap = { sm: '14px', md: '16px', lg: '18px' }
 
   useEffect(() => {
     let q = supabase.from('posts').select('*').eq('slug', slug)
@@ -130,9 +140,13 @@ export default function BlogPost() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <Nav />
-      <main className="max-w-5xl mx-auto px-6 sm:px-12 py-16">
+      <main className={`max-w-5xl mx-auto px-6 sm:px-12 py-16 pb-28 lg:pb-16 transition-colors${dark ? ' bg-[#1a1a1a]' : ''}`}>
         <div className={headings.length >= 2 ? 'lg:grid lg:grid-cols-[1fr_220px] lg:gap-12' : ''}>
-          <article>
+          <article
+            ref={swipeRef}
+            style={{ fontSize: fontSizeMap[fontSize] }}
+            className={dark ? 'article-dark' : ''}
+          >
             {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">
               {(post.tags ?? []).map(t => (
@@ -238,6 +252,13 @@ export default function BlogPost() {
       </main>
       <Footer />
       <ScrollToTop />
+      <ArticleToolbar
+        fontSize={fontSize}
+        dark={dark}
+        onInc={incFontSize}
+        onDec={decFontSize}
+        onToggleDark={toggleDark}
+      />
     </>
   )
 }
