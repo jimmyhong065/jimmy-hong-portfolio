@@ -3,7 +3,7 @@ const FONT_LABELS = { sm: '14px', md: '16px', lg: '18px' }
 export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark }) {
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 lg:hidden z-40 border-t shadow-sm"
+      className="fixed bottom-12 md:bottom-0 left-0 right-0 lg:hidden z-40 border-t shadow-sm"
       style={dark
         ? { backgroundColor: '#1e1e1e', borderColor: '#333' }
         : { backgroundColor: '#ffffff', borderColor: '#f3f4f6' }}
