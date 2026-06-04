@@ -41,12 +41,16 @@ export default function AdminSubscribers() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('email_subscribers').select('email, confirmed, created_at').order('created_at', { ascending: false }),
-      supabase.from('posts').select('slug, title, excerpt').eq('published', true).order('published_at', { ascending: false }),
-    ]).then(([{ data: subs }, { data: p }]) => {
-      setSubscribers(subs ?? [])
-      setPosts(p ?? [])
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const token = session?.access_token ?? ''
+      const [subsRes, postsRes] = await Promise.all([
+        fetch('/api/admin/subscribers', {
+          headers: { 'Authorization': `Bearer ${token}` },
+        }).then(r => r.json()),
+        supabase.from('posts').select('slug, title, excerpt').eq('published', true).order('published_at', { ascending: false }),
+      ])
+      setSubscribers(Array.isArray(subsRes) ? subsRes : [])
+      setPosts(postsRes.data ?? [])
       setLoading(false)
     })
   }, [])
