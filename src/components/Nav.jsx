@@ -179,28 +179,27 @@ export default function Nav() {
           </div>
         </div>
       </nav>
-      {/* Mobile bottom tab bar */}
+      {/* Mobile bottom tab bar — floating pill */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 md:hidden"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        className="fixed left-4 right-4 md:hidden z-50 flex items-center justify-around rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-white/10"
+        style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
       >
-        <ul className="grid grid-cols-5 list-none m-0 p-0">
-          {TABS.map(tab => {
-            const active = location.pathname === tab.to || location.pathname.startsWith(tab.to + '/')
-            return (
-              <li key={tab.to}>
-                <Link
-                  to={tab.to}
-                  aria-current={active ? 'page' : undefined}
-                  className={`flex flex-col items-center py-2 gap-0.5 text-[10px] leading-none ${active ? 'text-gray-900' : 'text-gray-400'}`}
-                >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
+        {TABS.map(tab => {
+          const active = location.pathname === tab.to || location.pathname.startsWith(tab.to + '/')
+          return (
+            <Link
+              key={tab.to}
+              to={tab.to}
+              aria-label={tab.label}
+              aria-current={active ? 'page' : undefined}
+              className={`flex items-center justify-center rounded-xl py-3 px-4 transition-colors ${
+                active ? 'text-white bg-white/15' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {tab.icon}
+            </Link>
+          )
+        })}
       </nav>
     </>
   )

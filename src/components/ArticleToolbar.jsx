@@ -5,7 +5,7 @@ export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleD
     <div
       className="fixed left-0 right-0 lg:hidden z-40 border-t shadow-sm"
       style={{
-        bottom: 'calc(3rem + env(safe-area-inset-bottom))',
+        bottom: 'calc(4.5rem + env(safe-area-inset-bottom))',
         ...(dark
           ? { backgroundColor: '#1e1e1e', borderColor: '#333' }
           : { backgroundColor: '#ffffff', borderColor: '#f3f4f6' }),
