@@ -25,4 +25,46 @@ describe('TagFilter', () => {
     fireEvent.click(screen.getByText('CI/CD'))
     expect(onSelect).toHaveBeenCalledWith('CI/CD')
   })
+
+  it('renders 未讀 and 收藏 pills', () => {
+    render(<TagFilter tags={tags} selected={null} onSelect={() => {}} specialFilter={null} onSpecialFilter={() => {}} />)
+    expect(screen.getByText('未讀')).toBeInTheDocument()
+    expect(screen.getByText('收藏')).toBeInTheDocument()
+  })
+
+  it('calls onSpecialFilter with "unread" when 未讀 clicked', () => {
+    const onSpecialFilter = vi.fn()
+    render(<TagFilter tags={tags} selected={null} onSelect={() => {}} specialFilter={null} onSpecialFilter={onSpecialFilter} />)
+    fireEvent.click(screen.getByText('未讀'))
+    expect(onSpecialFilter).toHaveBeenCalledWith('unread')
+  })
+
+  it('calls onSpecialFilter with "saved" when 收藏 clicked', () => {
+    const onSpecialFilter = vi.fn()
+    render(<TagFilter tags={tags} selected={null} onSelect={() => {}} specialFilter={null} onSpecialFilter={onSpecialFilter} />)
+    fireEvent.click(screen.getByText('收藏'))
+    expect(onSpecialFilter).toHaveBeenCalledWith('saved')
+  })
+
+  it('clears tag selection when special filter selected', () => {
+    const onSelect = vi.fn()
+    render(<TagFilter tags={tags} selected="CI/CD" onSelect={onSelect} specialFilter={null} onSpecialFilter={() => {}} />)
+    fireEvent.click(screen.getByText('未讀'))
+    expect(onSelect).toHaveBeenCalledWith(null)
+  })
+
+  it('全部 button clears both tag and special filter', () => {
+    const onSelect = vi.fn()
+    const onSpecialFilter = vi.fn()
+    render(<TagFilter tags={tags} selected="CI/CD" onSelect={onSelect} specialFilter="unread" onSpecialFilter={onSpecialFilter} />)
+    fireEvent.click(screen.getByText('全部'))
+    expect(onSelect).toHaveBeenCalledWith(null)
+    expect(onSpecialFilter).toHaveBeenCalledWith(null)
+  })
+
+  it('全部 button is active only when both filters are null', () => {
+    render(<TagFilter tags={tags} selected={null} onSelect={() => {}} specialFilter="unread" onSpecialFilter={() => {}} />)
+    const allBtn = screen.getByText('全部')
+    expect(allBtn.className).not.toMatch(/bg-gray-900/)
+  })
 })
