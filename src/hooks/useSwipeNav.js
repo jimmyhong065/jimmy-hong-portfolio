@@ -24,11 +24,12 @@ export function useSwipeNav({ prevSlug, nextSlug }) {
       if (deltaX < -80 && nextSlug) navigate(`/blog/${nextSlug}`)
     }
 
-    el.addEventListener('touchstart', onStart, { passive: true })
-    el.addEventListener('touchend', onEnd, { passive: true })
+    const opts = { passive: true }
+    el.addEventListener('touchstart', onStart, opts)
+    el.addEventListener('touchend', onEnd, opts)
     return () => {
-      el.removeEventListener('touchstart', onStart)
-      el.removeEventListener('touchend', onEnd)
+      el.removeEventListener('touchstart', onStart, opts)
+      el.removeEventListener('touchend', onEnd, opts)
     }
   }, [prevSlug, nextSlug, navigate])
 
