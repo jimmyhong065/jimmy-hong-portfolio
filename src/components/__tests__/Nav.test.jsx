@@ -26,11 +26,9 @@ describe('Nav', () => {
     // Tab bar has: 作品集, 部落格, 收藏, FAQ, 關於我
     expect(screen.getAllByText('作品集')).toHaveLength(2) // desktop nav + tab bar
     expect(screen.getAllByText('部落格')).toHaveLength(2) // desktop nav + tab bar
-    expect(screen.getByText('收藏')).toBeInTheDocument() // only in tab bar
+    expect(screen.getAllByText('收藏')).toHaveLength(2) // desktop nav + tab bar
     expect(screen.getAllByText('FAQ')).toHaveLength(2) // desktop nav + tab bar
     expect(screen.getAllByText('關於我')).toHaveLength(2) // desktop nav + tab bar
-    // Desktop nav still has 合作方式
-    expect(screen.getByText('合作方式')).toBeInTheDocument()
   })
 
   it('marks /projects tab active when on projects route', () => {
