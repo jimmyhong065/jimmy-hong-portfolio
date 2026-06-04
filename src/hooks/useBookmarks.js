@@ -6,6 +6,10 @@ function readStorage() {
   try { return JSON.parse(localStorage.getItem(KEY) ?? '[]') } catch { return [] }
 }
 
+function writeStorage(value) {
+  try { localStorage.setItem(KEY, JSON.stringify(value)) } catch {}
+}
+
 export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState(readStorage)
 
@@ -14,7 +18,7 @@ export function useBookmarks() {
       ? bookmarks.filter(s => s !== slug)
       : [...bookmarks, slug]
     setBookmarks(next)
-    localStorage.setItem(KEY, JSON.stringify(next))
+    writeStorage(next)
   }
 
   function isBookmarked(slug) { return bookmarks.includes(slug) }
