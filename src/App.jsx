@@ -40,6 +40,7 @@ import AdminPhotos from './pages/admin/AdminPhotos'
 import AdminFAQs from './pages/admin/AdminFAQs'
 import AdminFAQEdit from './pages/admin/AdminFAQEdit'
 import AdminSubmissions from './pages/admin/AdminSubmissions'
+import AdminSubscribers from './pages/admin/AdminSubscribers'
 import Services from './pages/Services'
 import FAQ from './pages/FAQ'
 import NotFound from './pages/NotFound'
@@ -82,6 +83,7 @@ export default function App() {
             <Route path="faqs" element={<AdminFAQs />} />
             <Route path="faqs/:id" element={<AdminFAQEdit />} />
             <Route path="submissions" element={<AdminSubmissions />} />
+            <Route path="subscribers" element={<AdminSubscribers />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
