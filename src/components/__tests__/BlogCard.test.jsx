@@ -12,8 +12,8 @@ const post = {
   published_at: '2026-06-04T00:00:00Z',
 }
 
-function renderCard(p = post) {
-  return render(<MemoryRouter><BlogCard post={p} /></MemoryRouter>)
+function renderCard(p = post, isRead = false) {
+  return render(<MemoryRouter><BlogCard post={p} isRead={isRead} /></MemoryRouter>)
 }
 
 describe('BlogCard', () => {
@@ -58,5 +58,15 @@ describe('BlogCard', () => {
   it('renders without published_at gracefully', () => {
     renderCard({ ...post, published_at: null })
     expect(screen.getByText('Test Post Title')).toBeInTheDocument()
+  })
+
+  it('shows ✓ badge when isRead is true', () => {
+    renderCard(post, true)
+    expect(screen.getByText('✓')).toBeInTheDocument()
+  })
+
+  it('does not show ✓ badge when isRead is false', () => {
+    renderCard(post, false)
+    expect(screen.queryByText('✓')).not.toBeInTheDocument()
   })
 })

@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom'
 
-export default function BlogCard({ post }) {
+export default function BlogCard({ post, isRead = false }) {
   const date = post.published_at ? post.published_at.slice(0, 10) : ''
   const tags = (post.tags ?? []).slice(0, 3)
 
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className="block rounded-2xl border border-gray-100 shadow-sm p-4 mb-3 hover:shadow-md transition-shadow"
+      className={`block rounded-2xl border border-gray-100 shadow-sm p-4 mb-3 hover:shadow-md transition-shadow relative${isRead ? ' opacity-60' : ''}`}
     >
+      {isRead && (
+        <span className="absolute top-3 right-3 text-[10px] text-gray-400">✓</span>
+      )}
       {tags.length > 0 && (
         <div className="flex gap-1 mb-2 flex-wrap">
           {tags.map(tag => (
