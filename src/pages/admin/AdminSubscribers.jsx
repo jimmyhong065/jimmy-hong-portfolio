@@ -61,6 +61,7 @@ export default function AdminSubscribers() {
     setResult(null)
     try {
       const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { setResult('請重新登入後再試'); setSending(false); return }
       const res = await fetch('/api/admin/email-broadcast', {
         method: 'POST',
         headers: {
@@ -83,9 +84,11 @@ export default function AdminSubscribers() {
       <h1 className="text-lg font-bold mb-7">訂閱管理</h1>
 
       <div className="mb-10">
-        <p className="text-sm text-gray-500 mb-4">
-          共 {confirmedCount} 位已確認訂閱者
-        </p>
+        {!loading && (
+          <p className="text-sm text-gray-500 mb-4">
+            共 {confirmedCount} 位已確認訂閱者
+          </p>
+        )}
         {loading ? (
           <p className="text-sm text-gray-400">載入中…</p>
         ) : subscribers.length === 0 ? (
