@@ -43,6 +43,7 @@ import AdminSubmissions from './pages/admin/AdminSubmissions'
 import AdminSubscribers from './pages/admin/AdminSubscribers'
 import Services from './pages/Services'
 import FAQ from './pages/FAQ'
+import Saved from './pages/Saved'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/saved" element={<Saved />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/faq" element={<FAQ />} />
