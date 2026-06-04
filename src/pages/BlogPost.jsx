@@ -222,6 +222,15 @@ export default function BlogPost() {
                 </button>
               )}
               {/* 桌機：個別按鈕 */}
+              <button
+                onClick={() => toggle(slug)}
+                className="hidden md:inline text-xs border px-3 py-1.5 rounded-md transition-colors"
+                style={isBookmarked(slug)
+                  ? { color: '#111827', borderColor: '#111827' }
+                  : { color: '#6b7280', borderColor: '#e5e7eb' }}
+              >
+                {isBookmarked(slug) ? '★ 已收藏' : '☆ 收藏'}
+              </button>
               <button onClick={() => copyLink(postUrl)}
                 className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400 transition-colors">
                 {copied ? '✓ 已複製' : '複製連結'}
