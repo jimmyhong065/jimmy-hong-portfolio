@@ -17,6 +17,8 @@ import { useArticleSettings } from '../hooks/useArticleSettings'
 import { useSwipeNav } from '../hooks/useSwipeNav'
 import ArticleToolbar from '../components/ArticleToolbar'
 
+const fontSizeMap = { sm: '14px', md: '16px', lg: '18px' }
+
 export default function BlogPost() {
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
@@ -32,8 +34,6 @@ export default function BlogPost() {
     prevSlug: adjacent.prev?.slug ?? null,
     nextSlug: adjacent.next?.slug ?? null,
   })
-
-  const fontSizeMap = { sm: '14px', md: '16px', lg: '18px' }
 
   useEffect(() => {
     let q = supabase.from('posts').select('*').eq('slug', slug)
@@ -145,7 +145,7 @@ export default function BlogPost() {
           <article
             ref={swipeRef}
             style={{ fontSize: fontSizeMap[fontSize] }}
-            className={dark ? 'article-dark' : ''}
+            className={`transition-colors${dark ? ' article-dark' : ''}`}
           >
             {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">
