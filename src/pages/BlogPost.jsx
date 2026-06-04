@@ -163,6 +163,27 @@ export default function BlogPost() {
             ref={swipeRef}
             className={`transition-colors article-font-${fontSize}${dark ? ' article-dark' : ''}`}
           >
+            {/* Back — mobile: prominent row; desktop: breadcrumb */}
+            <Link
+              to="/blog"
+              className="md:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 -ml-1 w-fit transition-colors"
+              style={dark ? { color: '#9ca3af' } : {}}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              部落格
+            </Link>
+            <Link
+              to="/blog"
+              className="hidden md:inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 mb-6 transition-colors"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              部落格
+            </Link>
+
             {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">
               {(post.tags ?? []).map(t => (
