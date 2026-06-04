@@ -27,7 +27,7 @@ export default function EmailSubscribeForm() {
       <p className="text-sm text-gray-500 mb-4">有新文章時收到 Email 通知</p>
 
       {status === 'sent' && (
-        <p className="text-sm text-gray-600">確認信已寄出，請至信箱點擊確認連結完成訂閱。</p>
+        <p className="text-sm text-gray-600">訂閱成功！有新文章時將會通知您。</p>
       )}
       {status === 'already' && (
         <p className="text-sm text-gray-600">此 Email 已訂閱。</p>
