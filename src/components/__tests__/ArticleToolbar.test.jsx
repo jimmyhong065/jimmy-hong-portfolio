@@ -75,4 +75,21 @@ describe('ArticleToolbar', () => {
     fireEvent.click(screen.getByLabelText('切換暗色模式'))
     expect(onToggleDark).toHaveBeenCalledOnce()
   })
+
+  it('shows ☆ when not bookmarked', () => {
+    render(<ArticleToolbar {...defaults} bookmarked={false} onToggleBookmark={vi.fn()} />)
+    expect(screen.getByLabelText('加入收藏')).toBeInTheDocument()
+  })
+
+  it('shows ★ when bookmarked', () => {
+    render(<ArticleToolbar {...defaults} bookmarked={true} onToggleBookmark={vi.fn()} />)
+    expect(screen.getByLabelText('取消收藏')).toBeInTheDocument()
+  })
+
+  it('calls onToggleBookmark when bookmark button clicked', () => {
+    const onToggleBookmark = vi.fn()
+    render(<ArticleToolbar {...defaults} bookmarked={false} onToggleBookmark={onToggleBookmark} />)
+    fireEvent.click(screen.getByLabelText('加入收藏'))
+    expect(onToggleBookmark).toHaveBeenCalledTimes(1)
+  })
 })

@@ -1,6 +1,6 @@
 const FONT_LABELS = { sm: '14px', md: '16px', lg: '18px' }
 
-export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark }) {
+export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark, bookmarked = false, onToggleBookmark = () => {} }) {
   return (
     <div
       className="fixed left-0 right-0 lg:hidden z-40 border-t shadow-sm"
@@ -38,13 +38,23 @@ export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleD
             A+
           </button>
         </div>
-        <button
-          onClick={onToggleDark}
-          className="text-lg leading-none"
-          aria-label={dark ? '切換亮色模式' : '切換暗色模式'}
-        >
-          {dark ? '☀️' : '🌙'}
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={onToggleBookmark}
+            className="text-lg leading-none"
+            style={{ color: bookmarked ? (dark ? '#e5e7eb' : '#111827') : (dark ? '#6b7280' : '#d1d5db') }}
+            aria-label={bookmarked ? '取消收藏' : '加入收藏'}
+          >
+            {bookmarked ? '★' : '☆'}
+          </button>
+          <button
+            onClick={onToggleDark}
+            className="text-lg leading-none"
+            aria-label={dark ? '切換亮色模式' : '切換暗色模式'}
+          >
+            {dark ? '☀️' : '🌙'}
+          </button>
+        </div>
       </div>
     </div>
   )
