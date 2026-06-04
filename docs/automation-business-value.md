@@ -7,8 +7,9 @@
 1. [那次報告](#那次報告)
 2. [老闆想聽的和我說的完全不同](#老闆想聽的)
 3. [把測試數字翻譯成業務語言](#翻譯成業務語言)
-4. [我現在怎麼跟主管談自動化](#現在怎麼談)
-5. [結尾](#結尾)
+4. [業界怎麼說這件事](#業界怎麼說)
+5. [我現在怎麼跟主管談自動化](#現在怎麼談)
+6. [結尾](#結尾)
 
 ---
 
@@ -59,8 +60,7 @@
 
 這個數字說服力最強，但需要你自己去算：
 
-上線前發現的 bug，修復成本大概 1x。
-上線後用戶回報的 bug，修復成本大約 5–10x（還要加上客訴處理、hotfix 部署、品牌信任損失）。
+BetterQA 對多個企業的研究顯示，上線後才修的 bug 成本約是測試階段的 **30 倍**。更廣為人知的「IBM 100x 說法」雖然原始出處有爭議，但方向是有現代研究持續驗證的：bug 越晚發現，成本越高，因為牽涉到 context switch、hotfix 部署、客訴處理、甚至品牌損失。
 
 如果你能說「上個 quarter 自動化測試擋下了 X 個 bug，其中 Y 個是高風險的，如果這些在上線後才發現，估計要花多少時間和資源處理」，這才是主管能判斷的資訊。
 
@@ -69,6 +69,28 @@
 自動化讓 CI 每次 push 都跑一次核心流程，等於把 regression 週期從「每次 release 前幾天」變成「每次 push 後幾分鐘」。問題更快被發現，修復窗口更長，release 更穩定。
 
 這對主管的翻譯是：**更短的 release cycle、更少的 last-minute 緊急修復**。
+
+---
+
+## 業界怎麼說這件事
+
+這些不是只有我們面臨的問題，業界有數據支撐這件事的重要性。
+
+**自動化回本速度比多數人預期快**
+
+Katalon《State of Quality Report 2025》調查數千名工程師，**超過 50% 的公司在導入自動化測試的第一年內就看到正向 ROI**，其中 24% 幾乎是立即見效。這個數字告訴主管：這不是幾年後才回本的長期投資，多數公司一年內就能量化到效益。
+
+**市場在說話**
+
+Capgemini《World Quality Report 2024-25》調查全球超過 1,000 家企業，報告明確指出：**品質工程已經不再是後台支援功能，而是業務成功的核心驅動力**。同份報告顯示自動化採用率持續成長，企業已不再把測試自動化當成「side project」，而是主動投資的策略項目。
+
+**DORA 研究：品質和速度不衝突**
+
+Google 的 DORA 研究（2024 年版，調查超過 3 萬名開發者）追蹤了最頂尖的「Elite performer」團隊，這些團隊的部署頻率是表現最差團隊的 **182 倍**，同時 change failure rate 反而是他們的 **8 倍低**。
+
+也就是說，部署最快的公司，品質也最穩定。這和「快跟好只能選一個」的直覺完全相反——而讓他們做到這件事的基礎，正是完善的自動化測試。
+
+這三個數據放在一起，對主管說的意思是：這不是 QA 在替自己爭取資源，是業界持續驗證的投資方向。
 
 ---
 
@@ -102,8 +124,6 @@
 
 相反地，如果你沒有自動化，壓縮 timeline 的代價就是「跳測試」——而這個風險最後是公司承擔的。
 
-這樣說，主管通常會比較認真看待自動化的投資。
-
 ---
 
 ## 結尾
@@ -115,3 +135,12 @@
 不是技術沒有說服力，是技術語言說服不了做業務決策的人。
 
 把你做的事翻譯成對方能用的資訊，是 QA 工作裡最常被低估的技能。
+
+---
+
+## 參考資料
+
+- [BetterQA — Cost of fixing bugs by SDLC stage](https://betterqa.co/bug-fixing-costs-throughout-sdlc/)
+- [Katalon — State of Quality Report 2025](https://katalon.com/resources-center/blog/test-automation-statistics-for-2025)
+- [Capgemini — World Quality Report 2024-25](https://www.capgemini.com/insights/research-library/world-quality-report-2024-25/)
+- [Google DORA — Accelerate State of DevOps Report 2024](https://dora.dev/research/2024/dora-report/)

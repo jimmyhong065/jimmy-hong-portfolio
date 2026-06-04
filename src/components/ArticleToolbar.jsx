@@ -3,10 +3,13 @@ const FONT_LABELS = { sm: '14px', md: '16px', lg: '18px' }
 export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark }) {
   return (
     <div
-      className="fixed bottom-12 md:bottom-0 left-0 right-0 lg:hidden z-40 border-t shadow-sm"
-      style={dark
-        ? { backgroundColor: '#1e1e1e', borderColor: '#333' }
-        : { backgroundColor: '#ffffff', borderColor: '#f3f4f6' }}
+      className="fixed left-0 right-0 lg:hidden z-40 border-t shadow-sm"
+      style={{
+        bottom: 'calc(3rem + env(safe-area-inset-bottom))',
+        ...(dark
+          ? { backgroundColor: '#1e1e1e', borderColor: '#333' }
+          : { backgroundColor: '#ffffff', borderColor: '#f3f4f6' }),
+      }}
     >
       <div className="flex items-center justify-between px-6 h-12">
         <div className="flex items-center gap-3">
