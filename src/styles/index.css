@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Article dark mode — applied to <article> element */
+.article-dark {
+  color: #e5e5e5;
+}
+
+.article-dark .prose {
+  color: #e5e5e5;
+}
+
+.article-dark .prose h1,
+.article-dark .prose h2,
+.article-dark .prose h3,
+.article-dark .prose h4 {
+  color: #f0f0f0;
+}
+
+.article-dark .prose a {
+  color: #93c5fd;
+}
+
+.article-dark .prose strong {
+  color: #f0f0f0;
+}
+
+.article-dark .prose blockquote {
+  border-left-color: #444;
+  color: #aaaaaa;
+}
+
+.article-dark .prose hr {
+  border-color: #333;
+}
+
+.article-dark .prose thead {
+  color: #f0f0f0;
+  border-bottom-color: #444;
+}
+
+.article-dark .prose tbody tr {
+  border-bottom-color: #333;
+}
+
+/* Series nav box */
+.article-dark .bg-gray-50 {
+  background-color: #2a2a2a;
+  border-color: #333;
+}
+
+/* Tags */
+.article-dark .bg-gray-100 {
+  background-color: #2a2a2a;
+  color: #9ca3af;
+}
+
+/* Share buttons border */
+.article-dark .border-gray-100,
+.article-dark .border-gray-200 {
+  border-color: #444;
+}
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
