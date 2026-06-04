@@ -17,7 +17,6 @@ import { useArticleSettings } from '../hooks/useArticleSettings'
 import { useSwipeNav } from '../hooks/useSwipeNav'
 import ArticleToolbar from '../components/ArticleToolbar'
 
-const fontSizeMap = { sm: '14px', md: '16px', lg: '18px' }
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -144,8 +143,7 @@ export default function BlogPost() {
         <div className={headings.length >= 2 ? 'lg:grid lg:grid-cols-[1fr_220px] lg:gap-12' : ''}>
           <article
             ref={swipeRef}
-            style={{ fontSize: fontSizeMap[fontSize] }}
-            className={`transition-colors${dark ? ' article-dark' : ''}`}
+            className={`transition-colors article-font-${fontSize}${dark ? ' article-dark' : ''}`}
           >
             {/* Tags */}
             <div className="flex gap-2 flex-wrap mb-3">

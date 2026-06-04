@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Article font size — applied to <article> element */
+.article-font-sm .prose { font-size: 14px; }
+.article-font-lg .prose { font-size: 18px; }
+
 /* Article dark mode — applied to <article> element */
 .article-dark {
   color: #e5e5e5;
