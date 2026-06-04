@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function BlogRow({ post }) {
   const date = post.published_at
-    ? new Date(post.published_at).toISOString().slice(0, 10)
+    ? post.published_at.slice(0, 10)
     : ''
 
   const readingMin = post.content
