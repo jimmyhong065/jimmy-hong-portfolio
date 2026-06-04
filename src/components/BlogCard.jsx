@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom'
 
 export default function BlogCard({ post }) {
-  const date = post.published_at
-    ? new Date(post.published_at).toISOString().slice(0, 10)
-    : ''
+  const date = post.published_at ? post.published_at.slice(0, 10) : ''
   const tags = (post.tags ?? []).slice(0, 3)
 
   return (
