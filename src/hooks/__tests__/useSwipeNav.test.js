@@ -1,6 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import { useRef } from 'react'
 
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate }))
@@ -25,7 +24,7 @@ describe('useSwipeNav', () => {
   it('navigates to prevSlug on right swipe (deltaX > 80)', () => {
     const div = document.createElement('div')
     // Use a wrapper to set ref before the effect runs
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const swipeRef = useSwipeNav({ prevSlug: 'prev-post', nextSlug: 'next-post' })
       swipeRef.current = div
       return swipeRef
@@ -41,7 +40,7 @@ describe('useSwipeNav', () => {
 
   it('navigates to nextSlug on left swipe (deltaX < -80)', () => {
     const div = document.createElement('div')
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const swipeRef = useSwipeNav({ prevSlug: 'prev-post', nextSlug: 'next-post' })
       swipeRef.current = div
       return swipeRef
@@ -57,7 +56,7 @@ describe('useSwipeNav', () => {
 
   it('does not navigate when vertical scroll detected (|deltaY| > 50)', () => {
     const div = document.createElement('div')
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const swipeRef = useSwipeNav({ prevSlug: 'a', nextSlug: 'b' })
       swipeRef.current = div
       return swipeRef
@@ -73,7 +72,7 @@ describe('useSwipeNav', () => {
 
   it('does not navigate right when prevSlug is null', () => {
     const div = document.createElement('div')
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const swipeRef = useSwipeNav({ prevSlug: null, nextSlug: 'next' })
       swipeRef.current = div
       return swipeRef
@@ -89,7 +88,7 @@ describe('useSwipeNav', () => {
 
   it('does not navigate left when nextSlug is null', () => {
     const div = document.createElement('div')
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const swipeRef = useSwipeNav({ prevSlug: 'prev', nextSlug: null })
       swipeRef.current = div
       return swipeRef
