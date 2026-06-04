@@ -1,0 +1,80 @@
+brand: jimmy-hong-qa-blog
+
+# === IDENTITY ===
+site:
+  name: "Jimmy Hong — QA Engineer"
+  url: "https://jimmy-hong-portfolio.pages.dev"
+  url_structure: "/blog/{slug}"
+  language: "zh-TW"
+  niche: "QA engineering, software testing, test automation"
+
+author:
+  name: "Jimmy Hong"
+  role: "QA Engineer"
+  company: "Seekrtech"
+  experience_years: 4
+  credentials:
+    - "Mobile App 自動化測試框架（Appium + CI/CD）"
+    - "QA 流程規範與品質儀表板設計"
+    - "性能測試（k6, JMeter）"
+    - "API / 整合測試設計"
+  tools: [Appium, Selenium, Playwright, pytest, k6, JMeter, GitHub Actions, Fiddler, Charles]
+  social: {}
+
+# === AUDIENCE ===
+audience:
+  primary: "台灣 QA 工程師（1–5 年資歷）"
+  secondary: "QA Leader、對品質有興趣的 RD"
+  pain_points:
+    - "測試流程沒有效率，時間花在等待和溝通"
+    - "不知道如何推動自動化或流程改善"
+    - "跟 RD/PM 協作有落差"
+    - "測試覆蓋範圍不確定是否足夠"
+
+# === VOICE & STYLE ===
+voice:
+  language: "繁體中文"
+  tone: "實務、直接、有個人觀點"
+  pov: "第一人稱（我）"
+  style_notes:
+    - "從具體事件/失敗故事開場，再抽取教訓"
+    - "避免教科書式條列，改用故事帶出原則"
+    - "結尾給讀者可以直接帶走的做法"
+    - "不寫「總結來說」、「綜上所述」等空洞收尾"
+    - "段落短，每段聚焦一個想法"
+    - "中文句子避免翻譯腔（不說『進行測試』，說『去測』）"
+  avoid:
+    - "AI 生成痕跡（過度完整的列點、每段都有結論句）"
+    - "英文術語不必要混入中文句子"
+    - "泛泛而談的建議（沒有自己實際做過的）"
+
+# === CONTENT PILLARS ===
+content_pillars:
+  - name: "測試策略"
+    weight: 0.30
+    topics: [risk-based testing, test planning, shift-left, exploratory testing]
+  - name: "自動化實務"
+    weight: 0.25
+    topics: [Appium, Playwright, CI/CD, flaky tests, self-healing]
+  - name: "流程優化"
+    weight: 0.20
+    topics: [QA workflow, bug report, test data, efficiency]
+  - name: "團隊協作"
+    weight: 0.15
+    topics: [QA-RD collaboration, QA-Leader collaboration, spec review]
+  - name: "AI × QA"
+    weight: 0.10
+    topics: [AI-generated code testing, vision AI, LLM test cases]
+
+# === TRUST SCORE ===
+trust_score:
+  current: 0.5
+  auto_publish_at: 0.85
+  # 0.5 = semi-auto: pause at topic selection only
+
+# === SEO DEFAULTS ===
+seo:
+  meta_description_max: 160
+  title_format: "{article_title} | Jimmy Hong"
+  internal_link_target_per_article: 2
+  target_word_count: 1800..2500
