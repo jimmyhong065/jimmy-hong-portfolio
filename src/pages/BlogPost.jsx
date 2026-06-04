@@ -207,7 +207,7 @@ export default function BlogPost() {
             )}
 
             {/* Content */}
-            <MarkdownContent content={post.content} />
+            <MarkdownContent content={post.content?.replace(/^#[^\n]*\n?/, '')} />
 
             {/* Share */}
             <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-3 flex-wrap">
