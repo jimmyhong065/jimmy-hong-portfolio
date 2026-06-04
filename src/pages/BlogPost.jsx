@@ -1,5 +1,5 @@
 // src/pages/BlogPost.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Nav from '../components/Nav'
@@ -15,6 +15,8 @@ import { parseHeadings } from '../lib/toc'
 import { supabase } from '../lib/supabase'
 import { useArticleSettings } from '../hooks/useArticleSettings'
 import { useSwipeNav } from '../hooks/useSwipeNav'
+import { useBookmarks } from '../hooks/useBookmarks'
+import { useReadHistory } from '../hooks/useReadHistory'
 import ArticleToolbar from '../components/ArticleToolbar'
 
 
@@ -33,6 +35,22 @@ export default function BlogPost() {
     prevSlug: adjacent.prev?.slug ?? null,
     nextSlug: adjacent.next?.slug ?? null,
   })
+  const { isBookmarked, toggle } = useBookmarks()
+  const { markRead } = useReadHistory()
+  const markedRef = useRef(false)
+
+  // Reset the "already marked" guard when navigating to a different article
+  useEffect(() => {
+    markedRef.current = false
+  }, [slug])
+
+  // Auto-mark read when user scrolls past 80%
+  useEffect(() => {
+    if (progress >= 80 && !markedRef.current && slug) {
+      markRead(slug)
+      markedRef.current = true
+    }
+  }, [progress, slug, markRead])
 
   useEffect(() => {
     let q = supabase.from('posts').select('*').eq('slug', slug)
@@ -266,6 +284,8 @@ export default function BlogPost() {
         onInc={incFontSize}
         onDec={decFontSize}
         onToggleDark={toggleDark}
+        bookmarked={isBookmarked(slug)}
+        onToggleBookmark={() => toggle(slug)}
       />
     </>
   )
