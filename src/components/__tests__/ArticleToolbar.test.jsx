@@ -1,16 +1,19 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import ArticleToolbar from '../ArticleToolbar'
 
-const defaults = {
-  fontSize: 'md',
-  dark: false,
-  onInc: vi.fn(),
-  onDec: vi.fn(),
-  onToggleDark: vi.fn(),
-}
-
 describe('ArticleToolbar', () => {
+  let defaults
+
+  beforeEach(() => {
+    defaults = {
+      fontSize: 'md',
+      dark: false,
+      onInc: vi.fn(),
+      onDec: vi.fn(),
+      onToggleDark: vi.fn(),
+    }
+  })
   it('shows 16px label for md', () => {
     render(<ArticleToolbar {...defaults} />)
     expect(screen.getByText('16px')).toBeInTheDocument()
