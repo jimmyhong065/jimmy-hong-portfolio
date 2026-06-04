@@ -194,16 +194,26 @@ export default function BlogPost() {
             {/* Share */}
             <div className="mt-12 pt-8 border-t border-gray-100 flex items-center gap-3 flex-wrap">
               <span className="text-xs text-gray-400">分享：</span>
+              {/* 手機：系統原生分享 */}
+              {typeof navigator !== 'undefined' && navigator.share && (
+                <button
+                  onClick={() => navigator.share({ title: post.title, url: postUrl })}
+                  className="md:hidden text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400 transition-colors"
+                >
+                  分享
+                </button>
+              )}
+              {/* 桌機：個別按鈕 */}
               <button onClick={() => copyLink(postUrl)}
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400 transition-colors">
+                className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400 transition-colors">
                 {copied ? '✓ 已複製' : '複製連結'}
               </button>
               <a href={lineShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">Line</a>
+                className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">Line</a>
               <a href={linkedInShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">LinkedIn</a>
+                className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">LinkedIn</a>
               <a href={xShare} target="_blank" rel="noreferrer"
-                className="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">X</a>
+                className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">X</a>
             </div>
 
             <EmailSubscribeForm />

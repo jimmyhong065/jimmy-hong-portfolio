@@ -1,7 +1,8 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 
 export default function Lightbox({ images, index, onClose, onPrev, onNext }) {
   const total = images.length
+  const touchStartX = useRef(0)
 
   const handleKey = useCallback((e) => {
     if (e.key === 'Escape') onClose()
@@ -18,6 +19,16 @@ export default function Lightbox({ images, index, onClose, onPrev, onNext }) {
     }
   }, [handleKey])
 
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  function handleTouchEnd(e) {
+    const delta = e.changedTouches[0].clientX - touchStartX.current
+    if (delta > 60) onPrev()
+    else if (delta < -60) onNext()
+  }
+
   const current = images[index]
   const src = typeof current === 'string' ? current : current?.url
   const caption = typeof current === 'object' ? current?.caption : null
@@ -26,6 +37,8 @@ export default function Lightbox({ images, index, onClose, onPrev, onNext }) {
     <div
       className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Close */}
       <button

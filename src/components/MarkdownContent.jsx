@@ -53,7 +53,7 @@ function CopyButton({ text }) {
   }
   return (
     <button onClick={copy}
-      className="absolute top-2 right-2 text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors opacity-0 group-hover:opacity-100">
+      className="absolute top-2 right-2 text-xs px-2 py-1 rounded bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors sm:opacity-0 sm:group-hover:opacity-100">
       {copied ? '✓' : '複製'}
     </button>
   )
