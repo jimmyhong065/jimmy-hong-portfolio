@@ -1,9 +1,11 @@
+// src/pages/Blog.jsx
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
 import BlogRow from '../components/BlogRow'
+import BlogCard from '../components/BlogCard'
 import TagFilter from '../components/TagFilter'
 import { usePosts } from '../hooks/usePosts'
 
@@ -13,6 +15,7 @@ export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const { posts, loading } = usePosts()
 
   const selectedTag = searchParams.get('tag') || null
@@ -38,10 +41,18 @@ export default function Blog() {
     return result
   }, [posts, selectedTag, query])
 
-  useEffect(() => { setPage(1) }, [selectedTag, query])
+  useEffect(() => {
+    setPage(1)
+    setVisibleCount(PAGE_SIZE)
+  }, [selectedTag, query])
 
+  // 桌機分頁
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  // 手機 load more
+  const pagedMobile = filtered.slice(0, visibleCount)
+  const hasMore = visibleCount < filtered.length
 
   return (
     <>
@@ -70,34 +81,54 @@ export default function Blog() {
           <p className="text-sm text-gray-400 py-8">沒有符合的文章。</p>
         ) : (
           <>
-            <div>{paged.map(p => <BlogRow key={p.id} post={p} />)}</div>
-            {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-between">
-                <span className="text-xs text-gray-400">
-                  第 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} 篇，共 {filtered.length} 篇
-                </span>
-                <div className="flex gap-1">
-                  <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
-                    className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">←</button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
-                    .reduce((acc, n, i, arr) => {
-                      if (i > 0 && n - arr[i - 1] > 1) acc.push('…')
-                      acc.push(n)
-                      return acc
-                    }, [])
-                    .map((n, i) => n === '…'
-                      ? <span key={`e${i}`} className="text-xs px-2 py-1.5 text-gray-400">…</span>
-                      : <button key={n} onClick={() => setPage(n)}
-                          className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${page === n ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 hover:border-gray-400'}`}>
-                          {n}
-                        </button>
-                    )}
-                  <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}
-                    className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">→</button>
+            {/* 手機：卡片 + Load More */}
+            <div className="md:hidden">
+              {pagedMobile.map(p => <BlogCard key={p.id} post={p} />)}
+              {hasMore ? (
+                <button
+                  onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+                  className="w-full mt-4 py-3 text-sm text-gray-500 border border-gray-200 rounded-xl hover:border-gray-400 transition-colors"
+                >
+                  載入更多
+                </button>
+              ) : (
+                <p className="text-center text-xs text-gray-400 mt-6">
+                  已顯示全部 {filtered.length} 篇
+                </p>
+              )}
+            </div>
+
+            {/* 桌機：row + 數字分頁（不動） */}
+            <div className="hidden md:block">
+              <div>{paged.map(p => <BlogRow key={p.id} post={p} />)}</div>
+              {totalPages > 1 && (
+                <div className="mt-10 flex items-center justify-between">
+                  <span className="text-xs text-gray-400">
+                    第 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} 篇，共 {filtered.length} 篇
+                  </span>
+                  <div className="flex gap-1">
+                    <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
+                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">←</button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
+                      .reduce((acc, n, i, arr) => {
+                        if (i > 0 && n - arr[i - 1] > 1) acc.push('…')
+                        acc.push(n)
+                        return acc
+                      }, [])
+                      .map((n, i) => n === '…'
+                        ? <span key={`e${i}`} className="text-xs px-2 py-1.5 text-gray-400">…</span>
+                        : <button key={n} onClick={() => setPage(n)}
+                            className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${page === n ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 hover:border-gray-400'}`}>
+                            {n}
+                          </button>
+                      )}
+                    <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}
+                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">→</button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </>
         )}
       </main>
