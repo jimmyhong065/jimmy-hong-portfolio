@@ -8,6 +8,8 @@ import BlogRow from '../components/BlogRow'
 import BlogCard from '../components/BlogCard'
 import TagFilter from '../components/TagFilter'
 import { usePosts } from '../hooks/usePosts'
+import { useBookmarks } from '../hooks/useBookmarks'
+import { useReadHistory } from '../hooks/useReadHistory'
 
 const PAGE_SIZE = 12
 
@@ -17,6 +19,9 @@ export default function Blog() {
   const [page, setPage] = useState(1)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const { posts, loading } = usePosts()
+  const { isBookmarked } = useBookmarks()
+  const { isRead } = useReadHistory()
+  const [specialFilter, setSpecialFilter] = useState(null)
 
   const selectedTag = searchParams.get('tag') || null
 
@@ -38,13 +43,15 @@ export default function Blog() {
         p.title?.toLowerCase().includes(q) || p.excerpt?.toLowerCase().includes(q)
       )
     }
+    if (specialFilter === 'unread') result = result.filter(p => !isRead(p.slug))
+    if (specialFilter === 'saved') result = result.filter(p => isBookmarked(p.slug))
     return result
-  }, [posts, selectedTag, query])
+  }, [posts, selectedTag, query, specialFilter, isRead, isBookmarked])
 
   useEffect(() => {
     setPage(1)
     setVisibleCount(PAGE_SIZE)
-  }, [selectedTag, query])
+  }, [selectedTag, query, specialFilter])
 
   // 桌機分頁
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
@@ -74,7 +81,13 @@ export default function Blog() {
             className="w-full text-sm border border-gray-200 rounded-full pl-10 pr-5 py-3 focus:outline-none focus:border-gray-400 placeholder:text-gray-300"
           />
         </div>
-        <TagFilter tags={allTags} selected={selectedTag} onSelect={setSelectedTag} />
+        <TagFilter
+          tags={allTags}
+          selected={selectedTag}
+          onSelect={setSelectedTag}
+          specialFilter={specialFilter}
+          onSpecialFilter={setSpecialFilter}
+        />
         {loading ? (
           <p className="text-sm text-gray-400">載入中…</p>
         ) : filtered.length === 0 ? (
@@ -83,7 +96,7 @@ export default function Blog() {
           <>
             {/* 手機：卡片 + Load More */}
             <div className="md:hidden">
-              {pagedMobile.map(p => <BlogCard key={p.id} post={p} />)}
+              {pagedMobile.map(p => <BlogCard key={p.id} post={p} isRead={isRead(p.slug)} />)}
               {hasMore ? (
                 <button
                   onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
