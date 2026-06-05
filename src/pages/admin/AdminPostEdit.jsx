@@ -48,6 +48,8 @@ export default function AdminPostEdit() {
   const autoSaveRef = useRef()
   const formRef = useRef(form)
   formRef.current = form
+  const emailSendingRef = useRef(false)
+  const pushSendingRef = useRef(false)
 
   useEffect(() => {
     if (!isNew) {
@@ -175,6 +177,8 @@ export default function AdminPostEdit() {
   }
 
   async function sendEmailNotification() {
+    if (emailSendingRef.current) return
+    emailSendingRef.current = true
     setEmailResult('sending')
     try {
       const res = await fetch('/api/email-send', {
@@ -189,10 +193,14 @@ export default function AdminPostEdit() {
       setEmailResult(await res.json())
     } catch {
       setEmailResult('error')
+    } finally {
+      emailSendingRef.current = false
     }
   }
 
   async function sendPushNotification() {
+    if (pushSendingRef.current) return
+    pushSendingRef.current = true
     setPushResult('sending')
     try {
       const res = await fetch('/api/push-send', {
@@ -212,6 +220,8 @@ export default function AdminPostEdit() {
       setPushResult(data)
     } catch {
       setPushResult('error')
+    } finally {
+      pushSendingRef.current = false
     }
   }
 

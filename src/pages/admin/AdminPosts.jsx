@@ -1,13 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 
-function readingTime(content) {
-  if (!content) return 1
-  return Math.max(1, Math.ceil(content.replace(/\s/g, '').length / 400))
-}
-
 export default function AdminPosts() {
+  const navigate = useNavigate()
   const [posts, setPosts] = useState([])
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -29,7 +25,7 @@ export default function AdminPosts() {
   async function fetchPosts() {
     const { data } = await supabase
       .from('posts')
-      .select('id, title, tags, published, published_at, content')
+      .select('id, title, slug, excerpt, tags, published, published_at')
       .order('created_at', { ascending: false })
     setPosts(data ?? [])
     setSelectedIds(new Set())
@@ -143,7 +139,7 @@ export default function AdminPosts() {
       })
       .select('id')
       .single()
-    if (data?.id) window.location.href = `/admin/posts/${data.id}`
+    if (data?.id) navigate(`/admin/posts/${data.id}`)
   }
 
   return (
@@ -187,7 +183,6 @@ export default function AdminPosts() {
                 <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
               </th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('title')}>標題{sortIcon('title')}</th>
-              <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">時間</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標籤</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published')}>狀態{sortIcon('published')}</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('published_at')}>日期{sortIcon('published_at')}</th>
@@ -202,9 +197,6 @@ export default function AdminPosts() {
                     onChange={() => toggleSelect(post.id)} />
                 </td>
                 <td className="px-4 py-3 text-sm">{post.title}</td>
-                <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
-                  {readingTime(post.content)} 分鐘
-                </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1 flex-wrap">
                     {(post.tags ?? []).map(t => (

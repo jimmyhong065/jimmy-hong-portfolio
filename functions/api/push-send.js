@@ -1,5 +1,6 @@
 // functions/api/push-send.js
 import { buildVapidAuth, encryptPushPayload } from './_push.js'
+import { stripMarkdown } from './_utils.js'
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -16,16 +17,6 @@ function json(body, status = 200) {
 
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS })
-}
-
-function stripMarkdown(text) {
-  return (text ?? '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, '')
-    .replace(/[*_~`#>]/g, '')
-    .replace(/^\s*[-*+\d.]+\s+/gm, '')
-    .replace(/\s+/g, ' ')
-    .trim()
 }
 
 export async function onRequestPost({ request, env }) {
