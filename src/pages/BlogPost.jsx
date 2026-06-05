@@ -50,6 +50,7 @@ export default function BlogPost() {
   // Reset the "already marked" guard when navigating to a different article
   useEffect(() => {
     markedRef.current = false
+    window.scrollTo(0, 0)
   }, [slug])
 
   // Auto-mark read when user scrolls past 80%
@@ -386,6 +387,17 @@ export default function BlogPost() {
                 data-slug={p.slug}
                 className={`article-font-${fontSize}${dark ? ' article-dark' : ''}`}
               >
+                {/* Back button */}
+                <Link
+                  to="/blog"
+                  className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 -ml-1 w-fit transition-colors"
+                  style={dark ? { color: '#9ca3af' } : {}}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6"/>
+                  </svg>
+                  部落格
+                </Link>
                 {/* Tags */}
                 <div className="flex gap-2 flex-wrap mb-3">
                   {(p.tags ?? []).map(t => (
