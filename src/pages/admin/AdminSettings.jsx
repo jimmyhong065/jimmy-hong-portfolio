@@ -91,8 +91,10 @@ export default function AdminSettings() {
       const idx = arr.findIndex(t => t.id === id)
       const target = idx + dir
       if (target < 0 || target >= arr.length) return tabs
-      ;[arr[idx].order, arr[target].order] = [arr[target].order, arr[idx].order]
-      return arr
+      const result = [...arr]
+      result[idx]    = { ...arr[idx],    order: arr[target].order }
+      result[target] = { ...arr[target], order: arr[idx].order }
+      return result
     })
   }
 
@@ -115,7 +117,7 @@ export default function AdminSettings() {
       id: Date.now().toString(),
       ...addForm,
       visible: true,
-      order: navTabs.length,
+      order: Math.max(...navTabs.map(t => t.order), -1) + 1,
     }
     setNavTabs(tabs => [...tabs, newTab])
     setAdding(false)
@@ -282,12 +284,15 @@ export default function AdminSettings() {
                 <div className="px-3 pb-3 border-t border-gray-100 pt-3 flex flex-col gap-2">
                   <IconPicker value={editForm.icon_key} onChange={v => setEditForm(f => ({ ...f, icon_key: v }))} />
                   <input value={editForm.label} onChange={e => setEditForm(f => ({ ...f, label: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
                     placeholder="標籤" className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400" />
                   <input value={editForm.url} onChange={e => setEditForm(f => ({ ...f, url: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
                     placeholder="https://... 或 /blog" className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400" />
                   <div className="flex gap-2">
                     <button type="button" onClick={() => setEditingId(null)} className="text-xs border border-gray-200 px-3 py-1.5 rounded-lg hover:border-gray-400">取消</button>
-                    <button type="button" onClick={saveEdit} className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700">確認</button>
+                    <button type="button" onClick={saveEdit} disabled={!editForm.label || !editForm.url}
+                      className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700 disabled:opacity-40">確認</button>
                   </div>
                 </div>
               )}
@@ -298,8 +303,10 @@ export default function AdminSettings() {
             <div className="border border-dashed border-gray-200 rounded-xl px-3 py-3 flex flex-col gap-2">
               <IconPicker value={addForm.icon_key} onChange={v => setAddForm(f => ({ ...f, icon_key: v }))} />
               <input value={addForm.label} onChange={e => setAddForm(f => ({ ...f, label: e.target.value }))}
+                onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
                 placeholder="標籤" className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400" />
               <input value={addForm.url} onChange={e => setAddForm(f => ({ ...f, url: e.target.value }))}
+                onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
                 placeholder="https://... 或 /blog" className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400" />
               <div className="flex gap-2">
                 <button type="button" onClick={() => setAdding(false)} className="text-xs border border-gray-200 px-3 py-1.5 rounded-lg hover:border-gray-400">取消</button>
