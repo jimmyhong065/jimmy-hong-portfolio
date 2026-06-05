@@ -45,11 +45,13 @@ export default function AdminPostEdit() {
     const saved = localStorage.getItem(`editor-mode-${id}`)
     return saved || 'wysiwyg'
   })
+  const [showModeToggle, setShowModeToggle] = useState(false)
   const autoSaveRef = useRef()
   const formRef = useRef(form)
   formRef.current = form
   const emailSendingRef = useRef(false)
   const pushSendingRef = useRef(false)
+  const hasUnsavedRef = useRef(false)
 
   useEffect(() => {
     if (!isNew) {
@@ -88,6 +90,21 @@ export default function AdminPostEdit() {
     autoSaveRef.current = setTimeout(() => doSave(), 5000)
     return () => clearTimeout(autoSaveRef.current)
   }, [form, currentId, doSave])
+
+  // Track unsaved state for beforeunload
+  useEffect(() => {
+    hasUnsavedRef.current =
+      saveStatus === 'pending' || saveStatus === 'saving' || saveStatus === 'error' ||
+      (isNew && !!(form.title || form.content))
+  }, [saveStatus, isNew, form.title, form.content])
+
+  useEffect(() => {
+    function onBeforeUnload(e) {
+      if (hasUnsavedRef.current) e.preventDefault()
+    }
+    window.addEventListener('beforeunload', onBeforeUnload)
+    return () => window.removeEventListener('beforeunload', onBeforeUnload)
+  }, [])
 
   // Ctrl+S
   useEffect(() => {
@@ -247,6 +264,7 @@ export default function AdminPostEdit() {
           <input name="slug" value={form.slug} onChange={handleChange} required
             className={`w-full text-sm border rounded-lg px-4 py-2.5 focus:outline-none ${slugError ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-gray-400'}`} />
           {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
+          {!isNew && !slugError && <p className="text-xs text-gray-400 mt-1">URL 路徑，建立後請勿修改</p>}
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">摘要</label>
@@ -261,14 +279,22 @@ export default function AdminPostEdit() {
         <div>
           <div className="flex items-center justify-between mb-1">
             <label className="text-xs text-gray-500">內容</label>
-            <div className="flex gap-1">
-              <button type="button" onClick={() => switchMode('wysiwyg')}
-                className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'wysiwyg' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
-                視覺編輯
-              </button>
-              <button type="button" onClick={() => switchMode('markdown')}
-                className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'markdown' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
-                Markdown
+            <div className="flex items-center gap-2">
+              {showModeToggle && (
+                <div className="flex gap-1">
+                  <button type="button" onClick={() => switchMode('wysiwyg')}
+                    className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'wysiwyg' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+                    視覺編輯
+                  </button>
+                  <button type="button" onClick={() => switchMode('markdown')}
+                    className={`text-xs px-2.5 py-1 rounded transition-colors ${editorMode === 'markdown' ? 'bg-gray-900 text-white' : 'border border-gray-200 text-gray-500 hover:border-gray-400'}`}>
+                    Markdown
+                  </button>
+                </div>
+              )}
+              <button type="button" onClick={() => setShowModeToggle(v => !v)}
+                className="text-xs text-gray-300 hover:text-gray-500 transition-colors">
+                {showModeToggle ? '收起' : '進階'}
               </button>
             </div>
           </div>

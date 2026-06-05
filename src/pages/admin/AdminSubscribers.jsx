@@ -1,16 +1,7 @@
 // src/pages/admin/AdminSubscribers.jsx
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-
-function stripMarkdown(text) {
-  return (text ?? '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, '')
-    .replace(/[*_~`#>]/g, '')
-    .replace(/^\s*[-*+\d.]+\s+/gm, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
+import { stripMarkdown } from '../../lib/text'
 
 function EmailPreview({ title, excerpt }) {
   const clean = stripMarkdown(excerpt)
