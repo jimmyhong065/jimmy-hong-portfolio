@@ -1,5 +1,5 @@
 // functions/api/email-send.js
-import { stripMarkdown, chunkArray } from './_utils.js'
+import { stripMarkdown, chunkArray, escapeHtml } from './_utils.js'
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -57,8 +57,8 @@ export async function onRequestPost({ request, env }) {
           htmlContent: `
             <div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:40px 32px;color:#222;">
               <p style="font-size:11px;color:#aaa;margin:0 0 24px;text-transform:uppercase;letter-spacing:.08em;">Jimmy Hong — 新文章</p>
-              <h1 style="font-size:20px;font-weight:700;line-height:1.3;margin:0 0 12px;">${title}</h1>
-              ${cleanExcerpt ? `<p style="font-size:14px;color:#555;line-height:1.7;margin:0 0 24px;">${cleanExcerpt}</p>` : ''}
+              <h1 style="font-size:20px;font-weight:700;line-height:1.3;margin:0 0 12px;">${escapeHtml(title)}</h1>
+              ${cleanExcerpt ? `<p style="font-size:14px;color:#555;line-height:1.7;margin:0 0 24px;">${escapeHtml(cleanExcerpt)}</p>` : ''}
               <a href="${articleUrl}"
                 style="display:inline-block;background:#111;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;">
                 閱讀文章

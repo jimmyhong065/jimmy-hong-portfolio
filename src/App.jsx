@@ -1,6 +1,38 @@
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import ProtectedRoute from './components/ProtectedRoute'
+
+const Home = lazy(() => import('./pages/Home'))
+const Projects = lazy(() => import('./pages/Projects'))
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogPost = lazy(() => import('./pages/BlogPost'))
+const About = lazy(() => import('./pages/About'))
+const Login = lazy(() => import('./pages/Login'))
+const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
+const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
+const AdminPosts = lazy(() => import('./pages/admin/AdminPosts'))
+const AdminPostEdit = lazy(() => import('./pages/admin/AdminPostEdit'))
+const AdminProjects = lazy(() => import('./pages/admin/AdminProjects'))
+const AdminProjectEdit = lazy(() => import('./pages/admin/AdminProjectEdit'))
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
+const AdminPhotoProjects = lazy(() => import('./pages/admin/AdminPhotoProjects'))
+const AdminPhotoProjectEdit = lazy(() => import('./pages/admin/AdminPhotoProjectEdit'))
+const AdminServices = lazy(() => import('./pages/admin/AdminServices'))
+const AdminServiceEdit = lazy(() => import('./pages/admin/AdminServiceEdit'))
+const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements'))
+const AdminAnnouncementEdit = lazy(() => import('./pages/admin/AdminAnnouncementEdit'))
+const AdminPhotos = lazy(() => import('./pages/admin/AdminPhotos'))
+const AdminFAQs = lazy(() => import('./pages/admin/AdminFAQs'))
+const AdminFAQEdit = lazy(() => import('./pages/admin/AdminFAQEdit'))
+const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
+const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
+const Services = lazy(() => import('./pages/Services'))
+const FAQ = lazy(() => import('./pages/FAQ'))
+const Saved = lazy(() => import('./pages/Saved'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PushNavigationHandler() {
   const navigate = useNavigate()
@@ -14,81 +46,52 @@ function PushNavigationHandler() {
   }, [navigate])
   return null
 }
-import Home from './pages/Home'
-import Projects from './pages/Projects'
-import ProjectDetail from './pages/ProjectDetail'
-import Blog from './pages/Blog'
-import BlogPost from './pages/BlogPost'
-import About from './pages/About'
-import Login from './pages/Login'
-import PhotoHome from './pages/photo/PhotoHome'
-import PhotoDetail from './pages/photo/PhotoDetail'
-import ProtectedRoute from './components/ProtectedRoute'
-import AdminLayout from './pages/admin/AdminLayout'
-import AdminPosts from './pages/admin/AdminPosts'
-import AdminPostEdit from './pages/admin/AdminPostEdit'
-import AdminProjects from './pages/admin/AdminProjects'
-import AdminProjectEdit from './pages/admin/AdminProjectEdit'
-import AdminSettings from './pages/admin/AdminSettings'
-import AdminPhotoProjects from './pages/admin/AdminPhotoProjects'
-import AdminPhotoProjectEdit from './pages/admin/AdminPhotoProjectEdit'
-import AdminServices from './pages/admin/AdminServices'
-import AdminServiceEdit from './pages/admin/AdminServiceEdit'
-import AdminAnnouncements from './pages/admin/AdminAnnouncements'
-import AdminAnnouncementEdit from './pages/admin/AdminAnnouncementEdit'
-import AdminPhotos from './pages/admin/AdminPhotos'
-import AdminFAQs from './pages/admin/AdminFAQs'
-import AdminFAQEdit from './pages/admin/AdminFAQEdit'
-import AdminSubmissions from './pages/admin/AdminSubmissions'
-import AdminSubscribers from './pages/admin/AdminSubscribers'
-import Services from './pages/Services'
-import FAQ from './pages/FAQ'
-import Saved from './pages/Saved'
-import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
         <PushNavigationHandler />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/photo" element={<PhotoHome />} />
-          <Route path="/photo/:id" element={<PhotoDetail />} />
-          <Route path="/admin" element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<Navigate to="/admin/posts" replace />} />
-            <Route path="posts" element={<AdminPosts />} />
-            <Route path="posts/:id" element={<AdminPostEdit />} />
-            <Route path="projects" element={<AdminProjects />} />
-            <Route path="projects/:id" element={<AdminProjectEdit />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="photo-projects" element={<AdminPhotoProjects />} />
-            <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
-            <Route path="services" element={<AdminServices />} />
-            <Route path="services/:id" element={<AdminServiceEdit />} />
-            <Route path="announcements" element={<AdminAnnouncements />} />
-            <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
-            <Route path="photos" element={<AdminPhotos />} />
-            <Route path="faqs" element={<AdminFAQs />} />
-            <Route path="faqs/:id" element={<AdminFAQEdit />} />
-            <Route path="submissions" element={<AdminSubmissions />} />
-            <Route path="subscribers" element={<AdminSubscribers />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen bg-white" />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/saved" element={<Saved />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/photo" element={<PhotoHome />} />
+            <Route path="/photo/:id" element={<PhotoDetail />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<Navigate to="/admin/posts" replace />} />
+              <Route path="posts" element={<AdminPosts />} />
+              <Route path="posts/:id" element={<AdminPostEdit />} />
+              <Route path="projects" element={<AdminProjects />} />
+              <Route path="projects/:id" element={<AdminProjectEdit />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="photo-projects" element={<AdminPhotoProjects />} />
+              <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
+              <Route path="services" element={<AdminServices />} />
+              <Route path="services/:id" element={<AdminServiceEdit />} />
+              <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
+              <Route path="photos" element={<AdminPhotos />} />
+              <Route path="faqs" element={<AdminFAQs />} />
+              <Route path="faqs/:id" element={<AdminFAQEdit />} />
+              <Route path="submissions" element={<AdminSubmissions />} />
+              <Route path="subscribers" element={<AdminSubscribers />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </HelmetProvider>
   )

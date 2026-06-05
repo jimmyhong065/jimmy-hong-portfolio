@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from 'react'
 import DOMPurify from 'dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import mermaid from 'mermaid'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
@@ -36,11 +35,6 @@ const MERMAID_CONFIG = {
 }
 
 let mermaidInitialized = false
-function initMermaid() {
-  if (mermaidInitialized) return
-  mermaid.initialize(MERMAID_CONFIG)
-  mermaidInitialized = true
-}
 
 let htmlMermaidCounter = 0
 
@@ -117,10 +111,14 @@ export default function MarkdownContent({ content }) {
 
   useEffect(() => {
     if (!isHtml || !containerRef.current) return
-    initMermaid()
-    containerRef.current
-      .querySelectorAll('pre > code.language-mermaid')
-      .forEach(async (el) => {
+    const els = containerRef.current.querySelectorAll('pre > code.language-mermaid')
+    if (!els.length) return
+    import('mermaid').then(({ default: mermaid }) => {
+      if (!mermaidInitialized) {
+        mermaid.initialize(MERMAID_CONFIG)
+        mermaidInitialized = true
+      }
+      els.forEach(async (el) => {
         const id = `mermaid-html-${++htmlMermaidCounter}`
         try {
           const { svg } = await mermaid.render(id, el.textContent.trim())
@@ -132,6 +130,7 @@ export default function MarkdownContent({ content }) {
           // leave original code block on parse error
         }
       })
+    })
   }, [content, isHtml])
 
   return isHtml
