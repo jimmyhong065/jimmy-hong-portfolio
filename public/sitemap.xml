@@ -36,31 +36,37 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/teamwork</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/k6-article-revised</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/appium-article-revised</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://jimmy-hong-portfolio.pages.dev/blog/domain-knowledge-ai-era</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/appium-article-revised</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/k6-article-revised</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/testing-ai-generated-code</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://jimmy-hong-portfolio.pages.dev/blog/automation-business-value</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/ai-replaced-qa-6m-loss</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -72,37 +78,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/ai-replaced-qa-6m-loss</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/testing-ai-generated-code</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/sbtm-exploratory-testing</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-leader-ic-collaboration</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/spof-life-design</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/github-actions-qa-intro</loc>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/routine-change-risk</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -114,7 +90,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/routine-change-risk</loc>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/sbtm-exploratory-testing</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/github-actions-qa-intro</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -122,6 +104,60 @@
   <url>
     <loc>https://jimmy-hong-portfolio.pages.dev/blog/release-timing-disaster</loc>
     <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-leader-ic-collaboration</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/retro-effective-communication</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/spof-life-design</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-observability-for-test-automation</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-performance-load-testing</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-whole-team-continuous-testing</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-pytest-tutorial</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-github-actions-for-testing</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-pytest-bdd</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -134,6 +170,12 @@
   <url>
     <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-communication-skills</loc>
     <lastmod>2026-06-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-test-automation-foundation</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
