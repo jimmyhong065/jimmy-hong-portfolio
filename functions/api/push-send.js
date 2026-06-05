@@ -25,7 +25,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Unauthorized' }, 401)
   }
 
-  const { title, excerpt, slug } = await request.json()
+  const { title, excerpt = '', slug } = await request.json()
   if (!title || !slug) return json({ error: 'Missing title or slug' }, 400)
 
   const res = await fetch(`${env.SUPABASE_URL}/rest/v1/push_subscriptions?select=id,endpoint,p256dh,auth`, {
@@ -40,7 +40,8 @@ export async function onRequestPost({ request, env }) {
   }
 
   const privateKeyJwk = JSON.parse(env.VAPID_PRIVATE_KEY_JWK)
-  const payload = JSON.stringify({ title, body: stripMarkdown(excerpt).slice(0, 120), slug })
+  const notificationBody = stripMarkdown(excerpt).slice(0, 120)
+  const payload = JSON.stringify({ title, body: notificationBody, slug })
 
   let sent = 0
   const toRemove = []
@@ -85,7 +86,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (sent > 0) {
-    await fetch(`${env.SUPABASE_URL}/rest/v1/notifications`, {
+    const insertRes = await fetch(`${env.SUPABASE_URL}/rest/v1/notifications`, {
       method: 'POST',
       headers: {
         'apikey': env.SUPABASE_SERVICE_KEY,
@@ -95,10 +96,13 @@ export async function onRequestPost({ request, env }) {
       },
       body: JSON.stringify({
         title,
-        body: stripMarkdown(excerpt).slice(0, 120),
+        body: notificationBody,
         url: `${env.SITE_URL}/blog/${slug}`,
       }),
     })
+    if (!insertRes.ok) {
+      console.error('notifications INSERT failed', insertRes.status, await insertRes.text())
+    }
   }
 
   return json({ sent, removed: toRemove.length })
