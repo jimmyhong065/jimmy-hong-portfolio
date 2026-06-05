@@ -69,7 +69,7 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
           <Link to="/" className="text-sm font-semibold tracking-wide">Jimmy Hong</Link>
           {/* Mobile bell — hidden on desktop */}
