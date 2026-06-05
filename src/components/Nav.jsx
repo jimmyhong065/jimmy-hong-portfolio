@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSettings } from '../hooks/useSettings'
 import { usePushSubscription } from '../hooks/usePushSubscription'
+import { useNotifications } from '../hooks/useNotifications'
+import { NotificationBadge } from './NotificationBadge'
 import { SVG_MAP, FALLBACK_TABS } from './NavIconMap'
 
 export default function Nav() {
@@ -13,6 +15,7 @@ export default function Nav() {
   const location = useLocation()
   const { state, error, subscribe, unsubscribe } = usePushSubscription()
   const [hint, setHint] = useState(null)
+  const { unreadCount } = useNotifications()
 
   function showHint(msg) {
     setHint(msg)
@@ -143,11 +146,12 @@ export default function Nav() {
           const inner = (
             <span
               aria-label={tab.label}
-              className={`flex items-center justify-center rounded-xl py-3 px-4 transition-colors ${
+              className={`relative flex items-center justify-center rounded-xl py-3 px-4 transition-colors ${
                 active ? 'text-white bg-white/15' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               {icon}
+              <NotificationBadge count={tab.url === '/notifications' ? unreadCount : 0} />
             </span>
           )
           return isExternal ? (

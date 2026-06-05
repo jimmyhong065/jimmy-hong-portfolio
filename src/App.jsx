@@ -32,6 +32,7 @@ const AdminFAQs = lazy(() => import('./pages/admin/AdminFAQs'))
 const AdminFAQEdit = lazy(() => import('./pages/admin/AdminFAQEdit'))
 const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
 const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
+const Notifications = lazy(() => import('./pages/Notifications'))
 
 function PushNavigationHandler() {
   const navigate = useNavigate()
@@ -62,6 +63,7 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/login" element={<Login />} />
             <Route path="/photo" element={<PhotoHome />} />
             <Route path="/photo/:id" element={<PhotoDetail />} />

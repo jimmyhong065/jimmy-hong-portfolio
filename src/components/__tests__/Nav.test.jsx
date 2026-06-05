@@ -7,6 +7,10 @@ vi.mock('../../hooks/useSettings', () => ({
   useSettings: () => ({ settings: { email: 'test@example.com' } }),
 }))
 
+vi.mock('../../hooks/useNotifications', () => ({
+  useNotifications: () => ({ unreadCount: 0, notifications: [], loading: false, markAllRead: vi.fn() }),
+}))
+
 function renderNav(initialPath = '/') {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
