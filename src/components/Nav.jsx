@@ -2,62 +2,14 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSettings } from '../hooks/useSettings'
 import { usePushSubscription } from '../hooks/usePushSubscription'
-
-const TABS = [
-  {
-    to: '/projects',
-    label: '作品集',
-    icon: (
-      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/blog',
-    label: '部落格',
-    icon: (
-      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-        <path d="M14 3v6h6"/><path d="M9 12h6M9 16h6"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/saved',
-    label: '收藏',
-    icon: (
-      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/faq',
-    label: 'FAQ',
-    icon: (
-      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-        <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/about',
-    label: '關於我',
-    icon: (
-      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="8" r="4"/>
-        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-      </svg>
-    ),
-  },
-]
+import { SVG_MAP, FALLBACK_TABS } from './NavIconMap'
 
 export default function Nav() {
   const { settings } = useSettings()
+  const rawTabs = settings?.nav_tabs?.length ? settings.nav_tabs : FALLBACK_TABS
+  const tabs = rawTabs
+    .filter(t => t.visible)
+    .sort((a, b) => a.order - b.order)
   const location = useLocation()
   const { state, error, subscribe, unsubscribe } = usePushSubscription()
   const [hint, setHint] = useState(null)
@@ -184,19 +136,27 @@ export default function Nav() {
         className="fixed left-4 right-4 md:hidden z-50 flex items-center justify-around rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-white/10"
         style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
       >
-        {TABS.map(tab => {
-          const active = location.pathname === tab.to || location.pathname.startsWith(tab.to + '/')
-          return (
-            <Link
-              key={tab.to}
-              to={tab.to}
+        {tabs.map(tab => {
+          const active = location.pathname === tab.url || location.pathname.startsWith(tab.url + '/')
+          const icon = SVG_MAP[tab.icon_key] ?? SVG_MAP.link
+          const isExternal = tab.url.startsWith('http')
+          const inner = (
+            <span
               aria-label={tab.label}
-              aria-current={active ? 'page' : undefined}
               className={`flex items-center justify-center rounded-xl py-3 px-4 transition-colors ${
                 active ? 'text-white bg-white/15' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              {tab.icon}
+              {icon}
+            </span>
+          )
+          return isExternal ? (
+            <a key={tab.id} href={tab.url} target="_blank" rel="noreferrer" aria-label={tab.label}>
+              {inner}
+            </a>
+          ) : (
+            <Link key={tab.id} to={tab.url} aria-current={active ? 'page' : undefined}>
+              {inner}
             </Link>
           )
         })}
