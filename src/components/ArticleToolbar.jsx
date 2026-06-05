@@ -1,6 +1,16 @@
 const FONT_LABELS = { sm: '14px', md: '16px', lg: '18px' }
 
-export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark, bookmarked = false, onToggleBookmark = () => {} }) {
+function remainingLabel(progress, readingMin) {
+  if (!readingMin) return FONT_LABELS['md']
+  if (progress === 0) return `${readingMin} 分鐘`
+  if (progress >= 100) return '讀完了 ✓'
+  return `剩 ${Math.ceil(readingMin * (1 - progress / 100))} 分鐘`
+}
+
+export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark, bookmarked = false, onToggleBookmark = () => {}, progress = 0, readingMin = 0 }) {
+  const barColor = dark ? '#9ca3af' : '#111827'
+  const barBg = dark ? '#374151' : '#e5e7eb'
+
   return (
     <div
       className="fixed left-0 right-0 lg:hidden z-40 border-t shadow-sm"
@@ -11,6 +21,18 @@ export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleD
           : { backgroundColor: '#ffffff', borderColor: '#f3f4f6' }),
       }}
     >
+      {/* Progress bar */}
+      <div style={{ height: '2px', background: barBg, borderRadius: 0 }}>
+        <div
+          style={{
+            height: '100%',
+            width: `${Math.min(100, Math.max(0, progress))}%`,
+            background: barColor,
+            transition: 'width 0.2s ease',
+          }}
+        />
+      </div>
+
       <div className="flex items-center justify-between px-6 h-12">
         <div className="flex items-center gap-3">
           <button
@@ -23,10 +45,10 @@ export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleD
             A−
           </button>
           <span
-            className="text-xs w-8 text-center"
+            className="text-xs w-14 text-center tabular-nums"
             style={{ color: dark ? '#6b7280' : '#9ca3af' }}
           >
-            {FONT_LABELS[fontSize]}
+            {remainingLabel(progress, readingMin)}
           </span>
           <button
             onClick={onInc}

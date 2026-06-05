@@ -452,6 +452,8 @@ export default function BlogPost() {
         onInc={incFontSize}
         onDec={decFontSize}
         onToggleDark={toggleDark}
+        progress={progress}
+        readingMin={readingMin}
         bookmarked={isBookmarked(activeSlug)}
         onToggleBookmark={() => toggle(activeSlug)}
       />
