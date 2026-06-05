@@ -6,6 +6,19 @@
 .article-font-sm .prose { font-size: 14px; }
 .article-font-lg .prose { font-size: 18px; }
 
+/* Chinese reading line-height */
+.article-font-sm .prose p,
+.article-font-sm .prose li,
+.article-font-sm .prose blockquote,
+.article-font-md .prose p,
+.article-font-md .prose li,
+.article-font-md .prose blockquote,
+.article-font-lg .prose p,
+.article-font-lg .prose li,
+.article-font-lg .prose blockquote {
+  line-height: 1.85;
+}
+
 /* Article dark mode — applied to <article> element */
 .article-dark {
   color: #e5e5e5;
