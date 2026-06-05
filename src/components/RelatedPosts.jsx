@@ -26,7 +26,7 @@ export default function RelatedPosts({ currentSlug, tags }) {
     if (!tags?.length) return
     supabase
       .from('posts')
-      .select('id, title, slug, tags, excerpt')
+      .select('id, title, slug, tags')
       .eq('published', true)
       .neq('slug', currentSlug)
       .then(({ data }) => {
