@@ -1,7 +1,7 @@
 const FONT_LABELS = { sm: '14px', md: '16px', lg: '18px' }
 
-function remainingLabel(progress, readingMin) {
-  if (!readingMin) return FONT_LABELS['md']
+function remainingLabel(progress, readingMin, fontSize) {
+  if (!readingMin) return FONT_LABELS[fontSize] ?? FONT_LABELS['md']
   if (progress === 0) return `${readingMin} 分鐘`
   if (progress >= 100) return '讀完了 ✓'
   return `剩 ${Math.ceil(readingMin * (1 - progress / 100))} 分鐘`
@@ -48,7 +48,7 @@ export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleD
             className="text-xs w-14 text-center tabular-nums"
             style={{ color: dark ? '#6b7280' : '#9ca3af' }}
           >
-            {remainingLabel(progress, readingMin)}
+            {remainingLabel(progress, readingMin, fontSize)}
           </span>
           <button
             onClick={onInc}
