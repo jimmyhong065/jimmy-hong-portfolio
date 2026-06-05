@@ -84,5 +84,22 @@ export async function onRequestPost({ request, env }) {
     )
   }
 
+  if (sent > 0) {
+    await fetch(`${env.SUPABASE_URL}/rest/v1/notifications`, {
+      method: 'POST',
+      headers: {
+        'apikey': env.SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        title,
+        body: stripMarkdown(excerpt).slice(0, 120),
+        url: `${env.SITE_URL}/blog/${slug}`,
+      }),
+    })
+  }
+
   return json({ sent, removed: toRemove.length })
 }
