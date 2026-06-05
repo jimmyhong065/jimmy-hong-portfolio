@@ -2,7 +2,9 @@ import { useEffect } from 'react'
 import { useNotifications } from '../hooks/useNotifications'
 
 function relativeTime(dateStr) {
+  if (!dateStr) return ''
   const diff = Date.now() - new Date(dateStr).getTime()
+  if (isNaN(diff)) return ''
   const mins = Math.floor(diff / 60000)
   if (mins < 60) return `${Math.max(0, mins)} 分鐘前`
   const hours = Math.floor(mins / 60)
@@ -32,6 +34,8 @@ export default function Notifications() {
             <a
               key={n.id}
               href={n.url}
+              target="_blank"
+              rel="noreferrer noopener"
               className="py-4 block hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors"
             >
               <p className="text-sm font-medium text-gray-900 mb-1">{n.title}</p>
