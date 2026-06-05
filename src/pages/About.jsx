@@ -16,7 +16,7 @@ const EXPERIENCE = [
   {
     company: 'Seekrtech',
     role: 'QA Engineer',
-    period: '2023 — 現在',
+    period: '2025 — 現在',
     points: [
       '建立 iOS/Android Mobile App 自動化測試框架，導入 Appium + CI/CD 讓回歸週期大幅縮短',
       '設計 QA 流程規範與品質儀表板，讓品質指標可視化、可追蹤',
