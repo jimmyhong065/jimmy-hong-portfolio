@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 export function useSettings() {
-  const [settings, setSettings] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '', photo_avatar_url: '', seo_keywords: '', seo_description: '', seo_photo_keywords: '', seo_photo_description: '' })
+  const [settings, setSettings] = useState({
+    email: '', github_url: '', linkedin_url: '', avatar_url: '',
+    photo_avatar_url: '', seo_keywords: '', seo_description: '',
+    seo_photo_keywords: '', seo_photo_description: '', nav_tabs: null,
+  })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
