@@ -21,34 +21,33 @@ describe('Nav', () => {
     expect(screen.getByText('Jimmy Hong')).toBeInTheDocument()
   })
 
-  it('renders all 5 tab labels in bottom bar', () => {
+  it('renders all 5 tabs in bottom bar (via aria-label)', () => {
     renderNav()
-    // Tab bar has: 作品集, 部落格, 收藏, FAQ, 關於我
-    expect(screen.getAllByText('作品集')).toHaveLength(2) // desktop nav + tab bar
-    expect(screen.getAllByText('部落格')).toHaveLength(2) // desktop nav + tab bar
-    expect(screen.getAllByText('收藏')).toHaveLength(2) // desktop nav + tab bar
-    expect(screen.getAllByText('FAQ')).toHaveLength(2) // desktop nav + tab bar
-    expect(screen.getAllByText('關於我')).toHaveLength(2) // desktop nav + tab bar
+    // Mobile tab bar: icons-only, each link has aria-label
+    // Desktop nav: text links with same names → 2 links per label total
+    expect(screen.getAllByRole('link', { name: '作品集' })).toHaveLength(2)
+    expect(screen.getAllByRole('link', { name: '部落格' })).toHaveLength(2)
+    expect(screen.getAllByRole('link', { name: '收藏' })).toHaveLength(2)
+    expect(screen.getAllByRole('link', { name: 'FAQ' })).toHaveLength(2)
+    expect(screen.getAllByRole('link', { name: '關於我' })).toHaveLength(2)
   })
 
   it('marks /projects tab active when on projects route', () => {
     renderNav('/projects')
-    const tabLinks = screen.getAllByText('作品集')
-    const tabBarLink = tabLinks[1].closest('a')
+    // [0] = desktop nav link, [1] = mobile tab link
+    const tabBarLink = screen.getAllByRole('link', { name: '作品集' })[1]
     expect(tabBarLink).toHaveAttribute('aria-current', 'page')
   })
 
   it('marks /projects tab active for nested routes like /projects/1', () => {
     renderNav('/projects/1')
-    const tabLinks = screen.getAllByText('作品集')
-    const tabBarLink = tabLinks[1].closest('a')
+    const tabBarLink = screen.getAllByRole('link', { name: '作品集' })[1]
     expect(tabBarLink).toHaveAttribute('aria-current', 'page')
   })
 
-  it('inactive tabs use text-gray-400', () => {
+  it('inactive tab does not have aria-current', () => {
     renderNav('/projects')
-    const blogLinks = screen.getAllByText('部落格')
-    const tabBarLink = blogLinks[1].closest('a')
+    const tabBarLink = screen.getAllByRole('link', { name: '部落格' })[1]
     expect(tabBarLink).not.toHaveAttribute('aria-current')
   })
 })

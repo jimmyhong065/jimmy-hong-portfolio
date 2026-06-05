@@ -17,6 +17,7 @@ import { useArticleSettings } from '../hooks/useArticleSettings'
 import { useSwipeNav } from '../hooks/useSwipeNav'
 import { useBookmarks } from '../hooks/useBookmarks'
 import { useReadHistory } from '../hooks/useReadHistory'
+import { useInfiniteRead } from '../hooks/useInfiniteRead'
 import ArticleToolbar from '../components/ArticleToolbar'
 
 
@@ -38,6 +39,13 @@ export default function BlogPost() {
   const { isBookmarked, toggle } = useBookmarks()
   const { markRead } = useReadHistory()
   const markedRef = useRef(false)
+  const [extraArticles, setExtraArticles] = useState([])
+  const [loadingNext, setLoadingNext] = useState(false)
+  const [exhausted, setExhausted] = useState(false)
+  const [activeSlug, setActiveSlug] = useState(slug)
+  const sentinelRefs = useRef([])
+  const loadingRef = useRef(false)
+  const { fetchNext } = useInfiniteRead(post?.tags ?? [], slug)
 
   // Reset the "already marked" guard when navigating to a different article
   useEffect(() => {
@@ -86,6 +94,51 @@ export default function BlogPost() {
         if (data && data.length > 1) setSeriesPosts(data)
       })
   }, [post?.tags])
+
+  // Infinite read — sentinel observer (mobile only)
+  useEffect(() => {
+    if (!post || exhausted) return
+    const sentinels = sentinelRefs.current.filter(Boolean)
+    if (!sentinels.length) return
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        const triggered = entries.find(
+          e => e.isIntersecting && e.target === sentinels[sentinels.length - 1]
+        )
+        if (!triggered || loadingRef.current) return
+        loadingRef.current = true
+        setLoadingNext(true)
+        const next = await fetchNext()
+        if (next) setExtraArticles(prev => [...prev, next])
+        else setExhausted(true)
+        setLoadingNext(false)
+        loadingRef.current = false
+      },
+      { threshold: 0.1 }
+    )
+    sentinels.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [post, extraArticles.length, exhausted])
+
+  // Infinite read — URL + activeSlug tracking
+  useEffect(() => {
+    const articles = document.querySelectorAll('[data-slug]')
+    if (!articles.length) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+            const s = e.target.dataset.slug
+            setActiveSlug(s)
+            window.history.replaceState(null, '', `/blog/${s}`)
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
+    articles.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [extraArticles.length])
 
   const headings = post?.content ? parseHeadings(post.content) : []
   const activeId = useActiveHeading(headings)
@@ -161,6 +214,7 @@ export default function BlogPost() {
         <div className={headings.length >= 2 ? 'lg:grid lg:grid-cols-[1fr_220px] lg:gap-12' : ''}>
           <article
             ref={swipeRef}
+            data-slug={slug}
             className={`transition-colors article-font-${fontSize}${dark ? ' article-dark' : ''}`}
           >
             {/* Back — mobile: prominent row; desktop: breadcrumb */}
@@ -294,6 +348,12 @@ export default function BlogPost() {
             <div className="mt-8">
               <Link to="/blog" className="text-xs text-gray-400 hover:text-gray-700">← 回文章列表</Link>
             </div>
+            {/* Infinite read sentinel — mobile only */}
+            <div
+              ref={el => { sentinelRefs.current[0] = el }}
+              className="md:hidden h-1"
+              aria-hidden="true"
+            />
           </article>
 
           {/* Desktop TOC */}
@@ -305,6 +365,72 @@ export default function BlogPost() {
             </aside>
           )}
         </div>
+
+        {/* Infinite read — appended articles (mobile only) */}
+        {extraArticles.map((p, i) => {
+          const pMin = p.content
+            ? Math.max(1, Math.ceil(p.content.replace(/\s/g, '').length / 400))
+            : null
+          return (
+            <div key={p.slug} className="md:hidden">
+              {/* Separator */}
+              <div className="my-10 flex items-center gap-3 text-xs text-gray-400">
+                <div className="flex-1 border-t border-gray-200" />
+                <span>下一篇</span>
+                <div className="flex-1 border-t border-gray-200" />
+              </div>
+              <p className="text-sm font-semibold text-center text-gray-600 mb-8 line-clamp-2">
+                {p.title}
+              </p>
+              <article
+                data-slug={p.slug}
+                className={`article-font-${fontSize}${dark ? ' article-dark' : ''}`}
+              >
+                {/* Tags */}
+                <div className="flex gap-2 flex-wrap mb-3">
+                  {(p.tags ?? []).map(t => (
+                    <Link
+                      key={t}
+                      to={`/blog?tag=${encodeURIComponent(t)}`}
+                      className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded hover:bg-gray-200 transition-colors"
+                    >
+                      {t}
+                    </Link>
+                  ))}
+                </div>
+                {/* Title + meta */}
+                <h2 className="text-2xl font-bold mb-2">{p.title}</h2>
+                <p className="text-xs text-gray-400 mb-10 flex items-center gap-3">
+                  {p.published_at ? p.published_at.slice(0, 10) : ''}
+                  {pMin && <span className="text-gray-300">·</span>}
+                  {pMin && <span>{pMin} 分鐘閱讀</span>}
+                </p>
+                {/* Content */}
+                <MarkdownContent content={p.content?.replace(/^\s*#[^\n]*\n?/, '')} />
+                {/* Sentinel */}
+                <div
+                  ref={el => { sentinelRefs.current[i + 1] = el }}
+                  className="h-1"
+                  aria-hidden="true"
+                />
+              </article>
+            </div>
+          )
+        })}
+
+        {/* Loading spinner */}
+        {loadingNext && (
+          <div className="md:hidden flex justify-center py-12">
+            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* End marker */}
+        {exhausted && (
+          <p className="md:hidden text-center text-xs text-gray-400 py-12">
+            — 已讀完所有相關文章 —
+          </p>
+        )}
       </main>
       <Footer />
       <ScrollToTop />
@@ -314,8 +440,8 @@ export default function BlogPost() {
         onInc={incFontSize}
         onDec={decFontSize}
         onToggleDark={toggleDark}
-        bookmarked={isBookmarked(slug)}
-        onToggleBookmark={() => toggle(slug)}
+        bookmarked={isBookmarked(activeSlug)}
+        onToggleBookmark={() => toggle(activeSlug)}
       />
     </>
   )
