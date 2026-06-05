@@ -20,3 +20,4 @@ docs/pictures/
 *.mjs
 generate-article.sh
 data/
+.superpowers/
