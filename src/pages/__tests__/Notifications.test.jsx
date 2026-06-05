@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import Notifications from '../Notifications'
 
+vi.mock('../../components/Nav', () => ({ default: () => null }))
+
 const mockMarkAllRead = vi.fn()
 let mockNotifications = [
   { id: 'aaa', title: '新文章：測試', body: '這是摘要', url: '/blog/test', sent_at: '2026-06-01T00:00:00Z' },

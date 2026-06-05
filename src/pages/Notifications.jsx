@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Nav from '../components/Nav'
 import { useNotifications } from '../hooks/useNotifications'
 
 function relativeTime(dateStr) {
@@ -22,7 +23,9 @@ export default function Notifications() {
   }, [markAllRead])
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 pb-32">
+    <>
+      <Nav />
+      <div className="max-w-2xl mx-auto px-4 py-8 pb-32">
       <h1 className="text-lg font-bold mb-6">通知</h1>
       {loading ? (
         <p className="text-sm text-gray-400">載入中…</p>
@@ -46,5 +49,6 @@ export default function Notifications() {
         </div>
       )}
     </div>
+    </>
   )
 }
