@@ -18,14 +18,18 @@ export function useNotifications() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let active = true
     supabase
       .from('notifications')
       .select('id, title, body, url, sent_at')
       .order('sent_at', { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (!active) return
+        if (error) console.error('[useNotifications]', error)
         setNotifications(data ?? [])
         setLoading(false)
       })
+    return () => { active = false }
   }, [])
 
   const unreadCount = notifications.filter(n => !readIds.has(n.id)).length

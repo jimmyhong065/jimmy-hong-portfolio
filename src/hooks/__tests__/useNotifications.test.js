@@ -45,7 +45,7 @@ describe('useNotifications', () => {
     const { result } = renderHook(() => useNotifications())
     await act(async () => {})
     expect(result.current.unreadCount).toBe(2)
-    act(() => result.current.markAllRead())
+    await act(async () => { result.current.markAllRead() })
     expect(result.current.unreadCount).toBe(0)
     const stored = JSON.parse(localStorage.getItem('qa_read_notifs') ?? '[]')
     expect(stored).toContain('aaa')
