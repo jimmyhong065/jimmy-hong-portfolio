@@ -2,13 +2,16 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import ProtectedRoute from './components/ProtectedRoute'
-
-const Home = lazy(() => import('./pages/Home'))
-const Projects = lazy(() => import('./pages/Projects'))
-const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
-const Blog = lazy(() => import('./pages/Blog'))
-const BlogPost = lazy(() => import('./pages/BlogPost'))
-const About = lazy(() => import('./pages/About'))
+import Home from './pages/Home'
+import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
+import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
+import About from './pages/About'
+import Services from './pages/Services'
+import FAQ from './pages/FAQ'
+import Saved from './pages/Saved'
+import NotFound from './pages/NotFound'
 const Login = lazy(() => import('./pages/Login'))
 const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
 const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
@@ -29,10 +32,6 @@ const AdminFAQs = lazy(() => import('./pages/admin/AdminFAQs'))
 const AdminFAQEdit = lazy(() => import('./pages/admin/AdminFAQEdit'))
 const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
 const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
-const Services = lazy(() => import('./pages/Services'))
-const FAQ = lazy(() => import('./pages/FAQ'))
-const Saved = lazy(() => import('./pages/Saved'))
-const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PushNavigationHandler() {
   const navigate = useNavigate()
