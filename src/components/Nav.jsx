@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useSettings } from '../hooks/useSettings'
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 import { usePushSubscription } from '../hooks/usePushSubscription'
 import { useNotifications } from '../hooks/useNotifications'
 import { NotificationBadge } from './NotificationBadge'
 import { SVG_MAP, FALLBACK_TABS } from './NavIconMap'
 
+const DESKTOP_LINKS = [
+  { key: 'projects', to: '/projects', label: '作品集' },
+  { key: 'blog', to: '/blog', label: '部落格' },
+  { key: 'saved', to: '/saved', label: '收藏' },
+  { key: 'faq', to: '/faq', label: 'FAQ' },
+  { key: 'about', to: '/about', label: '關於我' },
+]
+
 export default function Nav() {
-  const { settings } = useSettings()
+  const { settings } = useSiteSettings()
+  const hidden = settings.hidden_pages ?? []
   const rawTabs = settings?.nav_tabs?.length ? settings.nav_tabs : FALLBACK_TABS
-  const tabs = rawTabs
-    .filter(t => t.visible)
-    .sort((a, b) => a.order - b.order)
+  const tabs = rawTabs.filter(t => t.visible).sort((a, b) => a.order - b.order)
+  const visibleDesktopLinks = DESKTOP_LINKS.filter(l => !hidden.includes(l.key))
   const location = useLocation()
   const { state, error, subscribe, unsubscribe } = usePushSubscription()
   const [hint, setHint] = useState(null)
@@ -26,8 +34,8 @@ export default function Nav() {
     <>
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
-          <Link to="/" className="text-sm font-semibold tracking-wide">Jimmy Hong</Link>
-          {/* Mobile bell — hidden on desktop */}
+          <Link to="/" className="text-sm font-semibold tracking-wide">QA Lab</Link>
+          {/* Mobile bell */}
           {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied' || state === 'unsupported') && (
             <div className="relative md:hidden">
               <button
@@ -69,15 +77,17 @@ export default function Nav() {
               )}
             </div>
           )}
-          {/* Desktop nav — hidden on mobile */}
+          {/* Desktop nav */}
           <ul className="hidden md:flex gap-8 list-none">
-            <li><Link to="/projects" className="text-sm text-gray-500 hover:text-gray-900">作品集</Link></li>
-            <li><Link to="/blog" className="text-sm text-gray-500 hover:text-gray-900">部落格</Link></li>
-            <li><Link to="/saved" className="text-sm text-gray-500 hover:text-gray-900">收藏</Link></li>
-            <li><Link to="/faq" className="text-sm text-gray-500 hover:text-gray-900">FAQ</Link></li>
-            <li><Link to="/about" className="text-sm text-gray-500 hover:text-gray-900">關於我</Link></li>
+            {visibleDesktopLinks.map(link => (
+              <li key={link.key}>
+                <Link to={link.to} className="text-sm text-gray-500 hover:text-gray-900">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
-          {/* Desktop CTA — hidden on mobile */}
+          {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
             <a href="/rss.xml" target="_blank" rel="noreferrer" title="RSS 訂閱"
               className="text-gray-400 hover:text-gray-700 transition-colors">
@@ -127,14 +137,18 @@ export default function Nav() {
               </div>
             )}
             {settings.email && (
-              <a href={`mailto:${settings.email}`} className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
+              <a
+                href={`mailto:${settings.email}`}
+                className="text-xs px-4 py-2 rounded-md transition-colors"
+                style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-text)' }}
+              >
                 聯絡我
               </a>
             )}
           </div>
         </div>
       </nav>
-      {/* Mobile bottom tab bar — floating pill */}
+      {/* Mobile bottom tab bar */}
       <nav
         className="fixed left-4 right-4 md:hidden z-50 flex items-center justify-around rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-white/10"
         style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
