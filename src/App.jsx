@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Projects from './pages/Projects'
@@ -34,6 +35,13 @@ const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
 const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
 const Notifications = lazy(() => import('./pages/Notifications'))
 
+function HiddenRoute({ pageKey, children }) {
+  const { settings } = useSiteSettings()
+  const hidden = settings.hidden_pages ?? []
+  if (hidden.includes(pageKey)) return <Navigate to="/" replace />
+  return children
+}
+
 function PushNavigationHandler() {
   const navigate = useNavigate()
   useEffect(() => {
@@ -47,52 +55,60 @@ function PushNavigationHandler() {
   return null
 }
 
+function AppRoutes() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<HiddenRoute pageKey="projects"><Projects /></HiddenRoute>} />
+        <Route path="/projects/:id" element={<HiddenRoute pageKey="projects"><ProjectDetail /></HiddenRoute>} />
+        <Route path="/blog" element={<HiddenRoute pageKey="blog"><Blog /></HiddenRoute>} />
+        <Route path="/blog/:slug" element={<HiddenRoute pageKey="blog"><BlogPost /></HiddenRoute>} />
+        <Route path="/saved" element={<Saved />} />
+        <Route path="/about" element={<HiddenRoute pageKey="about"><About /></HiddenRoute>} />
+        <Route path="/services" element={<HiddenRoute pageKey="services"><Services /></HiddenRoute>} />
+        <Route path="/faq" element={<HiddenRoute pageKey="faq"><FAQ /></HiddenRoute>} />
+        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/photo" element={<HiddenRoute pageKey="photo"><PhotoHome /></HiddenRoute>} />
+        <Route path="/photo/:id" element={<HiddenRoute pageKey="photo"><PhotoDetail /></HiddenRoute>} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Navigate to="/admin/posts" replace />} />
+          <Route path="posts" element={<AdminPosts />} />
+          <Route path="posts/:id" element={<AdminPostEdit />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="projects/:id" element={<AdminProjectEdit />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="photo-projects" element={<AdminPhotoProjects />} />
+          <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
+          <Route path="services" element={<AdminServices />} />
+          <Route path="services/:id" element={<AdminServiceEdit />} />
+          <Route path="announcements" element={<AdminAnnouncements />} />
+          <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
+          <Route path="photos" element={<AdminPhotos />} />
+          <Route path="faqs" element={<AdminFAQs />} />
+          <Route path="faqs/:id" element={<AdminFAQEdit />} />
+          <Route path="submissions" element={<AdminSubmissions />} />
+          <Route path="subscribers" element={<AdminSubscribers />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
+  )
+}
+
 export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <PushNavigationHandler />
-        <Suspense fallback={<div className="min-h-screen bg-white" />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/saved" element={<Saved />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/photo" element={<PhotoHome />} />
-            <Route path="/photo/:id" element={<PhotoDetail />} />
-            <Route path="/admin" element={
-              <ProtectedRoute>
-                <AdminLayout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<Navigate to="/admin/posts" replace />} />
-              <Route path="posts" element={<AdminPosts />} />
-              <Route path="posts/:id" element={<AdminPostEdit />} />
-              <Route path="projects" element={<AdminProjects />} />
-              <Route path="projects/:id" element={<AdminProjectEdit />} />
-              <Route path="settings" element={<AdminSettings />} />
-              <Route path="photo-projects" element={<AdminPhotoProjects />} />
-              <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
-              <Route path="services" element={<AdminServices />} />
-              <Route path="services/:id" element={<AdminServiceEdit />} />
-              <Route path="announcements" element={<AdminAnnouncements />} />
-              <Route path="announcements/:id" element={<AdminAnnouncementEdit />} />
-              <Route path="photos" element={<AdminPhotos />} />
-              <Route path="faqs" element={<AdminFAQs />} />
-              <Route path="faqs/:id" element={<AdminFAQEdit />} />
-              <Route path="submissions" element={<AdminSubmissions />} />
-              <Route path="subscribers" element={<AdminSubscribers />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <SiteSettingsProvider>
+          <PushNavigationHandler />
+          <AppRoutes />
+        </SiteSettingsProvider>
       </BrowserRouter>
     </HelmetProvider>
   )
