@@ -166,7 +166,7 @@ export default function BlogPost() {
 
   if (loading) return (
     <>
-      <div className="fixed top-0 left-0 h-[3px] bg-gray-900 z-50" style={{ width: `${progress}%` }} />
+      <div className="fixed top-0 left-0 h-[3px] z-50" style={{ width: `${progress}%`, backgroundColor: 'var(--color-accent)' }} />
       <Nav />
       <div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">載入中…</div>
       <Footer />
@@ -206,7 +206,7 @@ export default function BlogPost() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 h-[3px] bg-gray-900 z-50 transition-none" style={{ width: `${progress}%` }} />
+      <div className="fixed top-0 left-0 h-[3px] z-50 transition-none" style={{ width: `${progress}%`, backgroundColor: 'var(--color-accent)' }} />
       <Helmet>
         <title>{post.title} | Jimmy Hong</title>
         <meta name="description" content={post.excerpt ?? ''} />

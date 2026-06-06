@@ -8,7 +8,7 @@ function remainingLabel(progress, readingMin, fontSize) {
 }
 
 export default function ArticleToolbar({ fontSize, dark, onInc, onDec, onToggleDark, bookmarked = false, onToggleBookmark = () => {}, progress = 0, readingMin = 0 }) {
-  const barColor = dark ? '#9ca3af' : '#111827'
+  const barColor = dark ? '#9ca3af' : 'var(--color-accent)'
   const barBg = dark ? '#374151' : '#e5e7eb'
 
   return (
