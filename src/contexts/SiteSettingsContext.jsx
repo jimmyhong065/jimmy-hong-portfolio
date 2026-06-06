@@ -5,7 +5,9 @@ import { applyTheme } from '../lib/theme'
 const DEFAULT_SETTINGS = {
   accent_color: '#111827',
   font_family: 'Noto Sans TC',
+  bg_color: '#ffffff',
   hidden_pages: [],
+  hidden_sections: [],
   nav_tabs: null,
   email: '',
   github_url: '',
@@ -32,7 +34,7 @@ export function SiteSettingsProvider({ children }) {
     const { data } = await supabase.from('settings').select('*').eq('id', 1).single()
     if (data) {
       setSettings({ ...DEFAULT_SETTINGS, ...data })
-      applyTheme(data)
+      applyTheme({ accent_color: data.accent_color, font_family: data.font_family, bg_color: data.bg_color })
     }
     setLoading(false)
   }
