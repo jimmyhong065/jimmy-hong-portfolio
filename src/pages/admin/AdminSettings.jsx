@@ -282,15 +282,6 @@ export default function AdminSettings() {
           />
           <p className="text-xs text-gray-400 mt-1">按 Enter 或逗號新增，× 移除</p>
         </div>
-        {success && <p className="text-sm text-green-600">已儲存</p>}
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <div>
-          <button type="submit" disabled={saving}
-            className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
-            {saving ? '儲存中…' : '儲存'}
-          </button>
-        </div>
-
         <hr className="border-gray-100" />
         <p className="text-xs tracking-widest text-gray-400 uppercase -mb-2">手機底部選單</p>
 
@@ -431,6 +422,15 @@ export default function AdminSettings() {
               })}
             </div>
           </div>
+        </div>
+
+        {success && <p className="text-sm text-green-600">已儲存</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
+        <div>
+          <button type="submit" disabled={saving}
+            className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
+            {saving ? '儲存中…' : '儲存'}
+          </button>
         </div>
       </form>
     </div>
