@@ -11,6 +11,17 @@ export function deriveColorPalette(hex) {
   }
 }
 
+function injectGoogleFont(id, fontName) {
+  let link = document.getElementById(id)
+  if (!link) {
+    link = document.createElement('link')
+    link.id = id
+    link.rel = 'stylesheet'
+    document.head.appendChild(link)
+  }
+  link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:wght@400;500;700&display=swap`
+}
+
 export function applyTheme({ accent_color, font_family, bg_color, heading_font }) {
   if (typeof document === 'undefined') return
   const palette = deriveColorPalette(accent_color ?? '#111827')
@@ -28,25 +39,9 @@ export function applyTheme({ accent_color, font_family, bg_color, heading_font }
 
   const font = font_family ?? 'Noto Sans TC'
   root.style.setProperty('--font-body', `"${font}", sans-serif`)
-
-  let link = document.getElementById('google-font-theme')
-  if (!link) {
-    link = document.createElement('link')
-    link.id = 'google-font-theme'
-    link.rel = 'stylesheet'
-    document.head.appendChild(link)
-  }
-  link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;700&display=swap`
+  injectGoogleFont('google-font-theme', font)
 
   const hFont = heading_font ?? font
   root.style.setProperty('--font-heading', `"${hFont}", sans-serif`)
-
-  let hLink = document.getElementById('google-font-heading')
-  if (!hLink) {
-    hLink = document.createElement('link')
-    hLink.id = 'google-font-heading'
-    hLink.rel = 'stylesheet'
-    document.head.appendChild(hLink)
-  }
-  hLink.href = `https://fonts.googleapis.com/css2?family=${hFont.replace(/ /g, '+')}:wght@400;500;700&display=swap`
+  injectGoogleFont('google-font-heading', hFont)
 }

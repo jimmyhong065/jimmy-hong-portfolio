@@ -94,4 +94,10 @@ describe('applyTheme', () => {
     expect(links.length).toBe(1)
     expect(links[0].href).toContain('Merriweather')
   })
+
+  it('falls back to font_family for --font-heading when heading_font not provided', () => {
+    applyTheme({ accent_color: '#111827', font_family: 'Inter' })
+    const val = document.documentElement.style.getPropertyValue('--font-heading')
+    expect(val).toContain('Inter')
+  })
 })
