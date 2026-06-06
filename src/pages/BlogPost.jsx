@@ -39,6 +39,7 @@ export default function BlogPost() {
   const { isBookmarked, toggle } = useBookmarks()
   const { markRead } = useReadHistory()
   const markedRef = useRef(false)
+  const completedRef = useRef(false)
   const [extraArticles, setExtraArticles] = useState([])
   const [loadingNext, setLoadingNext] = useState(false)
   const [exhausted, setExhausted] = useState(false)
@@ -47,9 +48,10 @@ export default function BlogPost() {
   const loadingRef = useRef(false)
   const { fetchNext } = useInfiniteRead(post?.tags ?? [], slug)
 
-  // Reset the "already marked" guard when navigating to a different article
+  // Reset guards when navigating to a different article
   useEffect(() => {
     markedRef.current = false
+    completedRef.current = false
     window.scrollTo(0, 0)
   }, [slug])
 
@@ -59,7 +61,16 @@ export default function BlogPost() {
       markRead(slug)
       markedRef.current = true
     }
-  }, [progress, slug, markRead])
+    if (progress >= 90 && !completedRef.current && slug && post?.title) {
+      completedRef.current = true
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'article_completed', {
+          article_title: post.title,
+          article_slug: slug,
+        })
+      }
+    }
+  }, [progress, slug, markRead, post?.title])
 
   useEffect(() => {
     let q = supabase.from('posts').select('*').eq('slug', slug)

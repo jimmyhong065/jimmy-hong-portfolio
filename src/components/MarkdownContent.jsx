@@ -82,6 +82,24 @@ function MdH3({ children }) {
   return <h3 id={headingId(raw)}>{headingText(raw)}</h3>
 }
 
+function MdLink({ href, children }) {
+  const isExternal = href?.startsWith('http')
+  function handleClick() {
+    if (isExternal && typeof window.gtag === 'function') {
+      window.gtag('event', 'outbound_click', {
+        link_url: href,
+        link_text: String(children),
+      })
+    }
+  }
+  return (
+    <a href={href} onClick={handleClick}
+      {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})}>
+      {children}
+    </a>
+  )
+}
+
 function MdImg({ src, alt }) {
   const [open, setOpen] = useState(false)
   return (
@@ -108,6 +126,25 @@ export default function MarkdownContent({ content }) {
       return `<${tag}${attrs} id="${slugify(text)}">${inner}</${tag}>`
     })
   }
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    const links = containerRef.current.querySelectorAll('a[href^="http"]')
+    const handlers = []
+    links.forEach(link => {
+      const handler = () => {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'outbound_click', {
+            link_url: link.href,
+            link_text: link.innerText,
+          })
+        }
+      }
+      link.addEventListener('click', handler)
+      handlers.push({ link, handler })
+    })
+    return () => handlers.forEach(({ link, handler }) => link.removeEventListener('click', handler))
+  }, [content])
 
   useEffect(() => {
     if (!isHtml || !containerRef.current) return
@@ -145,7 +182,7 @@ export default function MarkdownContent({ content }) {
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          components={{ code: MdCode, h2: MdH2, h3: MdH3, img: MdImg }}
+          components={{ code: MdCode, h2: MdH2, h3: MdH3, img: MdImg, a: MdLink }}
         >
           {content ?? ''}
         </ReactMarkdown>
