@@ -5,14 +5,15 @@ import ProjectCard from '../components/ProjectCard'
 import BlogRow from '../components/BlogRow'
 import { usePosts } from '../hooks/usePosts'
 import { useProjects } from '../hooks/useProjects'
-import { useSettings } from '../hooks/useSettings'
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 import { useServices } from '../hooks/useServices'
 import { useAnnouncements } from '../hooks/useAnnouncements'
 
 export default function Home() {
   const { posts } = usePosts()
   const { projects } = useProjects()
-  const { settings } = useSettings()
+  const { settings } = useSiteSettings()
+  const hiddenSections = settings.hidden_sections ?? []
   const { services } = useServices('qa')
   const { announcements } = useAnnouncements()
 
@@ -42,30 +43,34 @@ export default function Home() {
       <main>
 
         {/* ── Hero — white ── */}
-        <div className="max-w-5xl mx-auto px-4 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+        <div className="max-w-5xl mx-auto px-4 md:px-12 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
-            <div className="flex gap-7 items-start">
-              <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2">
+            {/* Mobile: centered column; Desktop: side-by-side row */}
+            <div className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left md:gap-7">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2 mb-4 md:mb-0">
                 {settings.avatar_url && <img src={settings.avatar_url} alt="Jimmy Hong" className="w-full h-full object-cover" />}
               </div>
-              <div>
+              <div className="w-full">
                 <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">QA Engineer / 品質架構師</p>
                 <h1 className="text-3xl font-bold mb-1">Jimmy Hong</h1>
                 <p className="text-sm text-gray-500 mb-4">打造讓團隊信任的 QA 系統</p>
-                <p className="text-sm text-gray-500 leading-relaxed mb-6">
+                <p className="text-sm text-gray-500 leading-relaxed mb-5">
                   專注測試流程設計與品質架構。<br />
                   從流程標準化到自動化導入，<br />
                   讓品質成為開發文化，而不是最後一道關卡。
                 </p>
-                <div className="flex gap-2 flex-wrap mb-6">
+                <div className="flex gap-2 flex-wrap justify-center md:justify-start mb-5">
                   {['測試策略', 'CI/CD 整合', '自動化框架', 'QA 流程設計'].map(t => (
                     <span key={t} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">{t}</span>
                   ))}
                 </div>
-                <div className="flex items-center gap-3">
-                  <a href="/projects" className="text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
-                  <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">閱讀文章</a>
-                  <div className="flex gap-2 ml-1">
+                {/* CTA: primary buttons row + social icons row on mobile */}
+                <div className="flex flex-col items-center md:flex-row md:items-center gap-3">
+                  <div className="flex items-center gap-3">
+                    <a href="/projects" className="text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
+                    <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">閱讀文章</a>
+                  </div>
+                  <div className="flex gap-2">
                     {settings.github_url && (
                       <a href={settings.github_url} target="_blank" rel="noreferrer" className="w-8 h-8 border border-gray-200 rounded-md flex items-center justify-center text-gray-500 hover:border-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
@@ -85,10 +90,20 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            {/* Mobile-only stats */}
+            <div className="mt-8 flex gap-2 md:hidden">
+              {[['3+', '年 QA 經驗'], [`${projects.length}`, '專案'], [`${posts.length}`, '文章']].map(([n, l]) => (
+                <div key={l} className="flex-1 bg-gray-100 rounded-lg p-2.5 text-center">
+                  <div className="text-lg font-bold">{n}</div>
+                  <div className="text-xs text-gray-400">{l}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 md:p-7">
-            <p className="hidden md:block text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
-            <div className="hidden md:grid grid-cols-2 gap-2.5 mb-5">
+          {/* Desktop-only right panel */}
+          <div className="hidden md:block bg-gray-50 border border-gray-200 rounded-2xl p-7">
+            <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
+            <div className="grid grid-cols-2 gap-2.5 mb-5">
               {services.map(s => (
                 <div key={s.id} className="bg-white border border-gray-200 rounded-lg p-3">
                   <div className="text-xs text-gray-600">{s.title}</div>
@@ -130,6 +145,7 @@ export default function Home() {
         )}
 
         {/* ── Dual identity — white ── */}
+        {!hiddenSections.includes('dual_identity') && (
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">兩個身份，一個視角</p>
           <h2 className="text-xl font-bold mb-2">用 QA 的嚴謹對待細節，<br className="hidden sm:block" />用攝影的眼光捕捉瞬間</h2>
@@ -155,8 +171,10 @@ export default function Home() {
             </a>
           </div>
         </section>
+        )}
 
         {/* ── Featured projects — slate-50 ── */}
+        {!hiddenSections.includes('featured_projects') && (
         <div className="bg-slate-50">
           <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
             <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
@@ -166,8 +184,10 @@ export default function Home() {
             </div>
           </section>
         </div>
+        )}
 
         {/* ── Recent posts — white ── */}
+        {!hiddenSections.includes('recent_posts') && (
         <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
           <h2 className="text-xl font-bold mb-2">部落格</h2>
@@ -183,8 +203,10 @@ export default function Home() {
             </a>
           </div>
         </section>
+        )}
 
         {/* ── Services — gray-900 dark ── */}
+        {!hiddenSections.includes('services') && (
         <div className="bg-gray-900">
           <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
             <p className="text-xs tracking-widest text-gray-500 uppercase mb-2">合作方式</p>
@@ -204,6 +226,7 @@ export default function Home() {
             </div>
           </section>
         </div>
+        )}
 
       </main>
       <Footer />
