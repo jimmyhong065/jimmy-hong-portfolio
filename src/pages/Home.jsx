@@ -14,6 +14,11 @@ export default function Home() {
   const { projects } = useProjects()
   const { settings } = useSiteSettings()
   const hiddenSections = settings.hidden_sections ?? []
+  const heroName        = settings.hero_name        ?? 'Jimmy Hong'
+  const heroSubtitle    = settings.hero_subtitle     ?? 'QA Engineer / 品質架構師'
+  const heroTagline     = settings.hero_tagline      ?? '打造讓團隊信任的 QA 系統'
+  const heroDescription = settings.hero_description  ?? ''
+  const heroSkills      = settings.hero_skills       ?? ['測試策略', 'CI/CD 整合', '自動化框架', 'QA 流程設計']
   const { services } = useServices('qa')
   const { announcements } = useAnnouncements()
 
@@ -48,19 +53,19 @@ export default function Home() {
             {/* Mobile: centered column; Desktop: side-by-side row */}
             <div className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left md:gap-7">
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden ring-2 ring-gray-100 ring-offset-2 mb-4 md:mb-0">
-                {settings.avatar_url && <img src={settings.avatar_url} alt="Jimmy Hong" className="w-full h-full object-cover" />}
+                {settings.avatar_url && <img src={settings.avatar_url} alt={heroName} className="w-full h-full object-cover" />}
               </div>
               <div className="w-full">
-                <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">QA Engineer / 品質架構師</p>
-                <h1 className="text-3xl font-bold mb-1">Jimmy Hong</h1>
-                <p className="text-sm text-gray-500 mb-4">打造讓團隊信任的 QA 系統</p>
+                <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">{heroSubtitle}</p>
+                <h1 className="text-3xl font-bold mb-1">{heroName}</h1>
+                <p className="text-sm text-gray-500 mb-4">{heroTagline}</p>
                 <p className="text-sm text-gray-500 leading-relaxed mb-5">
-                  專注測試流程設計與品質架構。<br />
-                  從流程標準化到自動化導入，<br />
-                  讓品質成為開發文化，而不是最後一道關卡。
+                  {heroDescription.split('\n').map((line, i, arr) => (
+                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                  ))}
                 </p>
                 <div className="flex gap-2 flex-wrap justify-center md:justify-start mb-5">
-                  {['測試策略', 'CI/CD 整合', '自動化框架', 'QA 流程設計'].map(t => (
+                  {heroSkills.map(t => (
                     <span key={t} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">{t}</span>
                   ))}
                 </div>
