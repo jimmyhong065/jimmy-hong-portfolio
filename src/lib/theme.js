@@ -11,7 +11,7 @@ export function deriveColorPalette(hex) {
   }
 }
 
-export function applyTheme({ accent_color, font_family }) {
+export function applyTheme({ accent_color, font_family, bg_color }) {
   if (typeof document === 'undefined') return
   const palette = deriveColorPalette(accent_color ?? '#111827')
   const root = document.documentElement
@@ -19,6 +19,12 @@ export function applyTheme({ accent_color, font_family }) {
   root.style.setProperty('--color-accent-hover', palette.hover)
   root.style.setProperty('--color-accent-light', palette.light)
   root.style.setProperty('--color-accent-text', palette.text)
+
+  const bg = bg_color ?? '#ffffff'
+  root.style.setProperty('--color-bg', bg)
+  const textPrimary = tinycolor(bg).isLight() ? '#111827' : '#f1f5f9'
+  root.style.setProperty('--color-text-primary', textPrimary)
+  document.body.style.backgroundColor = bg
 
   const font = font_family ?? 'Noto Sans TC'
   root.style.setProperty('--font-body', `"${font}", sans-serif`)

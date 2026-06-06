@@ -49,4 +49,22 @@ describe('applyTheme', () => {
     expect(links.length).toBe(1)
     expect(links[0].href).toContain('Roboto')
   })
+
+  it('sets --color-bg CSS variable when bg_color provided', () => {
+    applyTheme({ accent_color: '#3b82f6', font_family: 'Inter', bg_color: '#0f172a' })
+    const val = document.documentElement.style.getPropertyValue('--color-bg')
+    expect(val).toBe('#0f172a')
+  })
+
+  it('sets --color-text-primary to light color for dark bg', () => {
+    applyTheme({ accent_color: '#38bdf8', font_family: 'Inter', bg_color: '#0f172a' })
+    const val = document.documentElement.style.getPropertyValue('--color-text-primary')
+    expect(val).toBe('#f1f5f9')
+  })
+
+  it('sets --color-text-primary to dark color for light bg', () => {
+    applyTheme({ accent_color: '#111827', font_family: 'Noto Sans TC', bg_color: '#ffffff' })
+    const val = document.documentElement.style.getPropertyValue('--color-text-primary')
+    expect(val).toBe('#111827')
+  })
 })
