@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+h1, h2, h3, h4 {
+  font-family: var(--font-heading, var(--font-body));
+}
+
 /* Article font size — applied to <article> element */
 .article-font-sm .prose { font-size: 14px; }
 .article-font-lg .prose { font-size: 18px; }
