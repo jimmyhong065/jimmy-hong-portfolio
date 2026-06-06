@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
 import Nav from '../Nav'
 
-vi.mock('../../hooks/useSettings', () => ({
-  useSettings: () => ({ settings: { email: 'test@example.com' } }),
+vi.mock('../../contexts/SiteSettingsContext', () => ({
+  useSiteSettings: () => ({ settings: { email: 'test@example.com', hidden_pages: [] } }),
 }))
 
 vi.mock('../../hooks/useNotifications', () => ({
@@ -22,7 +22,7 @@ function renderNav(initialPath = '/') {
 describe('Nav', () => {
   it('renders brand link', () => {
     renderNav()
-    expect(screen.getByText('Jimmy Hong')).toBeInTheDocument()
+    expect(screen.getByText('QA Lab')).toBeInTheDocument()
   })
 
   it('renders all 5 tabs in bottom bar (via aria-label)', () => {
