@@ -1,7 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import BlogCard from '../BlogCard'
+
+vi.mock('../../contexts/SiteSettingsContext', () => ({
+  useSiteSettings: vi.fn(),
+}))
+
+import { useSiteSettings } from '../../contexts/SiteSettingsContext'
 
 const post = {
   id: '1',
@@ -15,6 +21,10 @@ const post = {
 function renderCard(p = post, isRead = false) {
   return render(<MemoryRouter><BlogCard post={p} isRead={isRead} /></MemoryRouter>)
 }
+
+beforeEach(() => {
+  useSiteSettings.mockReturnValue({ settings: { card_style: 'shadowed' } })
+})
 
 describe('BlogCard', () => {
   it('renders title', () => {
@@ -68,5 +78,27 @@ describe('BlogCard', () => {
   it('does not show ✓ badge when isRead is false', () => {
     renderCard(post, false)
     expect(screen.queryByText('✓')).not.toBeInTheDocument()
+  })
+})
+
+describe('BlogCard card_style', () => {
+  it('applies shadow classes for shadowed style', () => {
+    useSiteSettings.mockReturnValue({ settings: { card_style: 'shadowed' } })
+    const { container } = render(<MemoryRouter><BlogCard post={post} /></MemoryRouter>)
+    expect(container.firstChild.className).toContain('shadow-sm')
+  })
+
+  it('applies border classes for bordered style', () => {
+    useSiteSettings.mockReturnValue({ settings: { card_style: 'bordered' } })
+    const { container } = render(<MemoryRouter><BlogCard post={post} /></MemoryRouter>)
+    expect(container.firstChild.className).toContain('border-gray-200')
+    expect(container.firstChild.className).not.toContain('shadow-sm')
+  })
+
+  it('applies no shadow for minimal style', () => {
+    useSiteSettings.mockReturnValue({ settings: { card_style: 'minimal' } })
+    const { container } = render(<MemoryRouter><BlogCard post={post} /></MemoryRouter>)
+    expect(container.firstChild.className).toContain('shadow-none')
+    expect(container.firstChild.className).not.toContain('shadow-sm')
   })
 })
