@@ -4,9 +4,12 @@ export default function TagFilter({ tags, selected, onSelect, specialFilter = nu
   const btnClass = (active) =>
     `flex-shrink-0 text-xs px-4 py-1.5 rounded-full border transition-colors ${
       active
-        ? 'bg-gray-900 text-white border-gray-900'
+        ? 'text-white'
         : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
     }`
+
+  const btnStyle = (active) =>
+    active ? { backgroundColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' } : {}
 
   return (
     <div className="relative mb-8">
@@ -16,18 +19,21 @@ export default function TagFilter({ tags, selected, onSelect, specialFilter = nu
         <button
           onClick={() => { onSelect(null); onSpecialFilter(null) }}
           className={btnClass(selected === null && specialFilter === null)}
+          style={btnStyle(selected === null && specialFilter === null)}
         >
           全部
         </button>
         <button
           onClick={() => { onSpecialFilter('unread'); onSelect(null) }}
           className={btnClass(specialFilter === 'unread')}
+          style={btnStyle(specialFilter === 'unread')}
         >
           未讀
         </button>
         <button
           onClick={() => { onSpecialFilter('saved'); onSelect(null) }}
           className={btnClass(specialFilter === 'saved')}
+          style={btnStyle(specialFilter === 'saved')}
         >
           收藏
         </button>
@@ -37,6 +43,7 @@ export default function TagFilter({ tags, selected, onSelect, specialFilter = nu
             key={tag}
             onClick={() => { onSelect(tag); onSpecialFilter(null) }}
             className={btnClass(selected === tag)}
+            style={btnStyle(selected === tag)}
           >
             {tag}
           </button>

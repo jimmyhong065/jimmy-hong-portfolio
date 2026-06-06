@@ -8,9 +8,10 @@ function TocList({ headings, activeId }) {
             href={`#${id}`}
             className={`text-xs block transition-colors ${
               activeId === id
-                ? 'text-gray-900 font-medium'
+                ? 'font-medium'
                 : 'text-gray-400 hover:text-gray-700'
             }`}
+            style={activeId === id ? { color: 'var(--color-accent)' } : {}}
           >
             {text}
           </a>
