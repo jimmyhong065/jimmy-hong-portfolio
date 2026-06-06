@@ -3,6 +3,28 @@ import { supabase } from '../../lib/supabase'
 import { useUpload } from '../../hooks/useUpload'
 import KeywordInput from '../../components/KeywordInput'
 import { SVG_MAP, ICON_KEYS, FALLBACK_TABS } from '../../components/NavIconMap'
+import { applyTheme } from '../../lib/theme'
+import { useSiteSettings } from '../../contexts/SiteSettingsContext'
+
+const FONT_OPTIONS = [
+  { value: 'Noto Sans TC', label: 'Noto Sans TC（無襯線）' },
+  { value: 'Noto Serif TC', label: 'Noto Serif TC（有襯線）' },
+  { value: 'Inter', label: 'Inter' },
+  { value: 'Roboto', label: 'Roboto' },
+  { value: 'Lato', label: 'Lato' },
+  { value: 'Merriweather', label: 'Merriweather（有襯線）' },
+  { value: 'Playfair Display', label: 'Playfair Display（有襯線）' },
+  { value: 'Source Code Pro', label: 'Source Code Pro（等寬）' },
+]
+
+const PAGE_OPTIONS = [
+  { key: 'blog', label: '部落格' },
+  { key: 'projects', label: '作品集' },
+  { key: 'services', label: '服務' },
+  { key: 'faq', label: 'FAQ' },
+  { key: 'photo', label: '攝影' },
+  { key: 'about', label: '關於我' },
+]
 
 function IconPicker({ value, onChange }) {
   return (
@@ -27,7 +49,13 @@ function IconPicker({ value, onChange }) {
 }
 
 export default function AdminSettings() {
-  const [form, setForm] = useState({ email: '', github_url: '', linkedin_url: '', avatar_url: '', photo_avatar_url: '', seo_keywords: '', seo_description: '', seo_photo_keywords: '', seo_photo_description: '' })
+  const { refresh: refreshSettings } = useSiteSettings()
+  const [form, setForm] = useState({
+    email: '', github_url: '', linkedin_url: '', avatar_url: '',
+    photo_avatar_url: '', seo_keywords: '', seo_description: '',
+    seo_photo_keywords: '', seo_photo_description: '',
+    accent_color: '#111827', font_family: 'Noto Sans TC', hidden_pages: [],
+  })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(null)
@@ -72,12 +100,17 @@ export default function AdminSettings() {
       seo_description: form.seo_description,
       seo_photo_keywords: form.seo_photo_keywords,
       seo_photo_description: form.seo_photo_description,
+      accent_color: form.accent_color,
+      font_family: form.font_family,
+      hidden_pages: form.hidden_pages,
     }).eq('id', 1)
     setSaving(false)
     if (saveError) {
       setError(saveError.message)
     } else {
+      await refreshSettings()
       setSuccess(true)
+      setTimeout(() => setSuccess(false), 2000)
     }
   }
 
@@ -329,6 +362,75 @@ export default function AdminSettings() {
             className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">
             {navSaving ? '儲存中…' : '儲存選單設定'}
           </button>
+        </div>
+
+        {/* 外觀設定 */}
+        <div className="mt-10 pt-8 border-t border-gray-100">
+          <h2 className="text-sm font-semibold text-gray-900 mb-6">外觀設定</h2>
+
+          {/* Accent color */}
+          <div className="mb-6">
+            <label className="text-xs font-medium text-gray-700 block mb-2">品牌主色</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={form.accent_color ?? '#111827'}
+                onChange={e => {
+                  const val = e.target.value
+                  setForm(f => ({ ...f, accent_color: val }))
+                  applyTheme({ accent_color: val, font_family: form.font_family })
+                }}
+                className="w-10 h-10 rounded cursor-pointer border border-gray-200 p-0.5"
+              />
+              <span className="text-sm text-gray-500 font-mono">{form.accent_color ?? '#111827'}</span>
+            </div>
+          </div>
+
+          {/* Font family */}
+          <div className="mb-6">
+            <label className="text-xs font-medium text-gray-700 block mb-2">字型</label>
+            <select
+              value={form.font_family ?? 'Noto Sans TC'}
+              onChange={e => {
+                const val = e.target.value
+                setForm(f => ({ ...f, font_family: val }))
+                applyTheme({ accent_color: form.accent_color, font_family: val })
+              }}
+              className="text-sm border border-gray-200 rounded-md px-3 py-2 w-64"
+            >
+              {FONT_OPTIONS.map(f => (
+                <option key={f.value} value={f.value}>{f.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Page visibility */}
+          <div>
+            <label className="text-xs font-medium text-gray-700 block mb-3">頁面顯示</label>
+            <div className="flex flex-col gap-1">
+              {PAGE_OPTIONS.map(page => {
+                const isVisible = !(form.hidden_pages ?? []).includes(page.key)
+                return (
+                  <label key={page.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isVisible}
+                      onChange={e => {
+                        const hidden = form.hidden_pages ?? []
+                        const next = e.target.checked
+                          ? hidden.filter(k => k !== page.key)
+                          : [...hidden, page.key]
+                        setForm(f => ({ ...f, hidden_pages: next }))
+                      }}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">{page.label}</span>
+                    {!isVisible && <span className="text-xs text-gray-400">（隱藏）</span>}
+                  </label>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </form>
     </div>
