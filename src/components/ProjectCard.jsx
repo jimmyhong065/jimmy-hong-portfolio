@@ -1,8 +1,16 @@
 import { Link } from 'react-router-dom'
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 
 export default function ProjectCard({ project }) {
+  const { settings } = useSiteSettings()
+
+  const decorClass =
+    settings.card_style === 'bordered' ? 'border border-gray-200 shadow-none hover:border-gray-400' :
+    settings.card_style === 'minimal'  ? 'border border-transparent shadow-none' :
+    'border border-gray-200 shadow-sm hover:shadow-md'
+
   return (
-    <Link to={`/projects/${project.id}`} className="block border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+    <Link to={`/projects/${project.id}`} className={`block ${decorClass} rounded-xl overflow-hidden transition-shadow`}>
       {project.cover_url ? (
         <img src={project.cover_url} alt={project.title} loading="lazy" className="w-full h-40 object-cover" />
       ) : (
