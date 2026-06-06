@@ -2,6 +2,7 @@ import tinycolor from 'tinycolor2'
 
 export function deriveColorPalette(hex) {
   const base = tinycolor(hex)
+  if (!base.isValid()) return deriveColorPalette('#111827')
   return {
     accent: base.toHexString(),
     hover: base.clone().darken(15).toHexString(),
@@ -11,6 +12,7 @@ export function deriveColorPalette(hex) {
 }
 
 export function applyTheme({ accent_color, font_family }) {
+  if (typeof document === 'undefined') return
   const palette = deriveColorPalette(accent_color ?? '#111827')
   const root = document.documentElement
   root.style.setProperty('--color-accent', palette.accent)
