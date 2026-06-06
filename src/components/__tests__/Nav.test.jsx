@@ -4,7 +4,14 @@ import { vi } from 'vitest'
 import Nav from '../Nav'
 
 vi.mock('../../contexts/SiteSettingsContext', () => ({
-  useSiteSettings: () => ({ settings: { email: 'test@example.com', hidden_pages: [] } }),
+  useSiteSettings: () => ({
+    settings: {
+      email: 'test@example.com',
+      hidden_pages: [],
+      brand_name: 'Test Brand',
+      cta_text: '立即聯繫',
+    },
+  }),
 }))
 
 vi.mock('../../hooks/useNotifications', () => ({
@@ -22,7 +29,7 @@ function renderNav(initialPath = '/') {
 describe('Nav', () => {
   it('renders brand link', () => {
     renderNav()
-    expect(screen.getByText('QA Lab')).toBeInTheDocument()
+    expect(screen.getByText('Test Brand')).toBeInTheDocument()
   })
 
   it('renders all 5 tabs in bottom bar (via aria-label)', () => {
@@ -53,5 +60,15 @@ describe('Nav', () => {
     renderNav('/projects')
     const tabBarLink = screen.getAllByRole('link', { name: '部落格' })[1]
     expect(tabBarLink).not.toHaveAttribute('aria-current')
+  })
+
+  it('renders brand_name from settings', () => {
+    renderNav()
+    expect(screen.getByText('Test Brand')).toBeInTheDocument()
+  })
+
+  it('renders cta_text from settings', () => {
+    renderNav()
+    expect(screen.getByText('立即聯繫')).toBeInTheDocument()
   })
 })

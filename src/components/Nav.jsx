@@ -34,7 +34,7 @@ export default function Nav() {
     <>
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
-          <Link to="/" className="text-sm font-semibold tracking-wide">QA Lab</Link>
+          <Link to="/" className="text-sm font-semibold tracking-wide">{settings.brand_name ?? 'QA Lab'}</Link>
           {/* Mobile bell */}
           {(state === 'unsubscribed' || state === 'subscribed' || state === 'denied' || state === 'unsupported') && (
             <div className="relative md:hidden">
@@ -142,7 +142,7 @@ export default function Nav() {
                 className="text-xs px-4 py-2 rounded-md transition-colors"
                 style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-accent-text)' }}
               >
-                聯絡我
+                {settings.cta_text ?? '聯絡我'}
               </a>
             )}
           </div>
