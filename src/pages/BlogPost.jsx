@@ -238,7 +238,7 @@ export default function BlogPost() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="m15 18-6-6 6-6"/>
               </svg>
-              部落格
+              文章列表
             </Link>
             <Link
               to="/blog"
@@ -247,7 +247,7 @@ export default function BlogPost() {
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="m15 18-6-6 6-6"/>
               </svg>
-              部落格
+              文章列表
             </Link>
 
             {/* Tags */}
@@ -358,7 +358,10 @@ export default function BlogPost() {
             )}
 
             <div className="mt-8">
-              <Link to="/blog" className="text-xs text-gray-400 hover:text-gray-700">← 回文章列表</Link>
+              <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                文章列表
+              </Link>
             </div>
             {/* Infinite read sentinel — mobile only */}
             <div
@@ -407,7 +410,7 @@ export default function BlogPost() {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="m15 18-6-6 6-6"/>
                   </svg>
-                  部落格
+                  文章列表
                 </Link>
                 {/* Tags */}
                 <div className="flex gap-2 flex-wrap mb-3">
