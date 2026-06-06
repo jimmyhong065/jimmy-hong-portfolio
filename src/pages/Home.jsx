@@ -48,7 +48,7 @@ export default function Home() {
       <main>
 
         {/* ── Hero — white ── */}
-        <div className="max-w-5xl mx-auto px-4 md:px-12 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+        <div className="max-w-5xl mx-auto px-4 md:px-12 pt-12 pb-6 md:pt-16 md:pb-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
             {/* Mobile: centered column; Desktop: side-by-side row */}
             <div className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left md:gap-7">

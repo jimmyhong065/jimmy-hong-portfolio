@@ -15,7 +15,7 @@ export default function TagFilter({ tags, selected, onSelect, specialFilter = nu
     <div className="relative mb-8">
       <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
       <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 px-1">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 px-1 pr-6">
         <button
           onClick={() => { onSelect(null); onSpecialFilter(null) }}
           className={btnClass(selected === null && specialFilter === null)}
