@@ -73,4 +73,25 @@ describe('applyTheme', () => {
     applyTheme({ accent_color: '#3b82f6', font_family: 'Inter', bg_color: '#0f172a' })
     expect(document.body.style.backgroundColor).not.toBe('')
   })
+
+  it('sets --font-heading CSS variable when heading_font provided', () => {
+    applyTheme({ accent_color: '#111827', font_family: 'Inter', heading_font: 'Playfair Display' })
+    const val = document.documentElement.style.getPropertyValue('--font-heading')
+    expect(val).toContain('Playfair Display')
+  })
+
+  it('injects a google-font-heading link tag', () => {
+    applyTheme({ accent_color: '#111827', font_family: 'Inter', heading_font: 'Playfair Display' })
+    const link = document.getElementById('google-font-heading')
+    expect(link).not.toBeNull()
+    expect(link.href).toContain('Playfair+Display')
+  })
+
+  it('reuses google-font-heading link tag on second call', () => {
+    applyTheme({ accent_color: '#111827', font_family: 'Inter', heading_font: 'Playfair Display' })
+    applyTheme({ accent_color: '#111827', font_family: 'Inter', heading_font: 'Merriweather' })
+    const links = document.querySelectorAll('#google-font-heading')
+    expect(links.length).toBe(1)
+    expect(links[0].href).toContain('Merriweather')
+  })
 })
