@@ -27,6 +27,7 @@ describe('applyTheme', () => {
   beforeEach(() => {
     document.documentElement.style.cssText = ''
     document.head.innerHTML = ''
+    document.body.style.backgroundColor = ''
   })
 
   it('sets --color-accent CSS variable on root', () => {
@@ -66,5 +67,10 @@ describe('applyTheme', () => {
     applyTheme({ accent_color: '#111827', font_family: 'Noto Sans TC', bg_color: '#ffffff' })
     const val = document.documentElement.style.getPropertyValue('--color-text-primary')
     expect(val).toBe('#111827')
+  })
+
+  it('sets document.body.style.backgroundColor when bg_color provided', () => {
+    applyTheme({ accent_color: '#3b82f6', font_family: 'Inter', bg_color: '#0f172a' })
+    expect(document.body.style.backgroundColor).not.toBe('')
   })
 })
