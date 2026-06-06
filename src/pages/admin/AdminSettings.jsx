@@ -64,6 +64,15 @@ export default function AdminSettings() {
     seo_photo_keywords: '', seo_photo_description: '',
     accent_color: '#111827', font_family: 'Noto Sans TC', hidden_pages: [],
     bg_color: '#ffffff', hidden_sections: [],
+    brand_name: 'QA Lab',
+    cta_text: '聯絡我',
+    card_style: 'shadowed',
+    heading_font: 'Noto Sans TC',
+    hero_name: 'Jimmy Hong',
+    hero_subtitle: 'QA Engineer / 品質架構師',
+    hero_tagline: '打造讓團隊信任的 QA 系統',
+    hero_description: '專注測試流程設計與品質架構。\n從流程標準化到自動化導入，\n讓品質成為開發文化，而不是最後一道關卡。',
+    hero_skills: '測試策略, CI/CD 整合, 自動化框架, QA 流程設計',
   })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -83,7 +92,10 @@ export default function AdminSettings() {
   useEffect(() => {
     supabase.from('settings').select('*').eq('id', 1).single().then(({ data }) => {
       if (data) {
-        setForm(data)
+        setForm({
+          ...data,
+          hero_skills: (data.hero_skills ?? []).join(', '),
+        })
         if (data.nav_tabs?.length) setNavTabs(data.nav_tabs)
       }
     })
@@ -114,6 +126,15 @@ export default function AdminSettings() {
       hidden_pages: form.hidden_pages,
       bg_color: form.bg_color,
       hidden_sections: form.hidden_sections,
+      brand_name: form.brand_name,
+      cta_text: form.cta_text,
+      card_style: form.card_style,
+      heading_font: form.heading_font,
+      hero_name: form.hero_name,
+      hero_subtitle: form.hero_subtitle,
+      hero_tagline: form.hero_tagline,
+      hero_description: form.hero_description,
+      hero_skills: form.hero_skills.split(',').map(t => t.trim()).filter(Boolean),
     }).eq('id', 1)
     setSaving(false)
     if (saveError) {
@@ -366,6 +387,55 @@ export default function AdminSettings() {
           </button>
         </div>
 
+        {/* 品牌與文案 */}
+        <p className="text-sm font-semibold pt-2">品牌與文案</p>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">品牌名稱</label>
+          <input name="brand_name" value={form.brand_name ?? ''} onChange={handleChange}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">聯絡按鈕文字</label>
+          <input name="cta_text" value={form.cta_text ?? ''} onChange={handleChange}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+
+        <p className="text-sm font-semibold pt-2">Hero 文案</p>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">姓名</label>
+          <input name="hero_name" value={form.hero_name ?? ''} onChange={handleChange}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">職稱</label>
+          <input name="hero_subtitle" value={form.hero_subtitle ?? ''} onChange={handleChange}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">標語</label>
+          <input name="hero_tagline" value={form.hero_tagline ?? ''} onChange={handleChange}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">自我介紹 <span className="text-gray-400">（換行分段）</span></label>
+          <textarea name="hero_description" value={form.hero_description ?? ''} onChange={handleChange} rows={4}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 resize-none" />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">技能標籤</label>
+          <KeywordInput
+            value={form.hero_skills ?? ''}
+            onChange={v => setForm(f => ({ ...f, hero_skills: v }))}
+          />
+        </div>
+
         {/* 外觀設定 */}
         <div className="mt-10 pt-8 border-t border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900 mb-6">外觀設定</h2>
@@ -380,7 +450,7 @@ export default function AdminSettings() {
                   type="button"
                   onClick={() => {
                     setForm(f => ({ ...f, accent_color: preset.accent_color, font_family: preset.font_family, bg_color: preset.bg_color }))
-                    applyTheme({ accent_color: preset.accent_color, font_family: preset.font_family, bg_color: preset.bg_color })
+                    applyTheme({ accent_color: preset.accent_color, font_family: preset.font_family, bg_color: preset.bg_color, heading_font: form.heading_font })
                   }}
                   className="flex-shrink-0 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-gray-900 transition-colors min-w-[100px]"
                 >
@@ -402,7 +472,7 @@ export default function AdminSettings() {
                 onChange={e => {
                   const val = e.target.value
                   setForm(f => ({ ...f, accent_color: val }))
-                  applyTheme({ accent_color: val, font_family: form.font_family, bg_color: form.bg_color })
+                  applyTheme({ accent_color: val, font_family: form.font_family, bg_color: form.bg_color, heading_font: form.heading_font })
                 }}
                 className="w-10 h-10 rounded cursor-pointer border border-gray-200 p-0.5"
               />
@@ -420,7 +490,7 @@ export default function AdminSettings() {
                 onChange={e => {
                   const val = e.target.value
                   setForm(f => ({ ...f, bg_color: val }))
-                  applyTheme({ accent_color: form.accent_color, font_family: form.font_family, bg_color: val })
+                  applyTheme({ accent_color: form.accent_color, font_family: form.font_family, bg_color: val, heading_font: form.heading_font })
                 }}
                 className="w-10 h-10 rounded cursor-pointer border border-gray-200 p-0.5"
               />
@@ -436,7 +506,7 @@ export default function AdminSettings() {
               onChange={e => {
                 const val = e.target.value
                 setForm(f => ({ ...f, font_family: val }))
-                applyTheme({ accent_color: form.accent_color, font_family: val, bg_color: form.bg_color })
+                applyTheme({ accent_color: form.accent_color, font_family: val, bg_color: form.bg_color, heading_font: form.heading_font })
               }}
               className="text-sm border border-gray-200 rounded-md px-3 py-2 w-64"
             >
@@ -444,6 +514,54 @@ export default function AdminSettings() {
                 <option key={f.value} value={f.value}>{f.label}</option>
               ))}
             </select>
+          </div>
+
+          {/* Heading font */}
+          <div className="mb-6">
+            <label className="text-xs text-gray-500 mb-1 block">標題字型</label>
+            <select
+              name="heading_font"
+              value={form.heading_font ?? 'Noto Sans TC'}
+              onChange={e => {
+                handleChange(e)
+                applyTheme({
+                  accent_color: form.accent_color,
+                  font_family: form.font_family,
+                  bg_color: form.bg_color,
+                  heading_font: e.target.value,
+                })
+              }}
+              className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400"
+            >
+              {FONT_OPTIONS.map(f => (
+                <option key={f.value} value={f.value}>{f.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Card style */}
+          <div className="mb-6">
+            <label className="text-xs text-gray-500 mb-2 block">卡片風格</label>
+            <div className="flex gap-3">
+              {[
+                { value: 'shadowed', label: '陰影卡片' },
+                { value: 'bordered', label: '框線卡片' },
+                { value: 'minimal',  label: '簡約無框' },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, card_style: opt.value }))}
+                  className={`flex-1 text-xs py-2 rounded-lg border transition-colors ${
+                    form.card_style === opt.value
+                      ? 'border-gray-900 bg-gray-900 text-white'
+                      : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Page visibility */}
