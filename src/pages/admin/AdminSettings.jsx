@@ -5,6 +5,7 @@ import KeywordInput from '../../components/KeywordInput'
 import { SVG_MAP, ICON_KEYS, FALLBACK_TABS } from '../../components/NavIconMap'
 import { applyTheme } from '../../lib/theme'
 import { useSiteSettings } from '../../contexts/SiteSettingsContext'
+import { PRESETS } from '../../lib/presets'
 
 const FONT_OPTIONS = [
   { value: 'Noto Sans TC', label: 'Noto Sans TC（無襯線）' },
@@ -24,6 +25,13 @@ const PAGE_OPTIONS = [
   { key: 'faq', label: 'FAQ' },
   { key: 'photo', label: '攝影' },
   { key: 'about', label: '關於我' },
+]
+
+const SECTION_OPTIONS = [
+  { key: 'dual_identity',     label: '雙身份介紹' },
+  { key: 'featured_projects', label: '精選作品' },
+  { key: 'recent_posts',      label: '最新文章' },
+  { key: 'services',          label: '服務區塊' },
 ]
 
 function IconPicker({ value, onChange }) {
@@ -55,6 +63,7 @@ export default function AdminSettings() {
     photo_avatar_url: '', seo_keywords: '', seo_description: '',
     seo_photo_keywords: '', seo_photo_description: '',
     accent_color: '#111827', font_family: 'Noto Sans TC', hidden_pages: [],
+    bg_color: '#ffffff', hidden_sections: [],
   })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -103,6 +112,8 @@ export default function AdminSettings() {
       accent_color: form.accent_color,
       font_family: form.font_family,
       hidden_pages: form.hidden_pages,
+      bg_color: form.bg_color,
+      hidden_sections: form.hidden_sections,
     }).eq('id', 1)
     setSaving(false)
     if (saveError) {
@@ -359,6 +370,28 @@ export default function AdminSettings() {
         <div className="mt-10 pt-8 border-t border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900 mb-6">外觀設定</h2>
 
+          {/* Preset 快速套用 */}
+          <div className="mb-8">
+            <label className="text-xs font-medium text-gray-700 block mb-3">Preset 快速套用</label>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {PRESETS.map(preset => (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => {
+                    setForm(f => ({ ...f, accent_color: preset.accent_color, font_family: preset.font_family, bg_color: preset.bg_color }))
+                    applyTheme({ accent_color: preset.accent_color, font_family: preset.font_family, bg_color: preset.bg_color })
+                  }}
+                  className="flex-shrink-0 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-gray-900 transition-colors min-w-[100px]"
+                >
+                  <div className="w-6 h-6 rounded-full mb-2 border border-gray-200" style={{ backgroundColor: preset.accent_color }} />
+                  <p className="text-xs font-semibold text-gray-900">{preset.name}</p>
+                  <p className="text-xs text-gray-400 truncate">{preset.font_family}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Accent color */}
           <div className="mb-6">
             <label className="text-xs font-medium text-gray-700 block mb-2">品牌主色</label>
@@ -369,11 +402,29 @@ export default function AdminSettings() {
                 onChange={e => {
                   const val = e.target.value
                   setForm(f => ({ ...f, accent_color: val }))
-                  applyTheme({ accent_color: val, font_family: form.font_family })
+                  applyTheme({ accent_color: val, font_family: form.font_family, bg_color: form.bg_color })
                 }}
                 className="w-10 h-10 rounded cursor-pointer border border-gray-200 p-0.5"
               />
               <span className="text-sm text-gray-500 font-mono">{form.accent_color ?? '#111827'}</span>
+            </div>
+          </div>
+
+          {/* Background color */}
+          <div className="mb-6">
+            <label className="text-xs font-medium text-gray-700 block mb-2">背景色</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={form.bg_color ?? '#ffffff'}
+                onChange={e => {
+                  const val = e.target.value
+                  setForm(f => ({ ...f, bg_color: val }))
+                  applyTheme({ accent_color: form.accent_color, font_family: form.font_family, bg_color: val })
+                }}
+                className="w-10 h-10 rounded cursor-pointer border border-gray-200 p-0.5"
+              />
+              <span className="text-sm text-gray-500 font-mono">{form.bg_color ?? '#ffffff'}</span>
             </div>
           </div>
 
@@ -385,7 +436,7 @@ export default function AdminSettings() {
               onChange={e => {
                 const val = e.target.value
                 setForm(f => ({ ...f, font_family: val }))
-                applyTheme({ accent_color: form.accent_color, font_family: val })
+                applyTheme({ accent_color: form.accent_color, font_family: val, bg_color: form.bg_color })
               }}
               className="text-sm border border-gray-200 rounded-md px-3 py-2 w-64"
             >
@@ -416,6 +467,34 @@ export default function AdminSettings() {
                       className="rounded border-gray-300"
                     />
                     <span className="text-sm text-gray-700">{page.label}</span>
+                    {!isVisible && <span className="text-xs text-gray-400">（隱藏）</span>}
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Home section visibility */}
+          <div className="mt-6">
+            <label className="text-xs font-medium text-gray-700 block mb-3">首頁 Section 顯示</label>
+            <div className="flex flex-col gap-1">
+              {SECTION_OPTIONS.map(section => {
+                const isVisible = !(form.hidden_sections ?? []).includes(section.key)
+                return (
+                  <label key={section.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isVisible}
+                      onChange={e => {
+                        const hidden = form.hidden_sections ?? []
+                        const next = e.target.checked
+                          ? hidden.filter(k => k !== section.key)
+                          : [...hidden, section.key]
+                        setForm(f => ({ ...f, hidden_sections: next }))
+                      }}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">{section.label}</span>
                     {!isVisible && <span className="text-xs text-gray-400">（隱藏）</span>}
                   </label>
                 )
