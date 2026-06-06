@@ -16,7 +16,7 @@ const XML_HEADERS = {
   'Cache-Control': 'public, max-age=3600',
 }
 
-function buildXml(posts, photos) {
+function buildXml(posts) {
   const staticUrls = STATIC_PAGES.map(p => `
   <url>
     <loc>${SITE_URL}${p.url}</loc>
@@ -32,15 +32,8 @@ function buildXml(posts, photos) {
     <priority>0.6</priority>
   </url>`).join('') : ''
 
-  const photoUrls = Array.isArray(photos) ? photos.map(p => `
-  <url>
-    <loc>${SITE_URL}/photo/${p.id}</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>`).join('') : ''
-
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}${photoUrls}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}
 </urlset>`
 }
 
@@ -51,15 +44,12 @@ export async function onRequest() {
   const timer = setTimeout(() => controller.abort(), 8000)
 
   try {
-    const [postsRes, photosRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal }),
-      fetch(`${SUPABASE_URL}/rest/v1/photo_projects?select=id&order=display_order.asc`, { headers, signal: controller.signal }),
-    ])
+    const postsRes = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal })
     clearTimeout(timer)
-    const [posts, photos] = await Promise.all([postsRes.json(), photosRes.json()])
-    return new Response(buildXml(posts, photos), { headers: XML_HEADERS })
+    const posts = await postsRes.json()
+    return new Response(buildXml(posts), { headers: XML_HEADERS })
   } catch {
     clearTimeout(timer)
-    return new Response(buildXml([], []), { headers: XML_HEADERS })
+    return new Response(buildXml([]), { headers: XML_HEADERS })
   }
 }
