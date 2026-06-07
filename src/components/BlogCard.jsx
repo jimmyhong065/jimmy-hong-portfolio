@@ -14,7 +14,7 @@ export default function BlogCard({ post, isRead = false }) {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className={`block rounded-2xl ${decorClass} p-4 mb-3 transition-shadow relative${isRead ? ' opacity-60' : ''}`}
+      className={`block rounded-2xl ${decorClass} p-4 mb-3 transition-all hover:-translate-y-0.5 relative${isRead ? ' opacity-60' : ''}`}
     >
       {isRead && (
         <span className="absolute top-3 right-3 text-[10px] text-gray-400">✓</span>

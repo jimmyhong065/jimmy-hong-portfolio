@@ -40,6 +40,7 @@ export default function BlogPost() {
   const { markRead } = useReadHistory()
   const markedRef = useRef(false)
   const completedRef = useRef(false)
+  const [showComplete, setShowComplete] = useState(false)
   const [extraArticles, setExtraArticles] = useState([])
   const [loadingNext, setLoadingNext] = useState(false)
   const [exhausted, setExhausted] = useState(false)
@@ -52,7 +53,19 @@ export default function BlogPost() {
   useEffect(() => {
     markedRef.current = false
     completedRef.current = false
-    window.scrollTo(0, 0)
+    const saved = localStorage.getItem(`scroll:${slug}`)
+    if (saved) {
+      setTimeout(() => window.scrollTo(0, parseInt(saved)), 100)
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [slug])
+
+  // Save reading position
+  useEffect(() => {
+    const onScroll = () => localStorage.setItem(`scroll:${slug}`, window.scrollY)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [slug])
 
   // Auto-mark read when user scrolls past 80%
@@ -63,6 +76,8 @@ export default function BlogPost() {
     }
     if (progress >= 90 && !completedRef.current && slug && post?.title) {
       completedRef.current = true
+      setShowComplete(true)
+      setTimeout(() => setShowComplete(false), 3000)
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'article_completed', {
           article_title: post.title,
@@ -207,6 +222,11 @@ export default function BlogPost() {
   return (
     <>
       <div className="fixed top-0 left-0 h-[3px] z-50 transition-none" style={{ width: `${progress}%`, backgroundColor: 'var(--color-accent)' }} />
+      {showComplete && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg animate-fade-in-up pointer-events-none">
+          ✓ 讀完了！
+        </div>
+      )}
       <Helmet>
         <title>{post.title} | Jimmy Hong</title>
         <meta name="description" content={post.excerpt ?? ''} />

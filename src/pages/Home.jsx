@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
@@ -9,7 +10,24 @@ import { useSiteSettings } from '../contexts/SiteSettingsContext'
 import { useServices } from '../hooks/useServices'
 import { useAnnouncements } from '../hooks/useAnnouncements'
 
+function useFadeIn() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-fade]')
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible')
+          observer.unobserve(e.target)
+        }
+      })
+    }, { threshold: 0.1 })
+    els.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+}
+
 export default function Home() {
+  useFadeIn()
   const { posts } = usePosts()
   const { projects } = useProjects()
   const { settings } = useSiteSettings()
@@ -151,7 +169,7 @@ export default function Home() {
 
         {/* ── Dual identity — white ── */}
         {!hiddenSections.includes('dual_identity') && (
-        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+        <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">兩個身份，一個視角</p>
           <h2 className="text-xl font-bold mb-2">用 QA 的嚴謹對待細節，<br className="hidden sm:block" />用攝影的眼光捕捉瞬間</h2>
           <p className="text-sm text-gray-500 mb-10">工程師的理性與攝影師的感性，在同一個人身上找到平衡。</p>
@@ -181,7 +199,7 @@ export default function Home() {
         {/* ── Featured projects — slate-50 ── */}
         {!hiddenSections.includes('featured_projects') && (
         <div className="bg-slate-50">
-          <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+          <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
             <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">精選作品</p>
             <h2 className="text-xl font-bold mb-8">QA 作品集</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -193,7 +211,7 @@ export default function Home() {
 
         {/* ── Recent posts — white ── */}
         {!hiddenSections.includes('recent_posts') && (
-        <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+        <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
           <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
           <h2 className="text-xl font-bold mb-2">部落格</h2>
           <div>
