@@ -1,4 +1,4 @@
-const CACHE = 'qa-lab-v1'
+const CACHE = 'qa-lens-v1'
 const PRECACHE = ['/', '/pwa-icon.png', '/favicon.svg', '/favicon-camera.svg']
 
 self.addEventListener('install', event => {

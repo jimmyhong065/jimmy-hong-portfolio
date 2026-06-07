@@ -1,6 +1,6 @@
 {
-  "name": "QA Lab — 測試工程師的技術筆記",
-  "short_name": "QA Lab",
+  "name": "QA Lens — 測試工程師的技術筆記",
+  "short_name": "QA Lens",
   "description": "QA Engineer 分享自動化測試、CI/CD 與品質架構心得",
   "start_url": "/",
   "display": "standalone",
