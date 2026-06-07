@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
-const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+const SITE_URL = 'https://qa-lens.com'
 
 export async function onRequest() {
   const res = await fetch(

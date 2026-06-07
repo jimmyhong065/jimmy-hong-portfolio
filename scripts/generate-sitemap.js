@@ -10,7 +10,7 @@ try {
   })
 } catch {}
 
-const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+const SITE_URL = 'https://qa-lens.com'
 const supabaseUrl = process.env.VITE_SUPABASE_URL ?? env.VITE_SUPABASE_URL
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY
 

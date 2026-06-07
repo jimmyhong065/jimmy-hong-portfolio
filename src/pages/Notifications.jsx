@@ -36,7 +36,7 @@ export default function Notifications() {
           {notifications.map(n => (
             <a
               key={n.id}
-              href={n.url}
+              href={n.url?.replace('jimmy-hong-portfolio.pages.dev', 'qa-lens.com')}
               target="_blank"
               rel="noreferrer noopener"
               className="py-4 block hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors"
