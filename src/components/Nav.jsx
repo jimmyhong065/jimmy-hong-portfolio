@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSiteSettings } from '../contexts/SiteSettingsContext'
 import { usePushSubscription } from '../hooks/usePushSubscription'
@@ -24,6 +24,19 @@ export default function Nav() {
   const { state, error, subscribe, unsubscribe } = usePushSubscription()
   const [hint, setHint] = useState(null)
   const { unreadCount } = useNotifications()
+  const [navHidden, setNavHidden] = useState(false)
+
+  useEffect(() => {
+    let lastY = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y > lastY && y > 60) setNavHidden(true)
+      else setNavHidden(false)
+      lastY = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   function showHint(msg) {
     setHint(msg)
@@ -32,7 +45,7 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <nav className={`sticky top-0 z-50 bg-white border-b border-gray-100 transition-transform duration-300 ${navHidden ? '-translate-y-full' : 'translate-y-0'}`} style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-5xl mx-auto px-4 md:px-12 py-5 flex items-center justify-between">
           <Link to="/" className="text-sm font-semibold tracking-wide">{settings.brand_name ?? 'QA Lab'}</Link>
           {/* Mobile bell */}

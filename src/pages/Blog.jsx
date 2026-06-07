@@ -13,6 +13,21 @@ import { useReadHistory } from '../hooks/useReadHistory'
 
 const PAGE_SIZE = 12
 
+function SkeletonCard() {
+  return (
+    <div className="rounded-2xl border border-gray-100 p-4 mb-3 animate-pulse">
+      <div className="flex gap-1 mb-2">
+        <div className="h-4 w-14 bg-gray-100 rounded-full" />
+        <div className="h-4 w-10 bg-gray-100 rounded-full" />
+      </div>
+      <div className="h-4 w-4/5 bg-gray-100 rounded mb-2" />
+      <div className="h-3 w-full bg-gray-100 rounded mb-1" />
+      <div className="h-3 w-2/3 bg-gray-100 rounded mb-3" />
+      <div className="h-3 w-16 bg-gray-100 rounded" />
+    </div>
+  )
+}
+
 export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [query, setQuery] = useState('')
@@ -89,7 +104,9 @@ export default function Blog() {
           onSpecialFilter={setSpecialFilter}
         />
         {loading ? (
-          <p className="text-sm text-gray-400">載入中…</p>
+          <div className="md:hidden">
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
         ) : filtered.length === 0 ? (
           <p className="text-sm text-gray-400 py-8">沒有符合的文章。</p>
         ) : (

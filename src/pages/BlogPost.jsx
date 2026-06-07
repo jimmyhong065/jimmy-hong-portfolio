@@ -183,7 +183,20 @@ export default function BlogPost() {
     <>
       <div className="fixed top-0 left-0 h-[3px] z-50" style={{ width: `${progress}%`, backgroundColor: 'var(--color-accent)' }} />
       <Nav />
-      <div className="max-w-3xl mx-auto px-4 md:px-12 py-16 text-sm text-gray-400">載入中…</div>
+      <div className="max-w-3xl mx-auto px-4 md:px-12 py-16 animate-pulse">
+        <div className="flex gap-2 mb-4">
+          <div className="h-5 w-16 bg-gray-100 rounded-full" />
+          <div className="h-5 w-12 bg-gray-100 rounded-full" />
+        </div>
+        <div className="h-8 w-3/4 bg-gray-100 rounded mb-3" />
+        <div className="h-4 w-32 bg-gray-100 rounded mb-10" />
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="mb-3">
+            <div className="h-4 w-full bg-gray-100 rounded mb-1" />
+            <div className="h-4 w-5/6 bg-gray-100 rounded" />
+          </div>
+        ))}
+      </div>
       <Footer />
     </>
   )
