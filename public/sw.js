@@ -28,10 +28,28 @@ self.addEventListener('fetch', event => {
     return
   }
 
+  // Vite /assets/ are content-addressed — browser HTTP cache handles them; SW must not cache
+  if (request.url.includes('/assets/')) return
+
+  // Supabase article API — network-first, cache for offline reading
+  if (request.url.includes('supabase.co') && request.url.includes('/rest/v1/posts')) {
+    event.respondWith(
+      fetch(request).then(res => {
+        if (res.ok) {
+          const clone = res.clone()
+          caches.open(CACHE).then(c => c.put(request, clone))
+        }
+        return res
+      }).catch(() => caches.match(request))
+    )
+    return
+  }
+
   event.respondWith(
     caches.match(request).then(cached =>
       cached ?? fetch(request).then(res => {
-        if (res.ok) {
+        const ct = res.headers.get('content-type') ?? ''
+        if (res.ok && !ct.includes('text/html')) {
           const clone = res.clone()
           caches.open(CACHE).then(c => c.put(request, clone))
         }

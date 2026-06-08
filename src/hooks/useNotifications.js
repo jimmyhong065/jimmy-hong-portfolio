@@ -10,12 +10,19 @@ function getReadIds() {
 
 function saveReadIds(ids) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]))
+  window.dispatchEvent(new CustomEvent('qa-notifs-updated'))
 }
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState([])
   const [readIds, setReadIds] = useState(() => getReadIds())
   const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const onUpdate = () => setReadIds(getReadIds())
+    window.addEventListener('qa-notifs-updated', onUpdate)
+    return () => window.removeEventListener('qa-notifs-updated', onUpdate)
+  }, [])
 
   useEffect(() => {
     let active = true

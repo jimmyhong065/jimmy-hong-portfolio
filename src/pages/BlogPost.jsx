@@ -49,6 +49,14 @@ export default function BlogPost() {
   const loadingRef = useRef(false)
   const { fetchNext } = useInfiniteRead(post?.tags ?? [], slug)
 
+  // Screen Wake Lock — keep screen on while reading
+  useEffect(() => {
+    if (!('wakeLock' in navigator)) return
+    let wl = null
+    navigator.wakeLock.request('screen').then(w => { wl = w }).catch(() => {})
+    return () => { wl?.release().catch(() => {}) }
+  }, [slug])
+
   // Reset guards when navigating to a different article
   useEffect(() => {
     markedRef.current = false
@@ -77,6 +85,7 @@ export default function BlogPost() {
     if (progress >= 90 && !completedRef.current && slug && post?.title) {
       completedRef.current = true
       setShowComplete(true)
+      navigator.vibrate?.([50, 30, 50])
       setTimeout(() => setShowComplete(false), 3000)
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'article_completed', {
@@ -208,7 +217,7 @@ export default function BlogPost() {
     </>
   )
 
-  const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+  const SITE_URL = 'https://qa-lens.com'
   const postUrl = `${SITE_URL}/blog/${slug}`
   const shareText = encodeURIComponent(post.title)
   const shareUrl = encodeURIComponent(postUrl)
@@ -502,7 +511,7 @@ export default function BlogPost() {
         progress={progress}
         readingMin={readingMin}
         bookmarked={isBookmarked(activeSlug)}
-        onToggleBookmark={() => toggle(activeSlug)}
+        onToggleBookmark={() => { navigator.vibrate?.(30); toggle(activeSlug) }}
       />
     </>
   )

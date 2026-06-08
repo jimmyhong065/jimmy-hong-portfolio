@@ -19,8 +19,8 @@ export default function Notifications() {
   const { notifications, loading, markAllRead } = useNotifications()
 
   useEffect(() => {
-    markAllRead()
-  }, [markAllRead])
+    if (notifications.length > 0) markAllRead()
+  }, [notifications, markAllRead])
 
   return (
     <>
