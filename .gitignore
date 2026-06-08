@@ -20,4 +20,7 @@ docs/pictures/
 *.mjs
 generate-article.sh
 data/
+outputs/
 .superpowers/
+download.txt
+docs/.obsidian/workspace.json
