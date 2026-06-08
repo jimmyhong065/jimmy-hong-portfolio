@@ -14,5 +14,19 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "最新文章",
+      "short_name": "文章",
+      "url": "/blog",
+      "icons": [{ "src": "/pwa-icon.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "通知",
+      "short_name": "通知",
+      "url": "/notifications",
+      "icons": [{ "src": "/pwa-icon.png", "sizes": "96x96", "type": "image/png" }]
+    }
   ]
 }
