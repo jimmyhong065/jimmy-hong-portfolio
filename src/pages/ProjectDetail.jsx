@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase'
 
 export default function ProjectDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [project, setProject] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -31,6 +32,15 @@ export default function ProjectDetail() {
       <SEOHead title={project.title} description={project.description} />
       <Nav />
       <main className="max-w-3xl mx-auto px-4 md:px-12 py-16">
+        <button
+          onClick={() => navigate(-1)}
+          className="lg:hidden flex items-center justify-center w-9 h-9 mb-6 rounded-full border border-gray-200 text-gray-500 hover:border-gray-400 hover:text-gray-800 transition-colors"
+          aria-label="返回"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
         {(project.images?.length > 0) ? (
           <div className="mb-8 flex flex-col gap-4">
             {project.images.map((img, i) => (

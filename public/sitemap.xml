@@ -1,276 +1,288 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/</loc>
+    <loc>https://qa-lens.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog</loc>
+    <loc>https://qa-lens.com/blog</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects</loc>
+    <loc>https://qa-lens.com/projects</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/photo</loc>
+    <loc>https://qa-lens.com/photo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/about</loc>
+    <loc>https://qa-lens.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/services</loc>
+    <loc>https://qa-lens.com/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/faq</loc>
+    <loc>https://qa-lens.com/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/appium-article-revised</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/appium-article-revised</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/k6-article-revised</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/domain-knowledge-ai-era</loc>
+    <loc>https://qa-lens.com/blog/domain-knowledge-ai-era</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/bug-report-clarity</loc>
+    <loc>https://qa-lens.com/blog/k6-article-revised</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/test-debt</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/testing-ai-generated-code</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/testing-ai-generated-code</loc>
+    <loc>https://qa-lens.com/blog/automation-business-value</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/bug-report-clarity</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/automation-business-value</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/ai-replaced-qa-6m-loss</loc>
+    <loc>https://qa-lens.com/blog/ai-replaced-qa-6m-loss</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/retro-effective-communication</loc>
+    <loc>https://qa-lens.com/blog/retro-effective-communication</loc>
     <lastmod>2026-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-team-collaboration</loc>
+    <loc>https://qa-lens.com/blog/qa-team-collaboration</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-leader-ic-collaboration</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/github-actions-qa-intro</loc>
+    <loc>https://qa-lens.com/blog/sbtm-exploratory-testing</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/sbtm-exploratory-testing</loc>
+    <loc>https://qa-lens.com/blog/github-actions-qa-intro</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/release-timing-disaster</loc>
+    <loc>https://qa-lens.com/blog/release-timing-disaster</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/spof-life-design</loc>
+    <loc>https://qa-lens.com/blog/qa-leader-ic-collaboration</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/spof-life-design</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-problem-solving-six-steps</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/tau-test-automation-in-devops</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-pytest-tutorial</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/tau-performance-load-testing</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-communication-skills</loc>
+    <loc>https://qa-lens.com/blog/tau-pytest-bdd</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/tau-pytest-tutorial</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/appium-self-healing-framework</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/automated-testing-strategy</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/swe-at-google-startup</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/tau-building-quality-leaders</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/tau-observability-for-test-automation</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/tau-whole-team-continuous-testing</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/qa-influence-architecture</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/qa-problem-solving-six-steps</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/tau-unit-testing</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/qa-communication-skills</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-pytest-bdd</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-building-quality-leaders</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-unit-testing</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/skip-qa-release</loc>
+    <loc>https://qa-lens.com/blog/skip-qa-release</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-test-automation-in-devops</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/qa-pm-test-strategy-alignment</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-performance-load-testing</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/tau-github-actions-for-testing</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-whole-team-continuous-testing</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/user-story-mapping-qa</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-github-actions-for-testing</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/when-not-to-automate</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/automated-testing-strategy</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/tau-playwright-advanced</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/user-story-mapping-qa</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://qa-lens.com/blog/tau-test-automation-foundation</loc>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-test-automation-foundation</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/tau-observability-for-test-automation</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/appium-self-healing-framework</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/swe-at-google-startup</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/when-not-to-automate</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-pm-test-strategy-alignment</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/blog/qa-influence-architecture</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/32f780bb-d900-4598-9d77-b91085094005</loc>
-    <lastmod>2026-06-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/9182537d-de8b-44d6-8ca9-6a41eedbed0d</loc>
-    <lastmod>2026-06-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/9532ea56-6631-4748-a263-5eb349cedfe5</loc>
-    <lastmod>2026-06-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/612b77df-82a9-4283-9608-9e885bfca983</loc>
+    <loc>https://qa-lens.com/projects/32f780bb-d900-4598-9d77-b91085094005</loc>
     <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/b6f5522a-d4c0-4fcc-854e-0af8d333d0bc</loc>
+    <loc>https://qa-lens.com/projects/9182537d-de8b-44d6-8ca9-6a41eedbed0d</loc>
     <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jimmy-hong-portfolio.pages.dev/projects/e9c3b993-b600-4aa2-826d-f8a584b9ad4b</loc>
+    <loc>https://qa-lens.com/projects/9532ea56-6631-4748-a263-5eb349cedfe5</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/projects/612b77df-82a9-4283-9608-9e885bfca983</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/projects/b6f5522a-d4c0-4fcc-854e-0af8d333d0bc</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/projects/e9c3b993-b600-4aa2-826d-f8a584b9ad4b</loc>
     <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
