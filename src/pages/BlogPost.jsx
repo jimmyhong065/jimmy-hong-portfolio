@@ -227,16 +227,29 @@ export default function BlogPost() {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: post.title,
-    description: post.excerpt ?? '',
-    datePublished: post.published_at,
-    ...(post.updated_at && { dateModified: post.updated_at }),
-    author: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
-    publisher: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
-    url: postUrl,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
-    ...(post.tags?.length && { keywords: post.tags.join(', ') }),
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': postUrl,
+        headline: post.title,
+        description: post.excerpt ?? '',
+        datePublished: post.published_at,
+        ...(post.updated_at && { dateModified: post.updated_at }),
+        author: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
+        publisher: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
+        url: postUrl,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+        ...(post.tags?.length && { keywords: post.tags.join(', ') }),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: '文章', item: `${SITE_URL}/blog` },
+          { '@type': 'ListItem', position: 3, name: post.title, item: postUrl },
+        ],
+      },
+    ],
   }
 
   const seriesTag = post.tags?.find(t => t.includes('系列'))

@@ -40,17 +40,30 @@ export default function Home() {
   const { services } = useServices('qa')
   const { announcements } = useAnnouncements()
 
-  const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+  const SITE_URL = 'https://qa-lens.com'
   const personJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Jimmy Hong',
-    url: SITE_URL,
-    jobTitle: 'QA Engineer',
-    description: settings.seo_description || '專注測試流程設計與品質架構的 QA Engineer。',
-    ...(settings.avatar_url && { image: settings.avatar_url }),
-    sameAs: [settings.github_url, settings.linkedin_url].filter(Boolean),
-    ...(settings.email && { email: settings.email }),
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: 'Jimmy Hong | QA Lens',
+        description: settings.seo_description || '專注測試流程設計與品質架構的 QA Engineer。',
+        inLanguage: 'zh-TW',
+      },
+      {
+        '@type': 'Person',
+        '@id': `${SITE_URL}/#person`,
+        name: 'Jimmy Hong',
+        url: SITE_URL,
+        jobTitle: 'QA Engineer',
+        description: settings.seo_description || '專注測試流程設計與品質架構的 QA Engineer。',
+        ...(settings.avatar_url && { image: settings.avatar_url }),
+        sameAs: [settings.github_url, settings.linkedin_url].filter(Boolean),
+        ...(settings.email && { email: settings.email }),
+      },
+    ],
   }
 
   return (
