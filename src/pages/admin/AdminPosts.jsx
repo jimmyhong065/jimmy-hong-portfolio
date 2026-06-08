@@ -9,6 +9,7 @@ export default function AdminPosts() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [tagFilter, setTagFilter] = useState('')
   const [selectedIds, setSelectedIds] = useState(new Set())
+  const [selectAllFiltered, setSelectAllFiltered] = useState(false)
   const [sortKey, setSortKey] = useState('published_at')
   const [sortDir, setSortDir] = useState('desc')
   const [page, setPage] = useState(1)
@@ -29,6 +30,7 @@ export default function AdminPosts() {
       .order('created_at', { ascending: false })
     setPosts(data ?? [])
     setSelectedIds(new Set())
+    setSelectAllFiltered(false)
   }
 
   useEffect(() => { fetchPosts() }, [])
@@ -59,12 +61,18 @@ export default function AdminPosts() {
   const totalPages = Math.ceil(visiblePosts.length / PAGE_SIZE)
   const pagedPosts = visiblePosts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  useEffect(() => { setPage(1) }, [search, statusFilter, tagFilter, sortKey, sortDir])
+  useEffect(() => { setPage(1); setSelectAllFiltered(false) }, [search, statusFilter, tagFilter, sortKey, sortDir])
 
-  const allVisibleSelected = pagedPosts.length > 0 && pagedPosts.every(p => selectedIds.has(p.id))
+  const publishedCount = posts.filter(p => p.published).length
+  const draftCount = posts.filter(p => !p.published).length
 
-  function toggleSelectAll() {
-    if (allVisibleSelected) {
+  const allPageSelected = pagedPosts.length > 0 && pagedPosts.every(p => selectedIds.has(p.id))
+
+  function toggleSelectPage() {
+    if (selectAllFiltered) {
+      setSelectedIds(new Set())
+      setSelectAllFiltered(false)
+    } else if (allPageSelected) {
       setSelectedIds(prev => {
         const next = new Set(prev)
         pagedPosts.forEach(p => next.delete(p.id))
@@ -75,7 +83,13 @@ export default function AdminPosts() {
     }
   }
 
+  function handleSelectAllFiltered() {
+    setSelectedIds(new Set(visiblePosts.map(p => p.id)))
+    setSelectAllFiltered(true)
+  }
+
   function toggleSelect(id) {
+    setSelectAllFiltered(false)
     setSelectedIds(prev => {
       const next = new Set(prev)
       next.has(id) ? next.delete(id) : next.add(id)
@@ -83,23 +97,28 @@ export default function AdminPosts() {
     })
   }
 
+  const effectiveSelectedIds = selectAllFiltered
+    ? new Set(visiblePosts.map(p => p.id))
+    : selectedIds
+
   async function handleBatchPublish(published) {
     await supabase.from('posts')
       .update({ published, published_at: published ? new Date().toISOString() : null })
-      .in('id', [...selectedIds])
+      .in('id', [...effectiveSelectedIds])
     fetchPosts()
   }
 
   async function handleBatchDelete() {
-    if (!confirm(`確定刪除 ${selectedIds.size} 篇文章？`)) return
-    await supabase.from('posts').delete().in('id', [...selectedIds])
+    const count = effectiveSelectedIds.size
+    if (!confirm(`確定刪除 ${count} 篇文章？此操作無法復原。`)) return
+    await supabase.from('posts').delete().in('id', [...effectiveSelectedIds])
     fetchPosts()
   }
 
   async function handleBatchTag(mode) {
     const newTags = batchTagInput.split(',').map(t => t.trim()).filter(Boolean)
     if (!newTags.length) return
-    const selected = posts.filter(p => selectedIds.has(p.id))
+    const selected = posts.filter(p => effectiveSelectedIds.has(p.id))
     await Promise.all(selected.map(p => {
       const tags = mode === 'append'
         ? [...new Set([...(p.tags ?? []), ...newTags])]
@@ -142,6 +161,8 @@ export default function AdminPosts() {
     if (data?.id) navigate(`/admin/posts/${data.id}`)
   }
 
+  const selectedCount = effectiveSelectedIds.size
+
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
@@ -153,8 +174,8 @@ export default function AdminPosts() {
       </div>
 
       {/* Filter bar */}
-      <div className="flex gap-2 mb-4 flex-wrap">
-        <input type="text" placeholder="🔍 搜尋標題…" value={search}
+      <div className="flex gap-2 mb-3 flex-wrap">
+        <input type="text" placeholder="搜尋標題…" value={search}
           onChange={e => setSearch(e.target.value)}
           className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-400 flex-1 min-w-[160px]" />
         <div className="flex gap-1">
@@ -174,13 +195,83 @@ export default function AdminPosts() {
         </select>
       </div>
 
+      {/* Count summary */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3 text-xs text-gray-500">
+          <span>
+            {statusFilter === 'all'
+              ? `全部 ${posts.length} 篇`
+              : statusFilter === 'published'
+                ? `已發布 ${publishedCount} 篇`
+                : `草稿 ${draftCount} 篇`}
+            {(search || tagFilter) && ` → 篩選後 ${visiblePosts.length} 篇`}
+          </span>
+          <span className="text-gray-300">|</span>
+          <span>已發布 <strong className="text-green-600">{publishedCount}</strong></span>
+          <span>草稿 <strong className="text-yellow-600">{draftCount}</strong></span>
+        </div>
+        {totalPages > 1 && (
+          <span className="text-xs text-gray-400">
+            第 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, visiblePosts.length)} 篇，共 {visiblePosts.length} 篇
+          </span>
+        )}
+      </div>
+
+      {/* Batch action bar — shown above table when items selected */}
+      {selectedCount > 0 && (
+        <div className="mb-3 flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-xl flex-wrap">
+          <span className="text-sm font-medium text-blue-700">已選 {selectedCount} 篇</span>
+          {!selectAllFiltered && totalPages > 1 && pagedPosts.every(p => selectedIds.has(p.id)) && (
+            <button onClick={handleSelectAllFiltered}
+              className="text-xs text-blue-600 underline hover:no-underline">
+              全選篩選結果（{visiblePosts.length} 篇）
+            </button>
+          )}
+          <div className="w-px h-4 bg-blue-200" />
+          <button onClick={() => handleBatchPublish(true)}
+            className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700">
+            發布
+          </button>
+          <button onClick={() => handleBatchPublish(false)}
+            className="text-xs bg-yellow-500 text-white px-3 py-1.5 rounded-lg hover:bg-yellow-600">
+            取消發布
+          </button>
+          <button onClick={handleBatchDelete}
+            className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600">
+            刪除
+          </button>
+          <div className="w-px h-4 bg-blue-200" />
+          <input
+            type="text"
+            placeholder="標籤，逗號分隔"
+            value={batchTagInput}
+            onChange={e => setBatchTagInput(e.target.value)}
+            className="text-xs border border-blue-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-400 w-44 bg-white"
+          />
+          <button onClick={() => handleBatchTag('append')}
+            className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700">
+            追加標籤
+          </button>
+          <button onClick={() => handleBatchTag('replace')}
+            className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700">
+            取代標籤
+          </button>
+          <button onClick={() => { setSelectedIds(new Set()); setSelectAllFiltered(false) }}
+            className="text-xs text-gray-400 hover:text-gray-600 ml-auto">
+            取消選取
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="border border-gray-200 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 w-8">
-                <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAll} />
+                <input type="checkbox"
+                  checked={allPageSelected || selectAllFiltered}
+                  onChange={toggleSelectPage} />
               </th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('title')}>標題{sortIcon('title')}</th>
               <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">標籤</th>
@@ -191,12 +282,13 @@ export default function AdminPosts() {
           </thead>
           <tbody>
             {pagedPosts.map(post => (
-              <tr key={post.id} className="border-t border-gray-100">
+              <tr key={post.id}
+                className={`border-t border-gray-100 ${effectiveSelectedIds.has(post.id) ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
                 <td className="px-4 py-3">
-                  <input type="checkbox" checked={selectedIds.has(post.id)}
+                  <input type="checkbox" checked={effectiveSelectedIds.has(post.id)}
                     onChange={() => toggleSelect(post.id)} />
                 </td>
-                <td className="px-4 py-3 text-sm">{post.title}</td>
+                <td className="px-4 py-3 text-sm font-medium">{post.title}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1 flex-wrap">
                     {(post.tags ?? []).map(t => (
@@ -228,76 +320,43 @@ export default function AdminPosts() {
                 </td>
               </tr>
             ))}
+            {pagedPosts.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
+                  沒有符合條件的文章
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs text-gray-400">
-            第 {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, visiblePosts.length)} 篇，共 {visiblePosts.length} 篇
-          </span>
-          <div className="flex gap-1">
-            <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
-              className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
-              ←
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
-              .reduce((acc, n, i, arr) => {
-                if (i > 0 && n - arr[i - 1] > 1) acc.push('…')
-                acc.push(n)
-                return acc
-              }, [])
-              .map((n, i) => n === '…'
-                ? <span key={`ellipsis-${i}`} className="text-xs px-2 py-1.5 text-gray-400">…</span>
-                : <button key={n} onClick={() => setPage(n)}
-                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                      page === n ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 hover:border-gray-400'
-                    }`}>
-                    {n}
-                  </button>
-              )}
-            <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}
-              className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
-              →
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Batch action bar */}
-      {selectedIds.size > 0 && (
-        <div className="mt-4 flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-          <span className="text-sm text-gray-600">已選 {selectedIds.size} 篇</span>
-          <button onClick={() => handleBatchPublish(true)}
-            className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700">
-            發布
+        <div className="mt-4 flex items-center justify-end gap-1">
+          <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
+            className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
+            ←
           </button>
-          <button onClick={() => handleBatchPublish(false)}
-            className="text-xs bg-yellow-500 text-white px-3 py-1.5 rounded-lg hover:bg-yellow-600">
-            取消發布
-          </button>
-          <button onClick={handleBatchDelete}
-            className="text-xs bg-red-500 text-white px-3 py-1.5 rounded-lg hover:bg-red-600">
-            刪除
-          </button>
-          <div className="w-px h-4 bg-gray-300 mx-1" />
-          <input
-            type="text"
-            placeholder="標籤，用逗號分隔"
-            value={batchTagInput}
-            onChange={e => setBatchTagInput(e.target.value)}
-            className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-gray-400 w-48"
-          />
-          <button onClick={() => handleBatchTag('append')}
-            className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700">
-            追加
-          </button>
-          <button onClick={() => handleBatchTag('replace')}
-            className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700">
-            取代
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
+            .reduce((acc, n, i, arr) => {
+              if (i > 0 && n - arr[i - 1] > 1) acc.push('…')
+              acc.push(n)
+              return acc
+            }, [])
+            .map((n, i) => n === '…'
+              ? <span key={`ellipsis-${i}`} className="text-xs px-2 py-1.5 text-gray-400">…</span>
+              : <button key={n} onClick={() => setPage(n)}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                    page === n ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 hover:border-gray-400'
+                  }`}>
+                  {n}
+                </button>
+            )}
+          <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}
+            className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg disabled:opacity-30 hover:border-gray-400">
+            →
           </button>
         </div>
       )}

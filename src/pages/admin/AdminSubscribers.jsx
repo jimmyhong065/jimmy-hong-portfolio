@@ -1,5 +1,5 @@
 // src/pages/admin/AdminSubscribers.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import { stripMarkdown } from '../../lib/text'
 
@@ -19,6 +19,88 @@ function EmailPreview({ title, excerpt }) {
       <p style={{ fontSize: 11, color: '#bbb' }}>
         您收到此信是因為訂閱了 Jimmy Hong 部落格。取消訂閱
       </p>
+    </div>
+  )
+}
+
+function PostSearchSelect({ posts, value, onChange }) {
+  const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  const selected = posts.find(p => p.slug === value)
+
+  const filtered = posts.filter(p =>
+    !query || p.title.toLowerCase().includes(query.toLowerCase())
+  )
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  function handleSelect(slug) {
+    onChange(slug)
+    setQuery('')
+    setOpen(false)
+  }
+
+  function handleClear() {
+    onChange('')
+    setQuery('')
+  }
+
+  return (
+    <div ref={ref} className="relative max-w-sm">
+      <div
+        className={`flex items-center gap-2 border rounded-lg px-3 py-2 bg-white cursor-text ${
+          open ? 'border-gray-400 ring-1 ring-gray-300' : 'border-gray-200'
+        }`}
+        onClick={() => setOpen(true)}
+      >
+        {selected && !open ? (
+          <>
+            <span className="text-sm text-gray-800 flex-1 truncate">{selected.title}</span>
+            <button
+              onClick={e => { e.stopPropagation(); handleClear() }}
+              className="text-gray-400 hover:text-gray-600 shrink-0 text-xs"
+            >✕</button>
+          </>
+        ) : (
+          <input
+            autoFocus={open}
+            type="text"
+            value={open ? query : ''}
+            placeholder={selected ? selected.title : '搜尋文章標題…'}
+            onChange={e => setQuery(e.target.value)}
+            onFocus={() => setOpen(true)}
+            className="flex-1 text-sm outline-none bg-transparent placeholder-gray-400"
+          />
+        )}
+      </div>
+
+      {open && (
+        <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-72 overflow-y-auto">
+          {filtered.length === 0 ? (
+            <div className="px-4 py-3 text-sm text-gray-400">找不到符合的文章</div>
+          ) : (
+            filtered.map(p => (
+              <button
+                key={p.slug}
+                onMouseDown={() => handleSelect(p.slug)}
+                className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
+                  p.slug === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'
+                }`}
+              >
+                {p.title}
+              </button>
+            ))
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -119,15 +201,14 @@ export default function AdminSubscribers() {
       <div className="border-t border-gray-200 pt-8">
         <h2 className="text-sm font-semibold mb-4">發送文章通知</h2>
         <div className="mb-4">
-          <label className="text-xs text-gray-500 mb-1 block">選擇文章</label>
-          <select
+          <label className="text-xs text-gray-500 mb-1 block">
+            選擇文章 <span className="text-gray-400">（共 {posts.length} 篇已發布）</span>
+          </label>
+          <PostSearchSelect
+            posts={posts}
             value={selectedSlug}
-            onChange={e => { setSelectedSlug(e.target.value); setResult(null) }}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 w-full max-w-sm"
-          >
-            <option value="">— 請選擇 —</option>
-            {posts.map(p => <option key={p.slug} value={p.slug}>{p.title}</option>)}
-          </select>
+            onChange={slug => { setSelectedSlug(slug); setResult(null) }}
+          />
         </div>
 
         {selectedPost && (
