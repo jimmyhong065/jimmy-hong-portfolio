@@ -62,10 +62,10 @@ Vision AI 測試工具的執行流程：
 
 ```mermaid
 flowchart LR
-    A["自然語言指令\n點擊登入按鈕"] --> B["截圖"]
-    B --> C["VLM 分析\n辨識所有可見元素"]
-    C --> D["語意比對\n找到最符合的元素"]
-    D --> E["執行操作\n點擊座標"]
+    A[自然語言指令 點擊登入按鈕] --> B[截圖]
+    B --> C[VLM 分析 辨識所有可見元素]
+    C --> D[語意比對 找到最符合的元素]
+    D --> E[執行操作 點擊座標]
     style A fill:#dbeafe,stroke:#3b82f6
     style E fill:#dcfce7,stroke:#22c55e
 ```

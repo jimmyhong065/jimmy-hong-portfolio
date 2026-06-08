@@ -33,13 +33,12 @@ Appium 測試有一個特性：每次手動跑都很麻煩。
 
 ```mermaid
 flowchart LR
-    A["🔀 PR 開出來\n觸發 workflow"] --> B
-    B["☕ 安裝環境\nJava / Node / Appium"] --> C
-    C["📱 啟動 Android Emulator\nandroid-emulator-runner"] --> D
-    D["🚀 啟動 Appium Server\nappium &"] --> E
-    E["🧪 跑測試\nmvn test / pytest"] --> F
-    F["📊 上傳測試報告\nAllure Artifact"]
-
+    A[PR 觸發 workflow] --> B
+    B[安裝環境 Java/Node/Appium] --> C
+    C[啟動 Android Emulator] --> D
+    D[啟動 Appium Server] --> E
+    E[跑測試 mvn/pytest] --> F
+    F[上傳測試報告 Allure]
     style A fill:#dbeafe,stroke:#3b82f6
     style C fill:#dcfce7,stroke:#22c55e
     style D fill:#fef9c3,stroke:#f59e0b

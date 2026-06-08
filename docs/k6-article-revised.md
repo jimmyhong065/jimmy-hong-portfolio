@@ -42,12 +42,12 @@
 
 ```mermaid
 flowchart LR
-    SM["🟢 Smoke\n1–2 VU / 1分鐘\n確認環境正常"] --> LD
-    LD["🔵 Load\n緩慢爬升→穩定→降載\n建立基準線"] --> ST
-    ST["🟡 Stress\n慢慢加壓到極限\n找服務上限"] --> SK
-    SK["🔴 Spike\n瞬間打滿→觀察恢復\n測突發流量"] --> SK2
-    SK2["🟣 Soak\n中等負載 8–24 小時\n找記憶體洩漏"]
-
+    SM[Smoke] --> LD[Load] --> ST[Stress] --> SK[Spike] --> SK2[Soak]
+    SM -.- sm1[1-2 VU / 1分鐘]
+    LD -.- ld1[緩升→穩定→降載]
+    ST -.- st1[加壓到極限]
+    SK -.- sk1[瞬間打滿→觀察恢復]
+    SK2 -.- sk21[中等負載 8-24hr]
     style SM fill:#dcfce7,stroke:#22c55e
     style LD fill:#dbeafe,stroke:#3b82f6
     style ST fill:#fef9c3,stroke:#f59e0b
@@ -147,11 +147,10 @@ export function handleSummary(data) {
 
 ```mermaid
 flowchart LR
-    K6["⚡ k6\n執行壓測"] --> IDB["🗄️ InfluxDB\n指標儲存"]
-    IDB --> GF["📊 Grafana\nDashboard 視覺化"]
-    CW["☁️ AWS CloudWatch\nCPU / Memory / RDS / Redis"] --> GF
-    GF --> AL["🔔 Slack Alert\nP95 超過 threshold 時自動通知"]
-
+    K6[k6 壓測] --> IDB[InfluxDB 儲存]
+    IDB --> GF[Grafana Dashboard]
+    CW[AWS CloudWatch] --> GF
+    GF --> AL[Slack Alert]
     style K6 fill:#fef9c3,stroke:#f59e0b
     style IDB fill:#dbeafe,stroke:#3b82f6
     style GF fill:#dcfce7,stroke:#22c55e

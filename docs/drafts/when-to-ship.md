@@ -47,16 +47,15 @@ PM 的判斷框架更接近正確。
 
 ```mermaid
 flowchart TD
-    START["🐛 發現 Bug"] --> Q1{"影響用戶範圍？"}
-    Q1 -->|"少數 < 10%"| Q2{"嚴重程度？"}
-    Q1 -->|"多數 > 50%"| Q2B{"核心功能壞掉？"}
-    Q2 -->|"視覺異常\n功能正常"| SHIP["✅ 可上線\n下個 Sprint 修"]
-    Q2 -->|"功能受損"| Q3{"有 workaround？"}
-    Q2B -->|"是"| BLOCK["🚫 不應上線\n需先修復"]
-    Q2B -->|"否"| Q3
-    Q3 -->|"有"| RISK["⚠️ 評估延遲代價\nPM 一起決定"]
-    Q3 -->|"無"| BLOCK
-
+    START[發現 Bug] --> Q1{影響用戶範圍}
+    Q1 -->|少數 10% 以下| Q2{嚴重程度}
+    Q1 -->|多數 50% 以上| Q2B{核心功能壞掉}
+    Q2 -->|視覺異常 功能正常| SHIP[可上線 下個 Sprint 修]
+    Q2 -->|功能受損| Q3{有 workaround}
+    Q2B -->|是| BLOCK[不應上線 需先修復]
+    Q2B -->|否| Q3
+    Q3 -->|有| RISK[評估延遲代價 PM 一起決定]
+    Q3 -->|無| BLOCK
     style SHIP fill:#dcfce7,stroke:#22c55e
     style BLOCK fill:#fee2e2,stroke:#ef4444
     style RISK fill:#fef9c3,stroke:#f59e0b

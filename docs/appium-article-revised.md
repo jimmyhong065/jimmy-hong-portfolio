@@ -48,15 +48,13 @@ Appium 的指令從你的 Python 腳本出發，經過這條路：
 
 ```mermaid
 flowchart TD
-    A["📱 你的腳本\nPython / JS Client"] --> B["🔄 Appium Server\nNode.js 翻譯官"]
-    B --> C["🔧 Driver\nUIAutomator2 / XCUITest"]
-    C --> D["📲 真實裝置 / 模擬器"]
-
-    A -. "❶ 腳本邏輯\n等待時間不足" .-> E1["Debug 層：Client"]
-    B -. "❷ Session 超時\nPort 衝突" .-> E2["Debug 層：Server"]
-    C -. "❸ Android/iOS\n版本不符" .-> E3["Debug 層：Driver"]
-    D -. "❹ UI 未渲染完\n動畫進行中" .-> E4["Debug 層：裝置"]
-
+    A[腳本 Python/JS Client] --> B[Appium Server]
+    B --> C[Driver UIAutomator2/XCUITest]
+    C --> D[真實裝置 / 模擬器]
+    A -.- E1[Client層：等待時間不足]
+    B -.- E2[Server層：Session超時 Port衝突]
+    C -.- E3[Driver層：Android/iOS版本不符]
+    D -.- E4[裝置層：UI未渲染完]
     style A fill:#dbeafe,stroke:#3b82f6
     style B fill:#fef9c3,stroke:#f59e0b
     style C fill:#dcfce7,stroke:#22c55e

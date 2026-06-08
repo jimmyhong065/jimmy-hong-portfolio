@@ -30,11 +30,10 @@
 
 ```mermaid
 flowchart TD
-    A["第一層：撰寫層\n你怎麼寫測試腳本"] --> D
-    B["第二層：執行層\n測試在哪裡跑"] --> D
-    C["第三層：平台層\n把撰寫和執行都包起來"] --> D
-    D["你的測試需求"]
-
+    A[撰寫層 你怎麼寫測試腳本] --> D
+    B[執行層 測試在哪裡跑] --> D
+    C[平台層 包含撰寫和執行] --> D
+    D[你的測試需求]
     style A fill:#dbeafe,stroke:#3b82f6
     style B fill:#dcfce7,stroke:#22c55e
     style C fill:#f3e8ff,stroke:#a855f7
