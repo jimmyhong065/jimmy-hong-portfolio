@@ -243,6 +243,19 @@ describe('AdminPostEdit — auto-save and preview', () => {
     expect(insertMock).not.toHaveBeenCalled()
   })
 
+  it('blocks saving as published when content only has markdown syntax', async () => {
+    const { container } = renderNewPost()
+
+    fillCompletePublishForm(container, {
+      content: '###\n** **\n---\n` `\n> \n- \n1. ',
+    })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
   it('allows saving an incomplete draft', async () => {
     renderNewPost()
 

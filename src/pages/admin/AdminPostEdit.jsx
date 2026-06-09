@@ -21,16 +21,20 @@ function plainText(content) {
   return (content ?? '')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ')
+    .replace(/^\s*[-+*]\s+/gm, ' ')
+    .replace(/^\s*\d+\.\s+/gm, ' ')
+    .replace(/[`*_~>#-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
 }
 
 function parseTags(tags) {
+  if (Array.isArray(tags)) return tags.map(t => String(t).trim()).filter(Boolean)
   return (tags ?? '').split(',').map(t => t.trim()).filter(Boolean)
 }
 
 function buildPublishChecks(form) {
-  const tags = Array.isArray(form.tags) ? form.tags.filter(Boolean) : parseTags(form.tags)
+  const tags = parseTags(form.tags)
   return [
     { key: 'title', label: '標題', passed: Boolean(form.title?.trim()) },
     { key: 'slug', label: 'Slug', passed: Boolean(form.slug?.trim()) },
