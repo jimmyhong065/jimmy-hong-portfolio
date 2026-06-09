@@ -2,25 +2,45 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
+const {
+  postFixture,
+  singleMock,
+  updateEqMock,
+  updateMock,
+  insertSingleMock,
+  insertSelectMock,
+  insertMock,
+  selectMock,
+  eqMock,
+} = vi.hoisted(() => ({
+  postFixture: {
+    id: 'abc',
+    title: '測試文章',
+    slug: 'test-article',
+    content: '<p>內容</p>',
+    excerpt: '摘要',
+    tags: ['測試策略'],
+    published: false,
+    published_at: null,
+  },
+  singleMock: vi.fn(),
+  updateEqMock: vi.fn(),
+  updateMock: vi.fn(),
+  insertSingleMock: vi.fn(),
+  insertSelectMock: vi.fn(),
+  insertMock: vi.fn(),
+  selectMock: vi.fn(),
+  eqMock: vi.fn(),
+}))
+
 vi.mock('../../../lib/supabase', () => ({
   supabase: {
     from: vi.fn(() => ({
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({
-        data: {
-          id: 'abc',
-          title: '測試文章',
-          slug: 'test-article',
-          content: '<p>內容</p>',
-          excerpt: '摘要',
-          tags: ['測試策略'],
-          published: false,
-          published_at: null,
-        }
-      }),
-      update: vi.fn(() => ({ eq: vi.fn().mockResolvedValue({}) })),
-      insert: vi.fn().mockResolvedValue({}),
+      select: selectMock,
+      eq: eqMock,
+      single: singleMock,
+      update: updateMock,
+      insert: insertMock,
     })),
   }
 }))
@@ -44,8 +64,24 @@ function renderEdit(id = 'abc') {
   )
 }
 
+function renderNewPost() {
+  return renderEdit('new')
+}
+
 describe('AdminPostEdit — auto-save and preview', () => {
-  beforeEach(() => { vi.clearAllMocks() })
+  beforeEach(() => {
+    vi.clearAllMocks()
+    localStorage.clear()
+
+    singleMock.mockResolvedValue({ data: postFixture })
+    eqMock.mockReturnThis()
+    selectMock.mockReturnThis()
+    updateEqMock.mockResolvedValue({})
+    updateMock.mockReturnValue({ eq: updateEqMock })
+    insertSingleMock.mockResolvedValue({ data: { id: 'new-id' } })
+    insertSelectMock.mockReturnValue({ single: insertSingleMock })
+    insertMock.mockReturnValue({ select: insertSelectMock })
+  })
 
   it('shows preview button for existing post', async () => {
     renderEdit('abc')
@@ -115,6 +151,77 @@ describe('AdminPostEdit — auto-save and preview', () => {
 
     await waitFor(() => {
       expect(screen.getAllByText(/已儲存 \d{2}:\d{2}/).length).toBeGreaterThan(0)
+    })
+  })
+
+  it('keeps publish checklist hidden for an ordinary draft', () => {
+    renderNewPost()
+
+    expect(screen.queryByText('發布檢查')).not.toBeInTheDocument()
+  })
+
+  it('shows publish checklist when publish is checked', () => {
+    renderNewPost()
+
+    fireEvent.click(screen.getByLabelText('發布'))
+
+    expect(screen.getByText('發布檢查')).toBeInTheDocument()
+  })
+
+  it('blocks saving as published when required publish fields are missing', async () => {
+    renderNewPost()
+
+    fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
+      target: { value: '未完成文章' }
+    })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
+  it('allows saving an incomplete draft', async () => {
+    renderNewPost()
+
+    fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
+      target: { value: '未完成草稿' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    await waitFor(() => {
+      expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+        title: '未完成草稿',
+        published: false,
+      }))
+    })
+  })
+
+  it('allows saving as published when publish checks pass', async () => {
+    const { container } = renderNewPost()
+
+    fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
+      target: { value: '完整文章' }
+    })
+    fireEvent.change(container.querySelector('input[name="excerpt"]'), {
+      target: { value: '這是一段摘要' }
+    })
+    fireEvent.change(container.querySelector('input[name="tags"]'), {
+      target: { value: '測試策略' }
+    })
+    fireEvent.change(screen.getByTestId('rich-editor'), {
+      target: { value: '<p>完整內容</p>' }
+    })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    await waitFor(() => {
+      expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+        title: '完整文章',
+        published: true,
+        excerpt: '這是一段摘要',
+        tags: ['測試策略'],
+      }))
     })
   })
 })
