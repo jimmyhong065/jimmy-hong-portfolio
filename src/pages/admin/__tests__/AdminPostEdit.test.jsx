@@ -166,6 +166,11 @@ describe('AdminPostEdit — auto-save and preview', () => {
     fireEvent.click(screen.getByLabelText('發布'))
 
     expect(screen.getByText('發布檢查')).toBeInTheDocument()
+    expect(screen.getByText('標題')).toBeInTheDocument()
+    expect(screen.getByText('Slug')).toBeInTheDocument()
+    expect(screen.getByText('摘要')).toBeInTheDocument()
+    expect(screen.getByText('內容')).toBeInTheDocument()
+    expect(screen.getByText('至少一個標籤')).toBeInTheDocument()
   })
 
   it('blocks saving as published when required publish fields are missing', async () => {
