@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
 const {
@@ -122,6 +122,11 @@ describe('AdminPostEdit — auto-save and preview', () => {
     insertMock.mockReturnValue({ select: insertSelectMock })
   })
 
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
+
   it('shows preview button for existing post', async () => {
     renderEdit('abc')
     await waitFor(() => screen.getByDisplayValue('測試文章'))
@@ -139,7 +144,6 @@ describe('AdminPostEdit — auto-save and preview', () => {
     const previewButton = await screen.findByRole('button', { name: /預覽/ })
     fireEvent.click(previewButton)
     expect(open).toHaveBeenCalledWith('/blog/test-article?preview=1', '_blank')
-    open.mockRestore()
   })
 
   it('auto-saves after 5 seconds of inactivity', async () => {
@@ -165,7 +169,6 @@ describe('AdminPostEdit — auto-save and preview', () => {
     await act(async () => { await Promise.resolve() })
 
     expect(supabase.from).toHaveBeenCalledWith('posts')
-    vi.useRealTimers()
   })
 
   it('shows auto-saved timestamp after save completes', async () => {
