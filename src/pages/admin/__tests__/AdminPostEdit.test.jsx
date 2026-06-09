@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
@@ -66,6 +66,45 @@ function renderEdit(id = 'abc') {
 
 function renderNewPost() {
   return renderEdit('new')
+}
+
+function getPublishChecklist() {
+  const heading = screen.getByText('發布檢查')
+  const checklist = heading.closest('[data-testid="publish-checklist"], section, aside, fieldset') ?? heading.parentElement
+  expect(checklist).not.toBeNull()
+  return checklist
+}
+
+function fillCompletePublishForm(container, overrides = {}) {
+  const values = {
+    title: '完整文章',
+    excerpt: '這是一段摘要',
+    tags: '測試策略',
+    content: '<p>完整內容</p>',
+    ...overrides,
+  }
+
+  fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
+    target: { value: values.title }
+  })
+
+  if (values.excerpt !== undefined) {
+    fireEvent.change(container.querySelector('input[name="excerpt"]'), {
+      target: { value: values.excerpt }
+    })
+  }
+
+  if (values.tags !== undefined) {
+    fireEvent.change(container.querySelector('input[name="tags"]'), {
+      target: { value: values.tags }
+    })
+  }
+
+  if (values.content !== undefined) {
+    fireEvent.change(screen.getByTestId('rich-editor'), {
+      target: { value: values.content }
+    })
+  }
 }
 
 describe('AdminPostEdit — auto-save and preview', () => {
@@ -165,12 +204,12 @@ describe('AdminPostEdit — auto-save and preview', () => {
 
     fireEvent.click(screen.getByLabelText('發布'))
 
-    expect(screen.getByText('發布檢查')).toBeInTheDocument()
-    expect(screen.getByText('標題')).toBeInTheDocument()
-    expect(screen.getByText('Slug')).toBeInTheDocument()
-    expect(screen.getByText('摘要')).toBeInTheDocument()
-    expect(screen.getByText('內容')).toBeInTheDocument()
-    expect(screen.getByText('至少一個標籤')).toBeInTheDocument()
+    const checklist = within(getPublishChecklist())
+    expect(checklist.getByText('標題')).toBeInTheDocument()
+    expect(checklist.getByText('Slug')).toBeInTheDocument()
+    expect(checklist.getByText('摘要')).toBeInTheDocument()
+    expect(checklist.getByText('內容')).toBeInTheDocument()
+    expect(checklist.getByText('至少一個標籤')).toBeInTheDocument()
   })
 
   it('blocks saving as published when required publish fields are missing', async () => {
@@ -179,6 +218,21 @@ describe('AdminPostEdit — auto-save and preview', () => {
     fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
       target: { value: '未完成文章' }
     })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['excerpt', { excerpt: '' }],
+    ['content', { content: '' }],
+    ['tags', { tags: '' }],
+  ])('blocks saving as published when %s is missing', async (_field, overrides) => {
+    const { container } = renderNewPost()
+
+    fillCompletePublishForm(container, overrides)
     fireEvent.click(screen.getByLabelText('發布'))
     fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
 
@@ -205,18 +259,7 @@ describe('AdminPostEdit — auto-save and preview', () => {
   it('allows saving as published when publish checks pass', async () => {
     const { container } = renderNewPost()
 
-    fireEvent.change(screen.getByRole('textbox', { name: /標題/i }), {
-      target: { value: '完整文章' }
-    })
-    fireEvent.change(container.querySelector('input[name="excerpt"]'), {
-      target: { value: '這是一段摘要' }
-    })
-    fireEvent.change(container.querySelector('input[name="tags"]'), {
-      target: { value: '測試策略' }
-    })
-    fireEvent.change(screen.getByTestId('rich-editor'), {
-      target: { value: '<p>完整內容</p>' }
-    })
+    fillCompletePublishForm(container)
     fireEvent.click(screen.getByLabelText('發布'))
     fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
 
