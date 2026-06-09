@@ -47,8 +47,8 @@ describe('MarkdownContent', () => {
   })
 
   it('renders non-mermaid code blocks as regular code in markdown mode', () => {
-    render(<MarkdownContent content={'```js\nconsole.log(1)\n```'} />)
+    const { container } = render(<MarkdownContent content={'```js\nconsole.log(1)\n```'} />)
     expect(screen.queryByTestId('mermaid-chart')).toBeNull()
-    expect(screen.getByText(/console\.log/)).toBeInTheDocument()
+    expect(container.querySelector('code.language-js')).toHaveTextContent('console.log(1)')
   })
 })

@@ -50,24 +50,24 @@ describe('AdminPostEdit — auto-save and preview', () => {
   it('shows preview button for existing post', async () => {
     renderEdit('abc')
     await waitFor(() => screen.getByDisplayValue('測試文章'))
-    expect(screen.getByText('預覽')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /預覽/ })).toBeInTheDocument()
   })
 
   it('does not show preview button for new post', () => {
     renderEdit('new')
-    expect(screen.queryByText('預覽')).toBeNull()
+    expect(screen.queryByRole('button', { name: /預覽/ })).toBeNull()
   })
 
   it('preview button opens /blog/:slug in new tab', async () => {
     const open = vi.spyOn(window, 'open').mockImplementation(() => null)
     renderEdit('abc')
-    await waitFor(() => screen.getByText('預覽'))
-    fireEvent.click(screen.getByText('預覽'))
+    const previewButton = await screen.findByRole('button', { name: /預覽/ })
+    fireEvent.click(previewButton)
     expect(open).toHaveBeenCalledWith('/blog/test-article?preview=1', '_blank')
     open.mockRestore()
   })
 
-  it('auto-saves after 30 seconds of inactivity', async () => {
+  it('auto-saves after 5 seconds of inactivity', async () => {
     renderEdit('abc')
     // Wait for data load with real timers
     await waitFor(() => screen.getByDisplayValue('測試文章'))
@@ -83,10 +83,10 @@ describe('AdminPostEdit — auto-save and preview', () => {
     })
 
     // Shows pending state
-    expect(screen.getByText('• 未儲存變更')).toBeInTheDocument()
+    expect(screen.getByText('• 未儲存')).toBeInTheDocument()
 
-    // Advance 30 seconds
-    await act(async () => { vi.advanceTimersByTime(30000) })
+    // Advance 5 seconds
+    await act(async () => { vi.advanceTimersByTime(5000) })
     await act(async () => { await Promise.resolve() })
 
     expect(supabase.from).toHaveBeenCalledWith('posts')
@@ -107,14 +107,14 @@ describe('AdminPostEdit — auto-save and preview', () => {
       })
     })
 
-    await act(async () => { vi.advanceTimersByTime(30000) })
+    await act(async () => { vi.advanceTimersByTime(5000) })
     await act(async () => { await Promise.resolve() })
 
     // Switch back to real timers for waitFor
     vi.useRealTimers()
 
     await waitFor(() => {
-      expect(screen.getByText(/已自動儲存/)).toBeInTheDocument()
+      expect(screen.getAllByText(/已儲存 \d{2}:\d{2}/).length).toBeGreaterThan(0)
     })
   })
 })
