@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import RichTextEditor from '../../components/RichTextEditor'
@@ -15,6 +15,29 @@ function slugify(text) {
 function wordCount(html) {
   const text = html?.replace(/<[^>]+>/g, '') ?? ''
   return text.replace(/\s/g, '').length
+}
+
+function plainText(content) {
+  return (content ?? '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function parseTags(tags) {
+  return (tags ?? '').split(',').map(t => t.trim()).filter(Boolean)
+}
+
+function buildPublishChecks(form) {
+  const tags = Array.isArray(form.tags) ? form.tags.filter(Boolean) : parseTags(form.tags)
+  return [
+    { key: 'title', label: '標題', passed: Boolean(form.title?.trim()) },
+    { key: 'slug', label: 'Slug', passed: Boolean(form.slug?.trim()) },
+    { key: 'excerpt', label: '摘要', passed: Boolean(form.excerpt?.trim()) },
+    { key: 'content', label: '內容', passed: Boolean(plainText(form.content)) },
+    { key: 'tags', label: '至少一個標籤', passed: tags.length > 0 },
+  ]
 }
 
 function SaveStatus({ status }) {
@@ -40,6 +63,7 @@ export default function AdminPostEdit() {
   const [pushResult, setPushResult] = useState(null)
   const [emailResult, setEmailResult] = useState(null)
   const [slugError, setSlugError] = useState('')
+  const [publishCheckError, setPublishCheckError] = useState('')
   const [currentId, setCurrentId] = useState(isNew ? null : id)
   const [editorMode, setEditorMode] = useState(() => {
     const saved = localStorage.getItem(`editor-mode-${id}`)
@@ -70,7 +94,7 @@ export default function AdminPostEdit() {
       slug: f.slug,
       excerpt: f.excerpt,
       content: f.content,
-      tags: f.tags.split(',').map(t => t.trim()).filter(Boolean),
+      tags: parseTags(f.tags),
     }
     setSaveStatus('saving')
     const { error } = await supabase.from('posts').update(payload).eq('id', targetId)
@@ -127,6 +151,7 @@ export default function AdminPostEdit() {
       return updated
     })
     if (name === 'slug') setSlugError('')
+    if (publishCheckError) setPublishCheckError('')
   }
 
   async function switchMode(newMode) {
@@ -161,8 +186,16 @@ export default function AdminPostEdit() {
     e.preventDefault()
     setSaving(true)
     setSlugError('')
+    setPublishCheckError('')
 
-    const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean)
+    const currentPublishChecks = buildPublishChecks(form)
+    if (form.published && currentPublishChecks.some(check => !check.passed)) {
+      setPublishCheckError('請先完成發布檢查')
+      setSaving(false)
+      return
+    }
+
+    const tags = parseTags(form.tags)
     const payload = {
       ...form,
       tags,
@@ -243,6 +276,9 @@ export default function AdminPostEdit() {
   }
 
   const wc = wordCount(form.content)
+  const publishChecks = useMemo(() => buildPublishChecks(form), [form])
+  const publishCheckPassed = publishChecks.every(check => check.passed)
+  const showPublishCheck = form.published || publishCheckError
 
   return (
     <div className="max-w-4xl">
@@ -301,12 +337,18 @@ export default function AdminPostEdit() {
           {editorMode === 'wysiwyg' ? (
             <RichTextEditor
               value={form.content}
-              onChange={html => setForm(f => ({ ...f, content: html }))}
+              onChange={html => {
+                if (publishCheckError) setPublishCheckError('')
+                setForm(f => ({ ...f, content: html }))
+              }}
             />
           ) : (
             <MarkdownEditorPane
               value={form.content}
-              onChange={md => setForm(f => ({ ...f, content: md }))}
+              onChange={md => {
+                if (publishCheckError) setPublishCheckError('')
+                setForm(f => ({ ...f, content: md }))
+              }}
             />
           )}
         </div>
@@ -328,6 +370,35 @@ export default function AdminPostEdit() {
             </div>
           )}
         </div>
+        {showPublishCheck && (
+          <div data-testid="publish-checklist" className={`border rounded-xl p-4 ${
+            publishCheckError ? 'border-red-200 bg-red-50' : 'border-gray-100 bg-gray-50'
+          }`}>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-medium text-gray-500">發布檢查</p>
+              <span className={`text-xs ${publishCheckPassed ? 'text-green-600' : 'text-gray-400'}`}>
+                {publishCheckPassed ? '已完成' : '尚未完成'}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {publishChecks.map(check => (
+                <div key={check.key} className="flex items-center gap-2 text-xs">
+                  <span className={`inline-flex w-4 h-4 items-center justify-center rounded-full text-[10px] ${
+                    check.passed ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'
+                  }`}>
+                    {check.passed ? '✓' : '!'}
+                  </span>
+                  <span className={check.passed ? 'text-gray-600' : 'text-gray-500'}>
+                    {check.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {publishCheckError && (
+              <p className="text-xs text-red-500 mt-3">{publishCheckError}</p>
+            )}
+          </div>
+        )}
         {form.published && currentId && (
           <div className="border border-gray-100 rounded-xl p-4 bg-gray-50 flex flex-col gap-4">
             <div>
