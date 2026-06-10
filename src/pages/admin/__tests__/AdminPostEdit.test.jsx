@@ -196,6 +196,52 @@ describe('AdminPostEdit — auto-save and preview', () => {
     })
   })
 
+  it('blocks auto-saving a published post when publish checks fail', async () => {
+    singleMock.mockResolvedValue({
+      data: {
+        ...postFixture,
+        published: true,
+        published_at: '2026-06-10T00:00:00.000Z',
+      }
+    })
+    const { container } = renderEdit('abc')
+    await waitFor(() => screen.getByDisplayValue('測試文章'))
+    vi.clearAllMocks()
+    vi.useFakeTimers()
+
+    fireEvent.change(container.querySelector('input[name="slug"]'), {
+      target: { value: '' }
+    })
+
+    await act(async () => { vi.advanceTimersByTime(5000) })
+    await act(async () => { await Promise.resolve() })
+    vi.useRealTimers()
+
+    expect(updateMock).not.toHaveBeenCalled()
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+  })
+
+  it('blocks quick-saving a published post when publish checks fail', async () => {
+    singleMock.mockResolvedValue({
+      data: {
+        ...postFixture,
+        published: true,
+        published_at: '2026-06-10T00:00:00.000Z',
+      }
+    })
+    const { container } = renderEdit('abc')
+    await waitFor(() => screen.getByDisplayValue('測試文章'))
+    vi.clearAllMocks()
+
+    fireEvent.change(container.querySelector('input[name="slug"]'), {
+      target: { value: '' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: '⌘S 立即儲存' }))
+
+    expect(updateMock).not.toHaveBeenCalled()
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+  })
+
   it('keeps publish checklist hidden for an ordinary draft', () => {
     renderNewPost()
 
@@ -359,6 +405,7 @@ describe('AdminPostEdit — auto-save and preview', () => {
     ['link text', '[hello](https://example.com)'],
     ['image alt text', '![alt text](image.png)'],
     ['fenced code body', '```js\nconsole.log(1)\n```'],
+    ['html fenced code body', '```html\n<div></div>\n```'],
   ])('allows saving as published when markdown content has real %s', async (_case, content) => {
     const { container } = renderNewPost()
 

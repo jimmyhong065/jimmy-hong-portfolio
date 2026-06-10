@@ -19,9 +19,12 @@ function wordCount(html) {
 
 function plainText(content) {
   return (content ?? '')
+    .replace(/```[^\n`]*\n([\s\S]*?)```/g, (_match, body) => {
+      const codeBody = body.trim()
+      return codeBody ? ` ${codeBody.replace(/[<>]/g, ' ')} ` : ' '
+    })
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ')
-    .replace(/```[^\n`]*\n([\s\S]*?)```/g, '$1')
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/^\s*[-+*]\s+/gm, ' ')
@@ -109,6 +112,11 @@ export default function AdminPostEdit() {
     const f = formRef.current
     const targetId = explicitId ?? currentId
     if (!targetId) return
+    if (f.published && buildPublishChecks(f).some(check => !check.passed)) {
+      setPublishCheckError('請先完成發布檢查')
+      setSaveStatus('error')
+      return
+    }
     const payload = {
       title: f.title,
       slug: payloadSlug(f, targetId),
