@@ -229,13 +229,20 @@ describe('AdminPostEdit — auto-save and preview', () => {
   })
 
   it.each([
+    ['title', { title: '' }],
+    ['slug', { slug: '' }],
     ['excerpt', { excerpt: '' }],
     ['content', { content: '' }],
     ['tags', { tags: '' }],
-  ])('blocks saving as published when %s is missing', async (_field, overrides) => {
+  ])('blocks saving as published when %s is missing', async (field, overrides) => {
     const { container } = renderNewPost()
 
     fillCompletePublishForm(container, overrides)
+    if (field === 'slug') {
+      fireEvent.change(container.querySelector('input[name="slug"]'), {
+        target: { value: '' }
+      })
+    }
     fireEvent.click(screen.getByLabelText('發布'))
     fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
 
@@ -282,6 +289,29 @@ describe('AdminPostEdit — auto-save and preview', () => {
     await waitFor(() => {
       expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
         title: '未完成草稿',
+        published: false,
+      }))
+    })
+  })
+
+  it.each([
+    ['blank title', 'title'],
+    ['blank slug', 'slug'],
+  ])('allows saving a draft with %s', async (_case, field) => {
+    const { container } = renderEdit('abc')
+    await waitFor(() => screen.getByDisplayValue('測試文章'))
+
+    fireEvent.change(
+      field === 'title'
+        ? screen.getByRole('textbox', { name: /標題/i })
+        : container.querySelector('input[name="slug"]'),
+      { target: { value: '' } }
+    )
+    fireEvent.click(screen.getByRole('button', { name: '儲存' }))
+
+    await waitFor(() => {
+      expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+        [field]: '',
         published: false,
       }))
     })

@@ -298,12 +298,12 @@ export default function AdminPostEdit() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
           <label className="text-xs text-gray-500 mb-1 block">標題</label>
-          <input aria-label="標題" name="title" value={form.title} onChange={handleChange} required
+          <input aria-label="標題" name="title" value={form.title} onChange={handleChange}
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">Slug（URL）</label>
-          <input name="slug" value={form.slug} onChange={handleChange} required
+          <input name="slug" value={form.slug} onChange={handleChange}
             className={`w-full text-sm border rounded-lg px-4 py-2.5 focus:outline-none ${slugError ? 'border-red-400 focus:border-red-400' : 'border-gray-200 focus:border-gray-400'}`} />
           {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
           {!isNew && !slugError && <p className="text-xs text-gray-400 mt-1">URL 路徑，建立後請勿修改</p>}
