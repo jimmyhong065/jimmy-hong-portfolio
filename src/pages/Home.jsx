@@ -188,33 +188,33 @@ export default function Home() {
           <p className="text-sm text-gray-500 mb-10">工程師的理性與攝影師的感性，在同一個人身上找到平衡。</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <a href="/projects"
-              className="group border border-gray-200 rounded-2xl hover:border-gray-900 transition-colors overflow-hidden flex">
+              className="group border border-gray-200 rounded-2xl hover:border-teal-300 hover:shadow-md transition-all overflow-hidden flex">
               <div className="flex-1 p-8">
-                <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">QA Engineering</p>
-                <h3 className="text-lg font-bold mb-3 group-hover:text-gray-900">測試流程 × 品質架構</h3>
+                <span className="inline-block text-[10px] tracking-widest text-teal-700 bg-teal-50 border border-teal-100 rounded-full px-2.5 py-0.5 uppercase mb-4">QA Engineering</span>
+                <h3 className="text-lg font-bold mb-3">測試流程 × 品質架構</h3>
                 <p className="text-sm text-gray-500 leading-relaxed mb-6">
                   從測試策略規劃到自動化導入，讓品質成為開發文化，而不是最後一道關卡。
                 </p>
-                <span className="text-xs text-gray-900 border-b border-gray-400 pb-px">查看 QA 作品集 →</span>
+                <span className="text-xs text-teal-700 border-b border-teal-300 pb-px group-hover:border-teal-600 transition-colors">查看 QA 作品集 →</span>
               </div>
-              <div className="w-36 bg-gray-50 flex items-end justify-center overflow-hidden flex-shrink-0 group-hover:bg-gray-100 transition-colors">
+              <div className="w-40 bg-gradient-to-br from-teal-50 to-emerald-100 flex items-end justify-center overflow-hidden flex-shrink-0 transition-colors">
                 <img src="/images/5.png" alt="" aria-hidden="true"
-                  className="w-32 object-contain -rotate-3 translate-y-2 drop-shadow-sm" />
+                  className="w-36 object-contain -rotate-3 translate-y-2 drop-shadow-md" />
               </div>
             </a>
             <a href="/photo"
-              className="group border border-gray-200 rounded-2xl hover:border-gray-900 transition-colors overflow-hidden flex">
+              className="group border border-gray-200 rounded-2xl hover:border-amber-300 hover:shadow-md transition-all overflow-hidden flex">
               <div className="flex-1 p-8">
-                <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Photography</p>
-                <h3 className="text-lg font-bold mb-3 group-hover:text-gray-900">人像攝影 × 品牌視覺</h3>
+                <span className="inline-block text-[10px] tracking-widest text-amber-700 bg-amber-50 border border-amber-100 rounded-full px-2.5 py-0.5 uppercase mb-4">Photography</span>
+                <h3 className="text-lg font-bold mb-3">人像攝影 × 品牌視覺</h3>
                 <p className="text-sm text-gray-500 leading-relaxed mb-6">
                   給予人們自信魅力，拍出人生作品集。年代 MUCH 台《美的 in 台灣》報導攝影師。
                 </p>
-                <span className="text-xs text-gray-900 border-b border-gray-400 pb-px">查看攝影作品集 →</span>
+                <span className="text-xs text-amber-700 border-b border-amber-300 pb-px group-hover:border-amber-600 transition-colors">查看攝影作品集 →</span>
               </div>
-              <div className="w-36 bg-gray-50 flex items-end justify-center overflow-hidden flex-shrink-0 group-hover:bg-gray-100 transition-colors">
+              <div className="w-40 bg-gradient-to-br from-amber-50 to-orange-100 flex items-end justify-center overflow-hidden flex-shrink-0 transition-colors">
                 <img src="/images/10.png" alt="" aria-hidden="true"
-                  className="w-32 object-contain rotate-2 translate-y-2 drop-shadow-sm" />
+                  className="w-36 object-contain rotate-2 translate-y-2 drop-shadow-md" />
               </div>
             </a>
           </div>
