@@ -229,6 +229,23 @@ export default function BlogPost() {
 
   const wordCount = post.content ? post.content.replace(/\s+/g, ' ').split(' ').length : undefined
 
+  // Extract FAQ pairs from ## 常見問題 / ## FAQ sections
+  function extractFaq(content) {
+    if (!content) return []
+    const section = content.match(/##\s*(?:常見問題|FAQ)[^\n]*\n([\s\S]*?)(?=\n##\s|\n---|\s*$)/i)
+    if (!section) return []
+    const pairs = []
+    const qPattern = /\*\*Q[：:]\s*(.+?)\*\*[\s\S]*?(?:A[：:]\s*|^)([^*\n][^\n]+(?:\n(?!\*\*Q)[^\n]*)*)/gim
+    let m
+    while ((m = qPattern.exec(section[1])) !== null) {
+      const q = m[1].trim()
+      const a = m[2].trim().replace(/\n+/g, ' ')
+      if (q && a) pairs.push({ q, a })
+    }
+    return pairs
+  }
+  const faqPairs = extractFaq(post.content)
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -270,6 +287,14 @@ export default function BlogPost() {
           { '@type': 'ListItem', position: 3, name: post.title, item: postUrl },
         ],
       },
+      ...(faqPairs.length > 0 ? [{
+        '@type': 'FAQPage',
+        mainEntity: faqPairs.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }] : []),
     ],
   }
 
