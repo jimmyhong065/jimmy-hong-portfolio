@@ -37,12 +37,9 @@ export default function BlogCard({ post, isRead = false }) {
         )}
         {date && <p className="text-xs text-gray-400">{date}</p>}
       </div>
-      <img
-        src={thumb}
-        alt=""
-        className="w-14 h-14 object-contain flex-shrink-0 self-center -rotate-2 drop-shadow-sm"
-        loading="lazy"
-      />
+      <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden self-center">
+        <img src={thumb} alt="" className="w-14 h-14 object-contain" loading="lazy" />
+      </div>
     </Link>
   )
 }
