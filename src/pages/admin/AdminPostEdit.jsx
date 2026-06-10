@@ -123,6 +123,8 @@ export default function AdminPostEdit() {
       excerpt: f.excerpt,
       content: f.content,
       tags: parseTags(f.tags),
+      published: f.published,
+      published_at: f.published ? (f.published_at || new Date().toISOString()) : null,
     }
     setSaveStatus('saving')
     const { error } = await supabase.from('posts').update(payload).eq('id', targetId)

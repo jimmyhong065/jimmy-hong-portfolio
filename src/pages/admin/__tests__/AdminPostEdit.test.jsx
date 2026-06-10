@@ -242,6 +242,60 @@ describe('AdminPostEdit — auto-save and preview', () => {
     expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
   })
 
+  it('auto-saves unpublishing before draft-flexible fields are persisted', async () => {
+    singleMock.mockResolvedValue({
+      data: {
+        ...postFixture,
+        published: true,
+        published_at: '2026-06-10T00:00:00.000Z',
+      }
+    })
+    const { container } = renderEdit('abc')
+    await waitFor(() => screen.getByDisplayValue('測試文章'))
+    vi.clearAllMocks()
+    vi.useFakeTimers()
+
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.change(container.querySelector('input[name="slug"]'), {
+      target: { value: '' }
+    })
+
+    await act(async () => { vi.advanceTimersByTime(5000) })
+    await act(async () => { await Promise.resolve() })
+    vi.useRealTimers()
+
+    expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+      published: false,
+      published_at: null,
+      slug: 'draft-abc',
+    }))
+  })
+
+  it('quick-saves unpublishing before draft-flexible fields are persisted', async () => {
+    singleMock.mockResolvedValue({
+      data: {
+        ...postFixture,
+        published: true,
+        published_at: '2026-06-10T00:00:00.000Z',
+      }
+    })
+    const { container } = renderEdit('abc')
+    await waitFor(() => screen.getByDisplayValue('測試文章'))
+    vi.clearAllMocks()
+
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.change(container.querySelector('input[name="slug"]'), {
+      target: { value: '' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: '⌘S 立即儲存' }))
+
+    expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+      published: false,
+      published_at: null,
+      slug: 'draft-abc',
+    }))
+  })
+
   it('keeps publish checklist hidden for an ordinary draft', () => {
     renderNewPost()
 
