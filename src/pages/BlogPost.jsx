@@ -227,6 +227,8 @@ export default function BlogPost() {
   const xShare = `https://x.com/intent/tweet?text=${shareText}&url=${shareUrl}`
   const lineShare = `https://social-plugins.line.me/lineit/share?url=${shareUrl}`
 
+  const wordCount = post.content ? post.content.replace(/\s+/g, ' ').split(' ').length : undefined
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -237,11 +239,28 @@ export default function BlogPost() {
         description: post.excerpt ?? '',
         datePublished: post.published_at,
         ...(post.updated_at && { dateModified: post.updated_at }),
-        author: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
-        publisher: { '@type': 'Person', name: 'Jimmy Hong', url: SITE_URL },
+        image: ogImage,
+        inLanguage: 'zh-TW',
+        ...(wordCount && { wordCount }),
+        ...(post.tags?.length && {
+          keywords: post.tags.join(', '),
+          articleSection: post.tags[0],
+        }),
+        author: {
+          '@type': 'Person',
+          name: 'Jimmy Hong',
+          url: SITE_URL,
+          sameAs: ['https://github.com/jimmyhong065', 'https://qa-lens.com'],
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'QA Lens',
+          url: SITE_URL,
+          logo: { '@type': 'ImageObject', url: `${SITE_URL}/pwa-icon.png` },
+        },
         url: postUrl,
         mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
-        ...(post.tags?.length && { keywords: post.tags.join(', ') }),
+        isPartOf: { '@type': 'Blog', '@id': `${SITE_URL}/blog`, name: 'QA Lens 技術筆記' },
       },
       {
         '@type': 'BreadcrumbList',
