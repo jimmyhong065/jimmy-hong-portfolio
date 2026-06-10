@@ -40,7 +40,7 @@ export default function BlogCard({ post, isRead = false }) {
       <img
         src={thumb}
         alt=""
-        className="w-16 h-16 rounded-xl object-cover flex-shrink-0 self-center"
+        className="w-14 h-14 object-contain flex-shrink-0 self-center -rotate-2 drop-shadow-sm"
         loading="lazy"
       />
     </Link>

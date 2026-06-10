@@ -64,7 +64,7 @@ export default function PhotoHome() {
             <span className="text-lg text-gray-400 mb-2">攝影作品</span>
           </div>
           <img src="/images/10.png" alt="" aria-hidden="true"
-            className="w-24 h-24 md:w-32 md:h-32 object-contain flex-shrink-0 select-none" />
+            className="w-24 h-24 md:w-32 md:h-32 object-contain flex-shrink-0 select-none -rotate-3 drop-shadow-md" />
         </div>
       </div>
 
