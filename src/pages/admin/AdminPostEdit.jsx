@@ -21,6 +21,7 @@ function plainText(content) {
   return (content ?? '')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ')
+    .replace(/```[^\n`]*\n([\s\S]*?)```/g, '$1')
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/^\s*[-+*]\s+/gm, ' ')
@@ -33,6 +34,16 @@ function plainText(content) {
 function parseTags(tags) {
   if (Array.isArray(tags)) return tags.map(t => String(t).trim()).filter(Boolean)
   return (tags ?? '').split(',').map(t => t.trim()).filter(Boolean)
+}
+
+function draftSlugFallback(currentId) {
+  return `draft-${currentId ?? Date.now()}`
+}
+
+function payloadSlug(form, currentId) {
+  const slug = form.slug?.trim() ?? ''
+  if (slug) return slug
+  return form.published ? slug : draftSlugFallback(currentId)
 }
 
 function buildPublishChecks(form) {
@@ -97,7 +108,7 @@ export default function AdminPostEdit() {
     if (!targetId) return
     const payload = {
       title: f.title,
-      slug: f.slug,
+      slug: payloadSlug(f, targetId),
       excerpt: f.excerpt,
       content: f.content,
       tags: parseTags(f.tags),
@@ -202,14 +213,16 @@ export default function AdminPostEdit() {
     }
 
     const tags = parseTags(form.tags)
+    const slug = payloadSlug(form, currentId)
     const payload = {
       ...form,
+      slug,
       tags,
       published_at: form.published ? (form.published_at || new Date().toISOString()) : null,
     }
 
     if (isNew) {
-      const conflict = await checkSlug(form.slug, null)
+      const conflict = await checkSlug(slug, null)
       if (conflict) {
         setSlugError('此 slug 已被使用，請修改')
         setSaving(false)
@@ -220,7 +233,7 @@ export default function AdminPostEdit() {
       setCurrentId(data.id)
       navigate(`/admin/posts/${data.id}`, { replace: true })
     } else {
-      const conflict = await checkSlug(form.slug, currentId)
+      const conflict = await checkSlug(slug, currentId)
       if (conflict) {
         setSlugError('此 slug 已被使用，請修改')
         setSaving(false)

@@ -267,6 +267,7 @@ describe('AdminPostEdit — auto-save and preview', () => {
     ['empty link', '[]()'],
     ['empty image', '![]()'],
     ['table skeleton', '| | |\n|---|---|'],
+    ['empty fenced code block', '```js\n```'],
   ])('blocks saving as published when content only has markdown %s syntax', async (_case, content) => {
     const { container } = renderNewPost()
 
@@ -294,6 +295,19 @@ describe('AdminPostEdit — auto-save and preview', () => {
     })
   })
 
+  it('allows creating an empty draft with a generated slug fallback', async () => {
+    renderNewPost()
+
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    await waitFor(() => {
+      expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+        published: false,
+        slug: expect.stringMatching(/^draft-/),
+      }))
+    })
+  })
+
   it.each([
     ['blank title', 'title'],
     ['blank slug', 'slug'],
@@ -310,10 +324,17 @@ describe('AdminPostEdit — auto-save and preview', () => {
     fireEvent.click(screen.getByRole('button', { name: '儲存' }))
 
     await waitFor(() => {
-      expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
-        [field]: '',
-        published: false,
-      }))
+      if (field === 'slug') {
+        expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+          slug: 'draft-abc',
+          published: false,
+        }))
+      } else {
+        expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+          [field]: '',
+          published: false,
+        }))
+      }
     })
   })
 
@@ -337,6 +358,7 @@ describe('AdminPostEdit — auto-save and preview', () => {
   it.each([
     ['link text', '[hello](https://example.com)'],
     ['image alt text', '![alt text](image.png)'],
+    ['fenced code body', '```js\nconsole.log(1)\n```'],
   ])('allows saving as published when markdown content has real %s', async (_case, content) => {
     const { container } = renderNewPost()
 
