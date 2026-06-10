@@ -188,7 +188,9 @@ export default function Home() {
           <p className="text-sm text-gray-500 mb-10">工程師的理性與攝影師的感性，在同一個人身上找到平衡。</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <a href="/projects"
-              className="group border border-gray-200 rounded-2xl p-8 hover:border-gray-900 transition-colors">
+              className="group border border-gray-200 rounded-2xl p-8 hover:border-gray-900 transition-colors overflow-hidden relative">
+              <img src="/images/5.png" alt="" aria-hidden="true"
+                className="absolute -right-4 -bottom-4 w-32 h-32 object-contain opacity-10 group-hover:opacity-20 transition-opacity" />
               <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">QA Engineering</p>
               <h3 className="text-lg font-bold mb-3 group-hover:text-gray-900">測試流程 × 品質架構</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-6">
@@ -197,7 +199,9 @@ export default function Home() {
               <span className="text-xs text-gray-900 border-b border-gray-400 pb-px">查看 QA 作品集 →</span>
             </a>
             <a href="/photo"
-              className="group border border-gray-200 rounded-2xl p-8 hover:border-gray-900 transition-colors">
+              className="group border border-gray-200 rounded-2xl p-8 hover:border-gray-900 transition-colors overflow-hidden relative">
+              <img src="/images/10.png" alt="" aria-hidden="true"
+                className="absolute -right-4 -bottom-4 w-32 h-32 object-contain opacity-10 group-hover:opacity-20 transition-opacity" />
               <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Photography</p>
               <h3 className="text-lg font-bold mb-3 group-hover:text-gray-900">人像攝影 × 品牌視覺</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-6">

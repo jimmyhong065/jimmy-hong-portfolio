@@ -16,6 +16,7 @@ import { supabase } from '../lib/supabase'
 import { useArticleSettings } from '../hooks/useArticleSettings'
 import { useSwipeNav } from '../hooks/useSwipeNav'
 import { useBookmarks } from '../hooks/useBookmarks'
+import { getArticleImage } from '../lib/articleImages'
 import { useReadHistory } from '../hooks/useReadHistory'
 import { useInfiniteRead } from '../hooks/useInfiniteRead'
 import ArticleToolbar from '../components/ArticleToolbar'
@@ -219,6 +220,7 @@ export default function BlogPost() {
 
   const SITE_URL = 'https://qa-lens.com'
   const postUrl = `${SITE_URL}/blog/${slug}`
+  const ogImage = `${SITE_URL}${getArticleImage(post.tags ?? [])}`
   const shareText = encodeURIComponent(post.title)
   const shareUrl = encodeURIComponent(postUrl)
   const linkedInShare = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`
@@ -270,10 +272,12 @@ export default function BlogPost() {
         <meta property="og:description" content={post.excerpt ?? ''} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={postUrl} />
+        <meta property="og:image" content={ogImage} />
         <meta property="article:published_time" content={post.published_at} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt ?? ''} />
+        <meta name="twitter:image" content={ogImage} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
       <Nav />
