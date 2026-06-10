@@ -89,10 +89,13 @@ export default function AdminPostEdit() {
   const [showModeToggle, setShowModeToggle] = useState(false)
   const autoSaveRef = useRef()
   const formRef = useRef(form)
-  formRef.current = form
   const emailSendingRef = useRef(false)
   const pushSendingRef = useRef(false)
   const hasUnsavedRef = useRef(false)
+
+  useEffect(() => {
+    formRef.current = form
+  }, [form])
 
   useEffect(() => {
     if (!isNew) {
@@ -126,7 +129,6 @@ export default function AdminPostEdit() {
   // Auto-save 5s debounce
   useEffect(() => {
     if (!currentId) return
-    setSaveStatus('pending')
     clearTimeout(autoSaveRef.current)
     autoSaveRef.current = setTimeout(() => doSave(), 5000)
     return () => clearTimeout(autoSaveRef.current)
@@ -160,8 +162,13 @@ export default function AdminPostEdit() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [doSave])
 
+  function markPendingSave() {
+    if (currentId) setSaveStatus('pending')
+  }
+
   function handleChange(e) {
     const { name, value, type, checked } = e.target
+    markPendingSave()
     setForm(f => {
       const updated = { ...f, [name]: type === 'checkbox' ? checked : value }
       if (name === 'title' && isNew) updated.slug = slugify(value)
@@ -179,10 +186,12 @@ export default function AdminPostEdit() {
           const { default: TurndownService } = await import('turndown')
           const td = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' })
           const md = td.turndown(form.content)
+          markPendingSave()
           setForm(f => ({ ...f, content: md }))
         } else if (newMode === 'wysiwyg' && !form.content.trimStart().startsWith('<')) {
           const { marked } = await import('marked')
           const html = await marked(form.content)
+          markPendingSave()
           setForm(f => ({ ...f, content: html }))
         }
       } catch {
@@ -357,6 +366,7 @@ export default function AdminPostEdit() {
             <RichTextEditor
               value={form.content}
               onChange={html => {
+                markPendingSave()
                 if (publishCheckError) setPublishCheckError('')
                 setForm(f => ({ ...f, content: html }))
               }}
@@ -365,6 +375,7 @@ export default function AdminPostEdit() {
             <MarkdownEditorPane
               value={form.content}
               onChange={md => {
+                markPendingSave()
                 if (publishCheckError) setPublishCheckError('')
                 setForm(f => ({ ...f, content: md }))
               }}
@@ -383,7 +394,10 @@ export default function AdminPostEdit() {
                 type="date"
                 name="published_at"
                 value={form.published_at ? form.published_at.slice(0, 10) : new Date().toISOString().slice(0, 10)}
-                onChange={e => setForm(f => ({ ...f, published_at: e.target.value ? new Date(e.target.value).toISOString() : null }))}
+                onChange={e => {
+                  markPendingSave()
+                  setForm(f => ({ ...f, published_at: e.target.value ? new Date(e.target.value).toISOString() : null }))
+                }}
                 className="text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400"
               />
             </div>
