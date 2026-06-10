@@ -21,9 +21,11 @@ function plainText(content) {
   return (content ?? '')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/^\s*[-+*]\s+/gm, ' ')
     .replace(/^\s*\d+\.\s+/gm, ' ')
-    .replace(/[`*_~>#-]/g, ' ')
+    .replace(/[`*_~>#[\]()!|:-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
 }

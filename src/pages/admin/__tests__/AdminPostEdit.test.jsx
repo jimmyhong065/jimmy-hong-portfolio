@@ -256,6 +256,21 @@ describe('AdminPostEdit — auto-save and preview', () => {
     expect(insertMock).not.toHaveBeenCalled()
   })
 
+  it.each([
+    ['empty link', '[]()'],
+    ['empty image', '![]()'],
+    ['table skeleton', '| | |\n|---|---|'],
+  ])('blocks saving as published when content only has markdown %s syntax', async (_case, content) => {
+    const { container } = renderNewPost()
+
+    fillCompletePublishForm(container, { content })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    expect(await screen.findByText('請先完成發布檢查')).toBeInTheDocument()
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
   it('allows saving an incomplete draft', async () => {
     renderNewPost()
 
@@ -285,6 +300,24 @@ describe('AdminPostEdit — auto-save and preview', () => {
         published: true,
         excerpt: '這是一段摘要',
         tags: ['測試策略'],
+      }))
+    })
+  })
+
+  it.each([
+    ['link text', '[hello](https://example.com)'],
+    ['image alt text', '![alt text](image.png)'],
+  ])('allows saving as published when markdown content has real %s', async (_case, content) => {
+    const { container } = renderNewPost()
+
+    fillCompletePublishForm(container, { content })
+    fireEvent.click(screen.getByLabelText('發布'))
+    fireEvent.click(screen.getByRole('button', { name: '建立文章' }))
+
+    await waitFor(() => {
+      expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+        content,
+        published: true,
       }))
     })
   })
