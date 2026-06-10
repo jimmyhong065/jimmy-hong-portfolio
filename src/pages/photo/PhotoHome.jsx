@@ -58,13 +58,9 @@ export default function PhotoHome() {
 
       {/* Page heading */}
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-14 pb-10">
-        <div className="flex items-end justify-between gap-4">
-          <div className="flex items-end gap-4">
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-gray-900 leading-none">Collection</h1>
-            <span className="text-lg text-gray-400 mb-2">攝影作品</span>
-          </div>
-          <img src="/images/10.png" alt="" aria-hidden="true"
-            className="w-24 h-24 md:w-32 md:h-32 object-contain flex-shrink-0 select-none -rotate-3 drop-shadow-md" />
+        <div className="flex items-end gap-4">
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-gray-900 leading-none">Collection</h1>
+          <span className="text-lg text-gray-400 mb-2">攝影作品</span>
         </div>
       </div>
 
