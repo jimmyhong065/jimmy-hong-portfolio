@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_URL = 'https://jimmy-hong-portfolio.pages.dev'
+const SITE_URL = 'https://qa-lens.com'
 export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, type = 'website', publishedAt, jsonLd }) {
   const siteTitle = title ? `${title} | Jimmy Hong` : 'Jimmy Hong — QA Engineer'
   const metaDesc = description ?? '專注測試流程設計與品質架構的 QA Engineer。'
