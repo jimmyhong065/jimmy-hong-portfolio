@@ -54,13 +54,42 @@ const EXPERIENCE = [
   },
 ]
 
+const SITE_URL = 'https://qa-lens.com'
+
 export default function About() {
   const { settings } = useSettings()
   const { services } = useServices('qa')
 
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#person`,
+    name: 'Jimmy Hong',
+    alternateName: '洪裕彬',
+    url: `${SITE_URL}/about`,
+    jobTitle: 'QA Engineer',
+    description: '專注測試流程設計與品質架構的 QA Engineer，具備自動化、API、性能測試與後端開發背景。',
+    ...(settings?.avatar_url && { image: settings.avatar_url }),
+    knowsAbout: [
+      '軟體測試', '測試自動化', 'Appium', '行動測試', 'pytest', 'Selenium',
+      'CI/CD', 'GitHub Actions', '性能測試', 'k6', '測試策略', '品質架構',
+    ],
+    alumniOf: {
+      '@type': 'CollegeOrUniversity',
+      name: '中山醫學大學',
+      department: '應用資訊系',
+    },
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Seekrtech',
+    },
+    sameAs: [settings?.github_url, settings?.linkedin_url].filter(Boolean),
+    ...(settings?.email && { email: settings.email }),
+  }
+
   return (
     <>
-      <SEOHead title="關於我" description="洪裕彬 — QA Engineer，具備自動化、API、性能測試與後端開發背景。" canonical="/about" />
+      <SEOHead title="關於我" description="洪裕彬 — QA Engineer，具備自動化、API、性能測試與後端開發背景。" canonical="/about" jsonLd={personJsonLd} />
       <Nav />
       <main className="max-w-2xl mx-auto px-4 md:px-12 py-16">
 

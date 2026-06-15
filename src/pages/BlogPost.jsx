@@ -8,6 +8,7 @@ import MarkdownContent from '../components/MarkdownContent'
 import TableOfContents from '../components/TableOfContents'
 import RelatedPosts from '../components/RelatedPosts'
 import EmailSubscribeForm from '../components/EmailSubscribeForm'
+import AuthorCard from '../components/AuthorCard'
 import ScrollToTop from '../components/ScrollToTop'
 import { useReadingProgress } from '../hooks/useReadingProgress'
 import { useActiveHeading } from '../hooks/useActiveHeading'
@@ -432,6 +433,9 @@ export default function BlogPost() {
               <a href={xShare} target="_blank" rel="noreferrer"
                 className="hidden md:inline text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-md hover:border-gray-400">X</a>
             </div>
+
+            {/* Author bio */}
+            <AuthorCard />
 
             <EmailSubscribeForm />
 

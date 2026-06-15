@@ -119,7 +119,7 @@ strategy:
 
 目前用的是 GitHub Actions。
 
-原因很務實：repo 在 GitHub，沒有 on-premise 需求，team 不大。Actions 的 matrix builds 讓 E2E 測試平行跑在三個環境上，從 25 分鐘縮到 9 分鐘。PR 頁面直接看到哪個測試失敗，不用跳到另一個系統。
+原因很務實：repo 在 GitHub，沒有 on-premise 需求，team 不大。Actions 的 matrix builds 讓 E2E 測試平行跑在三個環境上，從 25 分鐘縮到 9 分鐘（怎麼做到的，整理在 [CI 測試跑太慢？平行化策略與最佳化](/blog/ci-test-too-slow)）。PR 頁面直接看到哪個測試失敗，不用跳到另一個系統。
 
 唯一覺得 Jenkins 比較好的地方是測試報告——Jenkins 的 Allure integration 更完整。但這個差距現在用 `dorny/test-reporter` 已經補得差不多了。
 
@@ -139,4 +139,4 @@ A：看情境。GitHub Actions 按分鐘計費，免費額度用完後計費。J
 A：取決於 pipeline 複雜度。簡單的「跑測試、部署」流程一天內可以遷完。複雜的 Groovy shared library、條件分支、跨 job 依賴關係，可能需要數週重新設計。建議先遷移一條簡單 pipeline 試水溫，評估工作量再決定是否全面遷移。
 
 **Q：self-hosted runner 是什麼？什麼時候需要用？**
-A：self-hosted runner 是你自己架的機器，但由 GitHub Actions 調度。用途：需要特定硬體（如連接實體 iOS 裝置跑 Appium 測試）、需要存取內網資源、或 hosted runner 的分鐘數不夠用。設定不複雜，但機器要自己維護，介於 hosted runner 和 Jenkins 之間的選項。
+A：self-hosted runner 是你自己架的機器，但由 GitHub Actions 調度。用途：需要特定硬體（如連接實體 iOS 裝置跑 Appium 測試）、需要存取內網資源、或 hosted runner 的分鐘數不夠用。設定不複雜，但機器要自己維護，介於 hosted runner 和 Jenkins 之間的選項。實際用 self-hosted runner 跑真機 Appium 測試的完整配置，可參考 [Appium 搭配 pytest 完整實務](/blog/appium-pytest-integration)。

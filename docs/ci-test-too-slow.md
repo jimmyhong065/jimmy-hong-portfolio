@@ -186,6 +186,8 @@ GitHub Actions 的標準 runner 是 2-core。花一點錢可以用 4-core、8-co
 
 不建議一開始就走這條路。更大的機器掩蓋的是測試架構的問題，不是解決它。先做前面幾個策略，確定瓶頸真的是 CPU 而不是設計問題，再考慮升級。
 
+行動測試（Appium）的 CI 又是另一個層次的慢——模擬器、真機、app 安裝都要時間，self-hosted runner 的配置也更複雜。這部分我整理在 [Appium 搭配 pytest 完整實務](/blog/appium-pytest-integration)。至於該用 GitHub Actions 還是 Jenkins 來跑這些 pipeline，可參考 [GitHub Actions vs Jenkins：CI 工具怎麼選](/blog/github-actions-vs-jenkins)。
+
 ---
 
 ## 實際案例：40 分鐘 → 9 分鐘

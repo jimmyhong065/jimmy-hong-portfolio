@@ -282,7 +282,7 @@ rp_skip_connection_errors = True  # 連接失敗時不中斷測試
 
 這是很多人卡住的地方：GitHub 的 hosted runner（雲端機器）沒有實體 Android/iOS 裝置，只能跑模擬器。
 
-如果你的測試需要真實裝置，必須用 **self-hosted runner**。
+如果你的測試需要真實裝置，必須用 **self-hosted runner**。（CI 工具怎麼選、self-hosted runner 的取捨，可參考 [GitHub Actions vs Jenkins：CI 工具怎麼選](/blog/github-actions-vs-jenkins)。）
 
 ```yaml
 # .github/workflows/e2e.yml
@@ -358,6 +358,8 @@ jobs:
 ---
 
 ## 幾個減少 CI 時間的細節
+
+行動測試的 CI 通常比 web 慢——模擬器啟動、app 安裝、UI 渲染都吃時間。下面是 Appium 專案特有的幾個調整；更通用的 CI 平行化策略，另一篇有完整整理：[CI 測試跑太慢？平行化策略與最佳化](/blog/ci-test-too-slow)。
 
 **關掉不必要的 log**。第三方 library 的 DEBUG log 會讓 CI 慢很多——Appium client、Selenium、urllib3 每個請求都在記東西：
 
