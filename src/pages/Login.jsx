@@ -25,7 +25,7 @@ export default function Login() {
 
   return (
     <>
-      <SEOHead title="登入" />
+      <SEOHead title="登入" noindex />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl p-8">
           <h1 className="text-lg font-bold mb-2">管理員登入</h1>

@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 const SITE_URL = 'https://qa-lens.com'
-export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, type = 'website', publishedAt, jsonLd }) {
+export default function SEOHead({ title, description, keywords, ogImage, favicon, canonical, noindex = false, type = 'website', publishedAt, jsonLd }) {
   const siteTitle = title ? `${title} | Jimmy Hong` : 'Jimmy Hong — QA Engineer'
   const metaDesc = description ?? '專注測試流程設計與品質架構的 QA Engineer。'
   const image = ogImage ?? null
@@ -10,6 +10,7 @@ export default function SEOHead({ title, description, keywords, ogImage, favicon
   return (
     <Helmet>
       <title>{siteTitle}</title>
+      {noindex && <meta name="robots" content="noindex, follow" />}
       <meta name="description" content={metaDesc} />
       {keywords && <meta name="keywords" content={keywords} />}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}

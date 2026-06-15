@@ -6,7 +6,7 @@ import SEOHead from '../components/SEOHead'
 export default function NotFound() {
   return (
     <>
-      <SEOHead title="找不到頁面" />
+      <SEOHead title="找不到頁面" noindex />
       <Nav />
       <main className="max-w-5xl mx-auto px-4 md:px-12 py-24 text-center">
         <img src="/images/2.png" alt="" aria-hidden="true" className="w-44 mx-auto mb-6 object-contain select-none rotate-3 drop-shadow-lg" />

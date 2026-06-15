@@ -53,6 +53,7 @@ export default function PhotoHome() {
         description={settings.seo_photo_description || '給予人們自信魅力，拍出人生作品集。台灣人像攝影品牌，年代MUCH台美的in台灣專題報導。'}
         keywords={settings.seo_photo_keywords || undefined}
         favicon="/favicon-camera.svg"
+        canonical="/photo"
       />
       <PhotoNav />
 

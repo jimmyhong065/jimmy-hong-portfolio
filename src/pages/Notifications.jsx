@@ -15,6 +15,8 @@ function relativeTime(dateStr) {
   return `${Math.floor(days / 30)} 個月前`
 }
 
+import SEOHead from '../components/SEOHead'
+
 export default function Notifications() {
   const { notifications, loading, markAllRead } = useNotifications()
 
@@ -24,6 +26,7 @@ export default function Notifications() {
 
   return (
     <>
+      <SEOHead title="通知" noindex />
       <Nav />
       <div className="max-w-2xl mx-auto px-4 py-8 pb-32">
       <h1 className="text-lg font-bold mb-6">通知</h1>
