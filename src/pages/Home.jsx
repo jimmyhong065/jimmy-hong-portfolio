@@ -182,7 +182,7 @@ export default function Home() {
         {/* ── Recent posts — slate-50 ── */}
         {!hiddenSections.includes('recent_posts') && posts.length > 0 && (
         <div className="bg-slate-50">
-          <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+          <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
             <div className="flex items-baseline justify-between mb-8">
               <div>
                 <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">近期文章</p>
