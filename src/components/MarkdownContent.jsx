@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -84,6 +85,8 @@ function MdH3({ children }) {
 
 function MdLink({ href, children }) {
   const isExternal = href?.startsWith('http')
+  // 站內路徑（/blog/...）用 react-router Link 做軟導航，避免整頁重整
+  const isInternalRoute = href?.startsWith('/') && !href.startsWith('//')
   function handleClick() {
     if (isExternal && typeof window.gtag === 'function') {
       window.gtag('event', 'outbound_click', {
@@ -91,6 +94,9 @@ function MdLink({ href, children }) {
         link_text: String(children),
       })
     }
+  }
+  if (isInternalRoute) {
+    return <Link to={href}>{children}</Link>
   }
   return (
     <a href={href} onClick={handleClick}
