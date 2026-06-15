@@ -3,7 +3,6 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
 import ProjectCard from '../components/ProjectCard'
-import BlogRow from '../components/BlogRow'
 import { usePosts } from '../hooks/usePosts'
 import { useProjects } from '../hooks/useProjects'
 import { useSiteSettings } from '../contexts/SiteSettingsContext'
@@ -104,7 +103,7 @@ export default function Home() {
                 <div className="flex flex-col items-center md:flex-row md:items-center gap-3">
                   <div className="flex items-center gap-3">
                     <a href="/projects" className="text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
-                    <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">閱讀文章</a>
+                    <a href="/blog" className="text-xs border border-gray-300 text-gray-700 px-5 py-2.5 rounded-md hover:border-gray-500 hover:text-gray-900 transition-colors">閱讀文章</a>
                   </div>
                   <div className="flex gap-2">
                     {settings.github_url && (
@@ -164,7 +163,7 @@ export default function Home() {
               <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">最新消息</p>
               <div className="flex flex-col divide-y divide-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
                 {announcements.slice(0, 3).map(a => (
-                  <div key={a.id} className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors">
+                  <a key={a.id} href="/blog" className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
                     <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full bg-gray-900" />
                     <div>
                       <div className="flex items-baseline gap-2 mb-0.5">
@@ -173,11 +172,45 @@ export default function Home() {
                       </div>
                       {a.content && <p className="text-xs text-gray-500 leading-relaxed">{a.content}</p>}
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
           </div>
+        )}
+
+        {/* ── Recent posts — slate-50 ── */}
+        {!hiddenSections.includes('recent_posts') && posts.length > 0 && (
+        <div className="bg-slate-50">
+          <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+            <div className="flex items-baseline justify-between mb-8">
+              <div>
+                <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">近期文章</p>
+                <h2 className="text-xl font-bold">精選閱讀</h2>
+              </div>
+              <a href="/blog" className="text-xs text-gray-500 hover:text-gray-900 border-b border-gray-300 pb-px">看全部文章 →</a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {(posts.filter(p => p.tags?.includes('精選')).length > 0
+                ? posts.filter(p => p.tags?.includes('精選')).slice(0, 3)
+                : posts.slice(0, 3)
+              ).map(p => (
+                <a key={p.id} href={`/blog/${p.slug}`}
+                  className="group bg-white border border-gray-200 rounded-xl p-5 hover:border-teal-300 hover:shadow-sm transition-all flex flex-col">
+                  {p.tags?.[0] && (
+                    <span className="text-[10px] tracking-widest text-teal-700 bg-teal-50 border border-teal-100 rounded-full px-2.5 py-0.5 uppercase mb-3 w-fit">{p.tags[0]}</span>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 leading-snug group-hover:text-teal-700 transition-colors flex-1">{p.title}</h3>
+                  {p.excerpt && <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-4">{p.excerpt}</p>}
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <span className="text-xs text-gray-300">{p.published_at?.slice(0, 10)}</span>
+                    <span className="text-xs text-teal-600">閱讀 →</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        </div>
         )}
 
         {/* ── Dual identity — white ── */}
@@ -234,24 +267,6 @@ export default function Home() {
         </div>
         )}
 
-        {/* ── Recent posts — white ── */}
-        {!hiddenSections.includes('recent_posts') && (
-        <section data-fade className="max-w-5xl mx-auto px-4 md:px-12 py-16">
-          <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">近期文章</p>
-          <h2 className="text-xl font-bold mb-2">部落格</h2>
-          <div>
-            {(posts.filter(p => p.tags?.includes('精選')).length > 0
-              ? posts.filter(p => p.tags?.includes('精選')).slice(0, 3)
-              : posts.slice(0, 3)
-            ).map(p => <BlogRow key={p.id} post={p} />)}
-          </div>
-          <div className="mt-6">
-            <a href="/blog" className="text-xs text-gray-500 border-b border-gray-300 pb-px hover:text-gray-900">
-              看全部文章 →
-            </a>
-          </div>
-        </section>
-        )}
 
         {/* ── Services — gray-900 dark ── */}
         {!hiddenSections.includes('services') && (

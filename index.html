@@ -63,7 +63,9 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-9GPNHE3PPP');
+    if (!window.location.pathname.startsWith('/admin')) {
+      gtag('config', 'G-9GPNHE3PPP');
+    }
   </script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bb83b950ea2c472f868954ebe430b1ae"}'></script>

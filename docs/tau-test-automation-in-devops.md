@@ -215,3 +215,19 @@ State of DevOps 調查找到了一個讓我覺得很重要的現象：
 ---
 
 課程連結：[TAU - Test Automation in DevOps](https://testautomationu.applitools.com/test-automation-in-devops/)
+
+---
+
+## 常見問題
+
+**Q：CI pipeline 全綠就代表沒有 bug 嗎？**
+A：不是。Pipeline 綠色只代表「你寫的測試通過了」。如果測試覆蓋不足、或測試設計不好，真正的問題可能完全不在測試涵蓋範圍內。CI 是信心工具，不是正確性保證——信心的上限取決於測試的品質，而不是綠燈的數量。
+
+**Q：QA 應該參與 CI/CD pipeline 的設計嗎？**
+A：絕對應該。測試在 pipeline 裡的位置——哪些測試在 PR 合併前跑、哪些在部署後跑、失敗時誰被通知——直接影響問題被發現的時間點。如果 QA 不參與設計，pipeline 可能「有跑測試」但未必是「測試設計得好的 pipeline」。
+
+**Q：什麼是 Blue-Green Deployment？QA 怎麼利用它？**
+A：同時維護兩個 production 環境（藍/綠），只有一個對外接受流量。新版本部署到閒置環境後，QA 可以在接近真實的環境做最終測試，確認沒問題再切換 DNS 讓用戶流量導入。最大好處是出問題時 rollback 只需切換一個開關，幾秒鐘完成，大幅降低發布風險。
+
+**Q：什麼是可觀測性（Observability）？和一般 Monitoring 有什麼差別？**
+A：Monitoring 是事先設定警報，當「你預期可能出問題的事」發生了才通知你。Observability 讓你能在問題發生時，即使沒有預期，也能快速找到根因——透過 log、trace、metrics 問出任意問題。QA 的探索性思維在 Observability 上特別有用，因為你不需要事先知道問題在哪。

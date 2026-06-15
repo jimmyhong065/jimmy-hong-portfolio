@@ -1,0 +1,26 @@
+name: Publish Articles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**/*.md'
+      - 'upload-articles.mjs'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: node upload-articles.mjs
+        env:
+          ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
+          REVIEW_MODE: '1'
