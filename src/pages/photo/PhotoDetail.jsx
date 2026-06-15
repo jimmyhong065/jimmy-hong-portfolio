@@ -49,7 +49,7 @@ export default function PhotoDetail() {
 
   return (
     <>
-      <SEOHead title={`${project.title} | r.bing recording`} description={project.description} favicon="/favicon-camera.svg" />
+      <SEOHead title={`${project.title} | r.bing recording`} description={project.description} favicon="/favicon-camera.svg" canonical={`/photo/${id}`} />
       <PhotoNav />
       <main className="max-w-4xl mx-auto px-4 md:px-8 py-12">
         <button

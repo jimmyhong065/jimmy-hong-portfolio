@@ -29,7 +29,7 @@ export default function ProjectDetail() {
 
   return (
     <>
-      <SEOHead title={project.title} description={project.description} />
+      <SEOHead title={project.title} description={project.description} canonical={`/projects/${id}`} />
       <Nav />
       <main className="max-w-3xl mx-auto px-4 md:px-12 py-16">
         <button
