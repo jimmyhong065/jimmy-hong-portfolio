@@ -15,7 +15,11 @@ export default function EmailSubscribeForm() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error()
-      setStatus(data.status === 'already_confirmed' ? 'already' : 'sent')
+      const already = data.status === 'already_confirmed'
+      setStatus(already ? 'already' : 'sent')
+      if (!already && typeof window.gtag === 'function') {
+        window.gtag('event', 'email_subscribe', { method: 'blog_form' })
+      }
     } catch {
       setStatus('error')
     }
