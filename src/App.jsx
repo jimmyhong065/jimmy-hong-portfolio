@@ -35,6 +35,7 @@ const AdminFAQs = lazy(() => import('./pages/admin/AdminFAQs'))
 const AdminFAQEdit = lazy(() => import('./pages/admin/AdminFAQEdit'))
 const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
 const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
+const AdminLinkedIn = lazy(() => import('./pages/admin/AdminLinkedIn'))
 const Notifications = lazy(() => import('./pages/Notifications'))
 
 function HiddenRoute({ pageKey, children }) {
@@ -124,6 +125,7 @@ function AppRoutes() {
           <Route path="faqs/:id" element={<AdminFAQEdit />} />
           <Route path="submissions" element={<AdminSubmissions />} />
           <Route path="subscribers" element={<AdminSubscribers />} />
+          <Route path="linkedin" element={<AdminLinkedIn />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

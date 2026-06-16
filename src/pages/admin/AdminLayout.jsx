@@ -60,6 +60,7 @@ export default function AdminLayout() {
             )}
           </NavLink>
           <NavLink to="/admin/subscribers" className={navClass}>📧 訂閱管理</NavLink>
+          <NavLink to="/admin/linkedin" className={navClass}>💼 LinkedIn 草稿</NavLink>
 
         </nav>
 
