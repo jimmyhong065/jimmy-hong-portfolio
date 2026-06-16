@@ -63,9 +63,8 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    if (!window.location.pathname.startsWith('/admin')) {
-      gtag('config', 'G-9GPNHE3PPP');
-    }
+    // 關閉自動 page_view，改由 SPA 路由手動送（排除 /admin）— 見 src/App.jsx GAPageView
+    gtag('config', 'G-9GPNHE3PPP', { send_page_view: false });
   </script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bb83b950ea2c472f868954ebe430b1ae"}'></script>

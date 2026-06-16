@@ -1,5 +1,5 @@
 import { useEffect, lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -56,6 +56,25 @@ function PushNavigationHandler() {
   return null
 }
 
+// 手動送 GA4 page_view，排除 /admin 後台流量
+function GAPageView() {
+  const location = useLocation()
+  useEffect(() => {
+    if (typeof window.gtag !== 'function') return
+    if (location.pathname.startsWith('/admin')) return
+    // 延一個 tick，讓 Helmet 先更新 document.title
+    const t = setTimeout(() => {
+      window.gtag('event', 'page_view', {
+        page_path: location.pathname + location.search,
+        page_location: window.location.href,
+        page_title: document.title,
+      })
+    }, 0)
+    return () => clearTimeout(t)
+  }, [location.pathname, location.search])
+  return null
+}
+
 function AppRoutes() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
@@ -108,6 +127,7 @@ export default function App() {
       <BrowserRouter>
         <SiteSettingsProvider>
           <PushNavigationHandler />
+          <GAPageView />
           <AppRoutes />
         </SiteSettingsProvider>
       </BrowserRouter>
