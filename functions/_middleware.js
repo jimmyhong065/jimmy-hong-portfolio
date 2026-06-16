@@ -89,6 +89,75 @@ function injectArticle(html, post) {
   return out
 }
 
+// --- 通用注入 helper ---
+function injectHead(html, headHtml) {
+  return html.replace('</head>', `${headHtml}</head>`)
+}
+function injectBody(html, bodyHtml) {
+  return html.replace(/(<div id="root">)(<\/div>|)/, `$1${bodyHtml}`)
+}
+function metaHead({ title, desc, url, type = 'website' }) {
+  const t = escapeHtml(title)
+  const d = escapeHtml(desc)
+  return `
+  <title>${t}</title>
+  <meta name="description" content="${d}" />
+  <meta property="og:title" content="${t}" />
+  <meta property="og:description" content="${d}" />
+  <meta property="og:type" content="${type}" />
+  <meta property="og:url" content="${url}" />
+  <link rel="canonical" href="${url}" />
+`
+}
+
+// 首頁 meta + 簡介
+function injectHome(html) {
+  const title = 'QA Lens — Jimmy Hong 的 QA 工程部落格'
+  const desc = 'QA Lens 是 Jimmy Hong 的測試工程部落格，分享軟體測試、QA 自動化、AI 輔助測試、測試策略與職涯經驗。'
+  let out = injectHead(html, metaHead({ title, desc, url: `${SITE_URL}/` }))
+  out = injectBody(out, `<section>
+  <h1>${escapeHtml(title)}</h1>
+  <p>${escapeHtml(desc)}</p>
+</section>`)
+  return out
+}
+
+// 列表頁 meta + 文章連結清單（幫爬蟲發現所有文章）
+function injectBlogList(html, posts) {
+  const title = '文章列表｜QA Lens'
+  const desc = 'QA Lens 全部文章：軟體測試、QA 自動化、AI 測試、測試策略與職涯主題。'
+  let out = injectHead(html, metaHead({ title, desc, url: `${SITE_URL}/blog` }))
+  const items = (Array.isArray(posts) ? posts : []).map(p => {
+    const u = `${SITE_URL}/blog/${p.slug}`
+    return `  <li><a href="${u}">${escapeHtml(p.title)}</a>${p.excerpt ? ` — ${escapeHtml(p.excerpt.slice(0, 120))}` : ''}</li>`
+  }).join('\n')
+  out = injectBody(out, `<section>
+  <h1>文章列表</h1>
+  <ul>
+${items}
+  </ul>
+</section>`)
+  return out
+}
+
+async function fetchPostList() {
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 6000)
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/posts?select=slug,title,excerpt&published=eq.true&order=published_at.desc`,
+      { headers, signal: controller.signal },
+    )
+    clearTimeout(timer)
+    const rows = await res.json()
+    return Array.isArray(rows) ? rows : []
+  } catch {
+    clearTimeout(timer)
+    return []
+  }
+}
+
 async function fetchPost(slug) {
   const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
   const controller = new AbortController()
@@ -115,19 +184,30 @@ export async function onRequest(context) {
   if (!isBot(ua)) return next()
 
   const url = new URL(request.url)
-  const m = url.pathname.match(/^\/blog\/([^/]+)\/?$/)
-  // 只攔文章頁；其餘（首頁/列表/既有 functions）放行
-  if (!m) return next()
+  const path = url.pathname.replace(/\/$/, '') || '/'
 
-  const post = await fetchPost(decodeURIComponent(m[1]))
-  if (!post) return next()
+  // 決定注入器：文章頁 / 首頁 / 列表頁，其餘（既有 functions 等）放行
+  let inject = null
+  const m = path.match(/^\/blog\/([^/]+)$/)
+  if (m) {
+    const post = await fetchPost(decodeURIComponent(m[1]))
+    if (!post) return next()
+    inject = html => injectArticle(html, post)
+  } else if (path === '/') {
+    inject = injectHome
+  } else if (path === '/blog') {
+    const posts = await fetchPostList()
+    inject = html => injectBlogList(html, posts)
+  } else {
+    return next()
+  }
 
   const res = await next()
   const ct = res.headers.get('content-type') || ''
   if (!ct.includes('text/html')) return res
 
   const html = await res.text()
-  const injected = injectArticle(html, post)
+  const injected = inject(html)
 
   const headers = new Headers(res.headers)
   headers.set('Cache-Control', 'public, max-age=600')
