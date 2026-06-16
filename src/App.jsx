@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { HelmetProvider } from 'react-helmet-async'
 import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { initBotDetection } from './lib/botDetection'
 import Home from './pages/Home'
 // 非首頁路由 lazy：把 MarkdownContent / syntax-highlighter 等重依賴移出首屏 chunk
 const Projects = lazy(() => import('./pages/Projects'))
@@ -75,6 +76,15 @@ function GAPageView() {
   return null
 }
 
+// 一次性啟動真人/bot 偵測，後台 /admin 不計（自己人）
+function BotDetection() {
+  useEffect(() => {
+    if (window.location.pathname.startsWith('/admin')) return
+    return initBotDetection()
+  }, [])
+  return null
+}
+
 function AppRoutes() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
@@ -128,6 +138,7 @@ export default function App() {
         <SiteSettingsProvider>
           <PushNavigationHandler />
           <GAPageView />
+          <BotDetection />
           <AppRoutes />
         </SiteSettingsProvider>
       </BrowserRouter>
