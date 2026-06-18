@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
@@ -113,6 +114,20 @@ export default function About() {
           <br /><br />
           喜歡把工作中解決過的問題整理成文章，持續透過知識分享提升團隊測試能力。
         </p>
+
+        {/* Content exits — give readers somewhere to go */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-10">
+          <Link to="/blog"
+            className="group flex-1 border border-gray-200 rounded-xl px-5 py-4 hover:border-teal-300 hover:shadow-sm transition-all">
+            <p className="text-sm font-semibold text-gray-900 mb-0.5 group-hover:text-teal-700 transition-colors">讀我的技術文章</p>
+            <p className="text-xs text-gray-500">測試策略、自動化框架、CI/CD 實戰筆記 →</p>
+          </Link>
+          <Link to="/projects"
+            className="group flex-1 border border-gray-200 rounded-xl px-5 py-4 hover:border-teal-300 hover:shadow-sm transition-all">
+            <p className="text-sm font-semibold text-gray-900 mb-0.5 group-hover:text-teal-700 transition-colors">看 QA 作品集</p>
+            <p className="text-xs text-gray-500">實際做過的測試系統與品質專案 →</p>
+          </Link>
+        </div>
 
         <hr className="border-gray-100 mb-10" />
 

@@ -470,10 +470,10 @@ export default function BlogPost() {
                 文章列表
               </Link>
             </div>
-            {/* Infinite read sentinel — mobile only */}
+            {/* Infinite read sentinel */}
             <div
               ref={el => { sentinelRefs.current[0] = el }}
-              className="md:hidden h-1"
+              className="h-1"
               aria-hidden="true"
             />
           </article>
@@ -488,13 +488,13 @@ export default function BlogPost() {
           )}
         </div>
 
-        {/* Infinite read — appended articles (mobile only) */}
+        {/* Infinite read — appended articles */}
         {extraArticles.map((p, i) => {
           const pMin = p.content
             ? Math.max(1, Math.ceil(p.content.replace(/\s/g, '').length / 400))
             : null
           return (
-            <div key={p.slug} className="md:hidden">
+            <div key={p.slug} className="lg:max-w-3xl lg:mx-auto">
               {/* Separator */}
               <div className="my-10 flex items-center gap-3 text-xs text-gray-400">
                 <div className="flex-1 border-t border-gray-200" />
@@ -553,14 +553,14 @@ export default function BlogPost() {
 
         {/* Loading spinner */}
         {loadingNext && (
-          <div className="md:hidden flex justify-center py-12">
+          <div className="flex justify-center py-12">
             <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
           </div>
         )}
 
         {/* End marker */}
         {exhausted && (
-          <p className="md:hidden text-center text-xs text-gray-400 py-12">
+          <p className="text-center text-xs text-gray-400 py-12">
             — 已讀完所有相關文章 —
           </p>
         )}
