@@ -76,8 +76,9 @@ export default function AdminPostEdit() {
 
   const [form, setForm] = useState({
     title: '', slug: '', content: '', excerpt: '',
-    tags: '', published: false, published_at: null,
+    tags: '', published: false, published_at: null, linkedin_draft: '',
   })
+  const [linkedinCopied, setLinkedinCopied] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('idle')
   const [pushResult, setPushResult] = useState(null)
@@ -125,6 +126,7 @@ export default function AdminPostEdit() {
       tags: parseTags(f.tags),
       published: f.published,
       published_at: f.published ? (f.published_at || new Date().toISOString()) : null,
+      linkedin_draft: f.linkedin_draft ?? '',
     }
     setSaveStatus('saving')
     const { error } = await supabase.from('posts').update(payload).eq('id', targetId)
@@ -392,6 +394,39 @@ export default function AdminPostEdit() {
             />
           )}
         </div>
+        {/* LinkedIn 草稿 */}
+        <div className="border border-blue-100 rounded-xl p-4 bg-blue-50/30">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-medium text-blue-700">💼 LinkedIn 草稿</label>
+            {form.linkedin_draft?.trim() && (
+              <button
+                type="button"
+                onClick={() => {
+                  const url = form.slug ? `https://qa-lens.com/blog/${form.slug}` : ''
+                  const text = form.linkedin_draft.replace('[連結]', url)
+                  navigator.clipboard.writeText(text)
+                  setLinkedinCopied(true)
+                  setTimeout(() => setLinkedinCopied(false), 2000)
+                }}
+                className="text-xs border border-blue-200 text-blue-600 px-3 py-1 rounded-lg hover:bg-blue-100 transition-colors"
+              >
+                {linkedinCopied ? '✓ 已複製' : '複製草稿'}
+              </button>
+            )}
+          </div>
+          <textarea
+            name="linkedin_draft"
+            value={form.linkedin_draft ?? ''}
+            onChange={handleChange}
+            placeholder="在這裡貼上或編寫 LinkedIn 發文草稿（[連結] 複製時自動換成文章 URL）"
+            rows={8}
+            className="w-full text-sm border border-blue-100 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:border-blue-300 resize-y leading-relaxed"
+          />
+          {form.slug && (
+            <p className="text-xs text-blue-400 mt-1">文章連結：https://qa-lens.com/blog/{form.slug}</p>
+          )}
+        </div>
+
         <div className="flex flex-col gap-3">
           <label className="flex items-center gap-2 text-sm text-gray-600">
             <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
