@@ -218,3 +218,13 @@ P95 比平均更重要。平均值容易被少數超慢的請求拉低，P95 告
 ---
 
 課程連結：[TAU - Introduction to Performance and Load Testing](https://testautomationu.applitools.com/performance-and-load-testing/)
+
+---
+
+## 參考資料
+
+- [Test Automation University — Performance and Load Testing](https://testautomationu.applitools.com/performance-and-load-testing/) — 本文課程來源
+- [k6 — Test Types](https://k6.io/docs/test-types/) — smoke、load、stress、soak 各類型測試定義
+- [ISTQB — Performance Testing Certification](https://www.istqb.org/certifications/performance-tester) — 效能測試專業認證標準
+- [Web.dev — Core Web Vitals](https://web.dev/articles/vitals) — Google 定義的核心效能指標（LCP、INP、CLS）
+- [Google DORA — Accelerate State of DevOps 2024](https://dora.dev/research/2024/dora-report/) — DevOps 效能指標與部署頻率研究

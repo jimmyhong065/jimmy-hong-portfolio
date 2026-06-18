@@ -382,3 +382,13 @@ Playwright 的優點：
 ---
 
 課程連結：[TAU - pytest Tutorial](https://testautomationu.applitools.com/pytest-tutorial/)
+
+---
+
+## 參考資料
+
+- [Test Automation University — Python and pytest for Beginners](https://testautomationu.applitools.com/pytest-tutorial/) — 本文課程來源
+- [pytest — Official Documentation](https://docs.pytest.org/en/stable/) — pytest 官方文件，含 fixture、parametrize、conftest 詳細說明
+- [Real Python — Effective Python Testing With Pytest](https://realpython.com/pytest-python-testing/) — pytest 實務教學
+- [Python — Official Documentation](https://docs.python.org/3/) — Python 語言官方參考
+- [pytest — Good Integration Practices](https://docs.pytest.org/en/stable/explanation/goodpractices.html) — pytest 官方最佳實踐指南

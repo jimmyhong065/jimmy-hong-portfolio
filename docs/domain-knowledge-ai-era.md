@@ -128,3 +128,13 @@ A：因為 AI 只能從你提供的資訊推測。你給它通用需求文字，
 
 **Q：AI 生成的測試套件看起來很完整，怎麼判斷它真的夠用？**
 A：「覆蓋得廣」和「看起來覆蓋得廣」有本質差別。AI 可能系統性地跳過最重要的場景，因為那些場景藏在產品特定邏輯裡，不在通用測試框架能推導的範圍內。沒有 domain knowledge 很難分辨這兩者——這是 AI 輔助測試最真實的風險：假安全感比沒有安全感更危險。
+
+---
+
+## 參考資料
+
+- [ISTQB — AI Testing Foundation](https://www.istqb.org/certifications/artificial-intelligence-tester) — ISTQB AI 測試師認證，定義 AI 時代 QA 的核心能力
+- [Gartner — AI in Software Testing](https://www.gartner.com/en/information-technology/topics/ai-quality-engineering) — Gartner 對 AI 與測試自動化趨勢的分析
+- [Capgemini — World Quality Report 2024-25](https://www.capgemini.com/insights/research-library/world-quality-report-2024-25/) — AI 測試工具採用率與效果的全球調查
+- [Google Testing Blog — ML Testing](https://testing.googleblog.com/2022/09/how-do-you-test-machine-learning.html) — Google 如何測試機器學習系統
+- [Microsoft — Responsible AI Testing](https://www.microsoft.com/en-us/ai/responsible-ai) — AI 系統的測試倫理與品質標準

@@ -229,3 +229,13 @@ flowchart LR
 ---
 
 課程連結：[TAU - Playwright Advanced](https://testautomationu.applitools.com/playwright-advanced/)
+
+---
+
+## 參考資料
+
+- [Test Automation University — Advanced Playwright](https://testautomationu.applitools.com/playwright-advanced/) — 本文課程來源
+- [Playwright — Official Documentation](https://playwright.dev/docs/intro) — Playwright 完整官方文件
+- [Playwright — Authentication](https://playwright.dev/docs/auth) — storageState 與 auth 設計說明
+- [Playwright — Fixtures](https://playwright.dev/docs/test-fixtures) — Fixtures 機制詳細文件
+- [Playwright — API Testing](https://playwright.dev/docs/api-testing) — APIRequestContext 使用指南
