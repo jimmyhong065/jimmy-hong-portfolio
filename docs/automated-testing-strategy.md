@@ -210,3 +210,13 @@ A：契約測試用於微服務架構，由消費端定義「我需要什麼 API
 
 **Q：新專案沒有任何自動化測試，應該從哪裡開始？**
 A：從「熱點代碼」開始：改動頻率高、容易出問題的區域效益最高。同時，新功能同步寫測試，在最熟悉這段 code 的當下寫，成本最低。從金字塔中間層（component/API 層）而不是 E2E 開始，往上往下都比較容易延伸。
+
+---
+
+## 參考資料
+
+- [Martin Fowler — Test Pyramid](https://martinfowler.com/bliki/TestPyramid.html) — 測試金字塔概念原始定義
+- [Martin Fowler — Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) — 金字塔的完整實作指南
+- [Mike Cohn — Succeeding with Agile](https://www.mountaingoatsoftware.com/books/succeeding-with-agile-software-development-using-scrum) — 測試金字塔的提出者 Mike Cohn 的相關著作
+- [Google Testing Blog — Just Say No to More End-to-End Tests](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html) — Google 對 E2E 測試過多的看法
+- [Capgemini — World Quality Report 2024-25](https://www.capgemini.com/insights/research-library/world-quality-report-2024-25/) — 全球自動化測試比例與趨勢

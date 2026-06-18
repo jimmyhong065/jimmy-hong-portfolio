@@ -1,0 +1,134 @@
+# 後端改了一個欄位名稱，我的測試全綠，但 bug 漏過了
+
+---
+
+## 目錄
+
+1. [那次漏掉的 bug](#那次漏掉的-bug)
+2. [我當時怎麼做 API 測試（問題在哪）](#問題在哪)
+3. [API 測試其實要驗的東西](#要驗的東西)
+4. [我現在的測試分層邏輯](#分層邏輯)
+5. [結尾](#結尾)
+
+---
+
+## 那次漏掉的 bug
+
+那次 release 之後，客服回報說某個頁面的資料顯示不出來。
+
+我去看 CI 的測試結果，全綠。
+
+去看我的 API 測試腳本，也全綠——status code 200，response time 正常，沒有任何 error。
+
+問了後端工程師，他說前兩天有調整 response 的欄位結構，把 `user_name` 改成 `username`（少一個底線）。前端還在讀舊的欄位名稱，所以畫面拿不到資料。
+
+我的測試完全沒抓到這件事，因為我只驗了 status code。
+
+---
+
+## 問題在哪
+
+那之前我對 API 測試的理解是：打一個請求，回來 200，就算過。
+
+這個邏輯本身沒有錯，但太少了。
+
+Status code 200 只代表「伺服器有回應，而且沒有炸掉」。它不代表回來的資料格式是對的、欄位名稱是對的、型別是對的、值的範圍是合理的。
+
+那次的 bug 就是這樣漏掉的。伺服器很正常，回了 200，但資料結構已經不是前端預期的樣子。Martin Fowler 在測試金字塔的概念中特別指出，API 整合層是最常被遺漏的測試層——開發者傾向過度依賴 unit test，卻跳過中間層的 schema 驗證，這正是 schema drift 問題反覆出現的結構性原因。
+
+---
+
+## 要驗的東西
+
+後來我整理了一下，API 測試我現在至少會驗這幾層：
+
+**Status code**
+
+這是基本，但只是基本。`201` 和 `200` 是不一樣的，`403` 和 `404` 也是。不要全部都只驗「有回應就好」。
+
+**Response schema**
+
+這是我過去最常跳過的。欄位名稱對不對、型別對不對、必填欄位有沒有出現。
+
+```python
+response = requests.post(url, json=payload)
+data = response.json()
+
+assert "username" in data          # 欄位名稱
+assert isinstance(data["id"], int) # 型別
+assert data["status"] in ["active", "inactive"]  # 值的範圍
+```
+
+這三行可以擋住大部分的 schema drift 問題。
+
+**Error handling**
+
+傳錯誤的參數進去，服務的反應是什麼？是回 400 還是 500？錯誤訊息有沒有洩漏不該洩漏的資訊（stack trace、資料庫結構）？
+
+這個常被跳過，但 security 和可觀測性都跟它有關。
+
+**邊界值**
+
+字串長度超過限制、數字傳負數、必填欄位留空。這些不是為了找 bug 而找，是確認服務在邊界條件下的行為是被設計過的，而不是剛好沒炸。
+
+---
+
+## 分層邏輯
+
+搞清楚要驗什麼之後，我花了更長時間搞清楚的是：這些測試要放在哪一層。
+
+不是每一個檢查都要寫成自動化腳本，也不是每一個都要在 CI 跑。
+
+我現在大概是這樣分的：
+
+**Unit / Contract test（最快，最穩）**
+
+Schema 驗證放這裡。每次後端改 response 結構，這層先爆，然後你知道要去協調前後端。不需要打真實 API，用 mock 就夠。
+
+**Integration test（打真實服務，核心流程）**
+
+幾個最重要的 API flow，從頭走到尾。登入 → 取資料 → 更新 → 登出這種。這層我只寫 10–20 個，不追求覆蓋率。
+
+**Exploratory（手動，看場景）**
+
+error handling、邊界值、奇怪的參數組合，這些我現在還是手動測。不是說不該自動化，是這類測試寫起來的維護成本通常大過它擋掉的 bug。
+
+這三層不是規則，是我做過之後覺得比較合理的比例。如果你的服務有 500 個 API endpoint，優先把最核心的 20 個 integration test 寫好，比把 500 個 status code 都自動化還有價值。
+
+---
+
+## 2025 年開始有人在談 Contract Testing
+
+搜尋資料的時候看到一個概念最近被討論比較多：Contract Testing。
+
+簡單說，就是把前後端之間的「API 規格」當成一份合約，前後端各自的測試都去驗這份合約，而不是真的互相打對方的服務。
+
+工具像是 Pact 就是在做這件事。Pact 的核心概念是「消費者驅動的合約」（Consumer-Driven Contracts）：由消費端（前端或下游服務）定義它對 API 的期待，後端根據這份合約驗證自己的實作——欄位一旦悄悄改名，合約測試立即報錯，不需要等到整合階段才發現。
+
+我自己還沒有在工作上完整導入過，但這個方向感覺是對的——尤其是微服務架構下，一個服務改了 response，很難知道哪些消費端會受影響。Contract test 把這個問題顯式化。
+
+如果你的團隊有跨服務依賴的問題，這個可以研究看看。
+
+---
+
+## 結尾
+
+那次的 bug 讓我重新想了一遍 API 測試在做什麼。
+
+它不是「確認 API 能動」，是「確認 API 的行為跟所有依賴它的人預期的一樣」。這包括欄位名稱、型別、錯誤情境、還有當你改了東西之後，其他人有沒有辦法在第一時間知道。
+
+Status code 只是其中一個訊號，不是全部。
+
+我現在還沒有把 error handling 和邊界值都自動化，這是坦白說的缺口。但 schema 驗證和核心 flow 的 integration test 已經幫我擋住好幾次類似的問題。
+
+如果你也只驗 status code，可以從 schema 驗證開始加，不需要一次全部到位。
+
+---
+
+## 參考資料
+
+1. [Martin Fowler — TestPyramid](https://martinfowler.com/bliki/TestPyramid.html) — 測試分層概念，說明各層測試的角色與比例原則
+2. [Martin Fowler — Consumer-Driven Contracts](https://martinfowler.com/articles/consumerDrivenContracts.html) — Consumer-Driven Contracts 的設計思維與落地建議
+3. [Pact Contract Testing Documentation](https://docs.pact.io/) — Contract Testing 的實作工具，解決服務間 schema drift 問題
+4. [Google Testing Blog](https://testing.googleblog.com/) — Google 工程師對 API 測試策略與測試分層的實踐分享
+5. [DORA 2024 State of DevOps Report](https://dora.dev/research/2024/dora-report/) — 測試覆蓋與部署穩定性的關聯研究

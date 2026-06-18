@@ -163,3 +163,13 @@ User Story Mapping 對 QA 的三種用法：
 如果你的 QA 角色一直是「接到票單才開始工作」，Story Mapping 可能是讓你往前移動半個 sprint 的工具。
 
 值得試試。
+
+---
+
+## 參考資料
+
+- [Jeff Patton — User Story Mapping](https://www.jpattonassociates.com/user-story-mapping/) — User story mapping 方法論原創者，本文概念來源
+- [Mike Cohn — User Stories Applied](https://www.mountaingoatsoftware.com/books/user-stories-applied) — Agile 需求寫作與 QA 配合的標準參考書
+- [Elisabeth Hendrickson — Explore It!](https://pragprog.com/titles/ehxta/explore-it/) — 探索式測試與需求理解的實踐方法
+- [Agile Alliance — Three Amigos](https://www.agilealliance.org/glossary/three-amigos/) — Three Amigos 會議定義與實踐指南
+- [ISTQB — Agile Tester Extension](https://www.istqb.org/certifications/agile-tester) — 敏捷測試師認證中的需求分析章節

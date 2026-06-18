@@ -147,3 +147,13 @@ Locator 的選擇也一樣。沒有最好的策略，只有當下條件下最合
 ---
 
 *如果你有不同的做法或踩過其他坑，歡迎留言。*
+
+---
+
+## 參考資料
+
+- [Appium Official Documentation](https://appium.io/docs/en/latest/) — Appium 架構說明與 Driver 清單
+- [UIAutomator2 Driver — Appium](https://github.com/appium/appium-uiautomator2-driver) — Android 自動化底層驅動文件
+- [XCUITest Driver — Appium](https://github.com/appium/appium-xcuitest-driver) — iOS 自動化底層驅動文件
+- [Appium Inspector](https://github.com/appium/appium-inspector) — 元素定位工具官方 repo
+- [Tricentis — State of Mobile Application Quality 2024](https://www.tricentis.com/resources/mobile-application-quality-report) — 行動測試挑戰調查報告

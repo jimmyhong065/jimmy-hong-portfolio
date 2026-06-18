@@ -8,6 +8,7 @@ export default function AdminLayout() {
   const { signOut } = useAuth()
   const navigate = useNavigate()
   const [unreadCount, setUnreadCount] = useState(0)
+  const [wishPending, setWishPending] = useState(0)
 
   useEffect(() => {
     supabase
@@ -15,6 +16,11 @@ export default function AdminLayout() {
       .select('id', { count: 'exact', head: true })
       .eq('status', 'unread')
       .then(({ count }) => setUnreadCount(count ?? 0))
+    supabase
+      .from('article_wishes')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending')
+      .then(({ count }) => setWishPending(count ?? 0))
   }, [])
 
   async function handleSignOut() {
@@ -56,6 +62,16 @@ export default function AdminLayout() {
             {unreadCount > 0 && (
               <span className="text-xs bg-red-500 text-white rounded-full px-1.5 leading-5 tabular-nums">
                 {unreadCount}
+              </span>
+            )}
+          </NavLink>
+          <NavLink to="/admin/wishes" className={({ isActive }) =>
+            `text-sm px-3 py-2 rounded-md flex items-center ${isActive ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}`
+          }>
+            <span className="flex-1 flex items-center gap-1.5">🪙 許願池</span>
+            {wishPending > 0 && (
+              <span className="text-xs bg-amber-500 text-white rounded-full px-1.5 leading-5 tabular-nums">
+                {wishPending}
               </span>
             )}
           </NavLink>

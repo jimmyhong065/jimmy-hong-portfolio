@@ -125,3 +125,13 @@ Brian Marick（敏捷宣言作者之一）早在 2003 年就指出：「Coverage
 - James Bach — [Exploratory Testing Explained](https://www.satisfice.com/download/exploratory-testing-explained)
 - Google Testing Blog — [Flaky Tests at Google and How We Mitigate Them](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html) (2016)
 - Capers Jones — *Applied Software Measurement* (2008)
+
+---
+
+## 參考資料
+
+- [Martin Fowler — Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html) — flaky test 的成因與解決策略
+- [Google Testing Blog — Flaky Tests at Google](https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html) — Google 處理不穩定測試的實際做法
+- [Lisa Crispin — When to Not Automate](https://lisacrispin.com/2011/11/20/using-the-agile-testing-quadrants/) — Agile Testing Quadrants 幫助判斷自動化邊界
+- [ISTQB — Test Automation Engineer](https://www.istqb.org/certifications/test-automation-engineer) — 測試自動化工程師認證的自動化範圍判斷準則
+- [Ministry of Testing — Automation in Testing](https://www.ministryoftesting.com/articles/automation-in-testing-a-practical-guide) — 自動化實務指南，含不適合自動化的情境

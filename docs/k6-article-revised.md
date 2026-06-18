@@ -191,3 +191,13 @@ Threshold 要跟 PM 和後端工程師一起決定，不是 QA 自己定。P95 <
 這篇記錄的是我第一次做效能測試踩坑、重來的過程。k6 本身不難，難的是搞清楚你在測什麼，以及怎麼讓數字對團隊有意義。
 
 如果你也是第一次接到「幫這個服務做壓測」的任務，希望這篇能讓你少踩幾個坑。
+
+---
+
+## 參考資料
+
+- [k6 Official Documentation](https://k6.io/docs/) — k6 完整文件，含 test types 定義（smoke / load / stress / soak）
+- [k6 — Test Types](https://k6.io/docs/test-types/) — 四種效能測試類型的差異與使用情境
+- [Grafana k6 Blog](https://grafana.com/blog/2024/01/30/load-testing-websites/) — 效能測試實務案例
+- [Google — Site Reliability Engineering: How Google Runs Production Systems](https://sre.google/sre-book/table-of-contents/) — SRE 視角的效能與可靠性設計
+- [ISTQB — Performance Testing Overview](https://www.istqb.org/certifications/performance-tester) — 效能測試國際標準定義

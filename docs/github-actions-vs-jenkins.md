@@ -140,3 +140,13 @@ A：取決於 pipeline 複雜度。簡單的「跑測試、部署」流程一天
 
 **Q：self-hosted runner 是什麼？什麼時候需要用？**
 A：self-hosted runner 是你自己架的機器，但由 GitHub Actions 調度。用途：需要特定硬體（如連接實體 iOS 裝置跑 Appium 測試）、需要存取內網資源、或 hosted runner 的分鐘數不夠用。設定不複雜，但機器要自己維護，介於 hosted runner 和 Jenkins 之間的選項。實際用 self-hosted runner 跑真機 Appium 測試的完整配置，可參考 [Appium 搭配 pytest 完整實務](/blog/appium-pytest-integration)。
+
+---
+
+## 參考資料
+
+- [GitHub Actions — Official Documentation](https://docs.github.com/en/actions) — GitHub Actions 完整官方文件
+- [Jenkins — Official Documentation](https://www.jenkins.io/doc/) — Jenkins 官方文件與 Pipeline 語法
+- [Google DORA — State of DevOps 2024](https://dora.dev/research/2024/dora-report/) — CI/CD 成熟度與軟體交付效能關聯
+- [Thoughtworks Technology Radar — CI Tools](https://www.thoughtworks.com/radar/tools) — 業界 CI 工具採用趨勢
+- [Stack Overflow Developer Survey 2024](https://survey.stackoverflow.co/2024/#section-most-popular-technologies-other-tools) — 全球開發者 CI/CD 工具使用率統計

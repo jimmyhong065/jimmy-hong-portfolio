@@ -231,3 +231,13 @@ A：同時維護兩個 production 環境（藍/綠），只有一個對外接受
 
 **Q：什麼是可觀測性（Observability）？和一般 Monitoring 有什麼差別？**
 A：Monitoring 是事先設定警報，當「你預期可能出問題的事」發生了才通知你。Observability 讓你能在問題發生時，即使沒有預期，也能快速找到根因——透過 log、trace、metrics 問出任意問題。QA 的探索性思維在 Observability 上特別有用，因為你不需要事先知道問題在哪。
+
+---
+
+## 參考資料
+
+- [Test Automation University — Test Automation in DevOps](https://testautomationu.applitools.com/test-automation-in-devops/) — 本文課程來源
+- [Google DORA — Accelerate State of DevOps 2024](https://dora.dev/research/2024/dora-report/) — CI/CD 與軟體交付效能核心研究報告
+- [Gene Kim et al. — The DevOps Handbook](https://www.oreilly.com/library/view/the-devops-handbook/9781457191381/) — DevOps 三步工作法完整框架
+- [Jez Humble & David Farley — Continuous Delivery](https://www.oreilly.com/library/view/continuous-delivery-reliable/9780321670250/) — 持續交付實踐原典
+- [Thoughtworks — Technology Radar](https://www.thoughtworks.com/radar) — 業界技術採用趨勢追蹤

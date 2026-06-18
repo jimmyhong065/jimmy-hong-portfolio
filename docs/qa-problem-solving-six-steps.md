@@ -209,3 +209,13 @@ QA 在這個框架裡的定位，不是接管別人的工作，而是**提供一
 如果 QA 不做，通常沒有人做。
 
 反覆出現的 bug 不是開發不努力的問題，通常是「從來沒有停下來問為什麼」的問題。這個停下來的動作，QA 最有動機，也最有視角去推動。
+
+---
+
+## 參考資料
+
+- [Taiichi Ohno — Toyota Production System (5 Whys)](https://en.wikipedia.org/wiki/Five_whys) — 根本原因分析五個為什麼的原始出處（豐田生產系統）
+- [IEEE — Root Cause Analysis in Software Testing](https://ieeexplore.ieee.org/document/8117163) — IEEE 軟體缺陷根本原因分析研究論文
+- [Google SRE Book — Postmortem Culture](https://sre.google/sre-book/postmortem-culture/) — Google 事後分析文化與學習機制
+- [Ishikawa — Fishbone Diagram](https://www.mindtools.com/pages/article/newTMC_03.htm) — 魚骨圖（因果圖）問題分析工具
+- [Martin Fowler — Root Cause Analysis](https://martinfowler.com/articles/root-cause.html) — 軟體問題根因分析的實踐觀點
