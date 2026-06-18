@@ -88,20 +88,43 @@ export default function Wish() {
           </p>
         </header>
 
-        {/* Wishing well + animation */}
+        {/* Wishing well — hand-drawn illustration + animation overlay */}
         <div className="wish-well mx-auto mb-3">
-          <div className="wish-rim">
-            <div className="wish-water">
-              <span className="wish-shine" />
-              {tossing && (
-                <>
-                  <span className="wish-coin" />
-                  <span className="wish-ripple" />
-                  <span className="wish-ripple r2" />
-                  {tossText && <span className="wish-float">「{tossText}」</span>}
-                </>
-              )}
-            </div>
+          <svg viewBox="0 0 240 210" className="wish-illu" aria-hidden="true">
+            {/* soft ground shadow */}
+            <ellipse cx="120" cy="172" rx="80" ry="13" fill="#000000" opacity="0.06" />
+            {/* outer stone rim */}
+            <ellipse cx="120" cy="120" rx="94" ry="62" fill="#f4ecd8" stroke="#5f4530" strokeWidth="4" />
+            {/* inner well wall */}
+            <ellipse cx="120" cy="120" rx="74" ry="46" fill="#e6d6b6" stroke="#5f4530" strokeWidth="2.5" />
+            {/* water */}
+            <ellipse cx="120" cy="122" rx="68" ry="40" fill="#74c4b2" stroke="#46897a" strokeWidth="3" />
+            {/* water highlight */}
+            <ellipse cx="98" cy="110" rx="30" ry="11" fill="#ffffff" opacity="0.22" />
+            {/* hand-drawn ripple lines */}
+            <path d="M86 128 Q120 142 154 128" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
+            <path d="M98 137 Q120 146 142 137" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.38" />
+            {/* twinkling sparkles */}
+            <g transform="translate(206 48)">
+              <path className="wish-spark" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
+            </g>
+            <g transform="translate(32 66) scale(0.7)">
+              <path className="wish-spark s2" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#46897a" />
+            </g>
+            <g transform="translate(214 152) scale(0.6)">
+              <path className="wish-spark s3" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
+            </g>
+          </svg>
+
+          <div className="wish-stage">
+            {tossing && (
+              <>
+                <span className="wish-coin">$</span>
+                <span className="wish-ripple" />
+                <span className="wish-ripple r2" />
+                {tossText && <span className="wish-float">「{tossText}」</span>}
+              </>
+            )}
           </div>
         </div>
         <p className="text-center text-xs text-gray-400 mb-8">投一塊錢，許個願</p>
