@@ -7,6 +7,37 @@ const CATEGORIES = ['自動化測試', 'API 測試', 'QA 職涯', '測試工具'
 
 const CATEGORY_STYLE = 'text-[11px] px-2 py-0.5 rounded-full bg-sky-50 text-sky-600 border border-sky-100'
 
+// Hand-drawn chibi wishing well, reused on the page and inside the toss overlay.
+function WishWell() {
+  return (
+    <svg viewBox="0 0 240 210" className="wish-illu" aria-hidden="true">
+      <ellipse cx="120" cy="172" rx="80" ry="13" fill="#000000" opacity="0.06" />
+      <ellipse cx="120" cy="120" rx="94" ry="62" fill="#f4ecd8" stroke="#5f4530" strokeWidth="4" />
+      <ellipse cx="120" cy="120" rx="74" ry="46" fill="#e6d6b6" stroke="#5f4530" strokeWidth="2.5" />
+      <ellipse cx="120" cy="122" rx="68" ry="40" fill="#74c4b2" stroke="#46897a" strokeWidth="3" />
+      <ellipse cx="98" cy="110" rx="30" ry="11" fill="#ffffff" opacity="0.22" />
+      <path d="M86 128 Q120 142 154 128" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
+      <path d="M98 137 Q120 146 142 137" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.38" />
+      <g transform="translate(206 48)">
+        <path className="wish-spark" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
+      </g>
+      <g transform="translate(32 66) scale(0.7)">
+        <path className="wish-spark s2" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#46897a" />
+      </g>
+      <g transform="translate(214 152) scale(0.6)">
+        <path className="wish-spark s3" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
+      </g>
+    </svg>
+  )
+}
+
+// Sparkle burst directions (px) emitted when the coin lands.
+const BURST = [
+  { tx: '0px', ty: '-26px' }, { tx: '22px', ty: '-14px' }, { tx: '26px', ty: '6px' },
+  { tx: '14px', ty: '22px' }, { tx: '-14px', ty: '22px' }, { tx: '-26px', ty: '6px' },
+  { tx: '-22px', ty: '-14px' },
+]
+
 export default function Wish() {
   const [content, setContent] = useState('')
   const [email, setEmail] = useState('')
@@ -19,7 +50,6 @@ export default function Wish() {
   const [wishes, setWishes] = useState([])
   const [wallLoading, setWallLoading] = useState(true)
   const tossTimer = useRef(null)
-  const wellRef = useRef(null)
 
   useEffect(() => {
     fetch('/api/wishes')
@@ -47,15 +77,13 @@ export default function Wish() {
       }
       if (!res.ok) throw new Error()
 
-      // 播丟幣動畫 — 先把許願井捲回畫面，手機填完表單已捲到下方才看得到
+      // 開啟投幣 overlay 播動畫（置中，任何捲動位置都看得到）
       setTossText(content.trim().slice(0, 24))
       setStatus('tossing')
-      wellRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'wish_submit', { category: category || 'none' })
-      }
+      if (navigator.vibrate) navigator.vibrate(20)
       tossTimer.current = setTimeout(() => {
         setStatus('done')
+        if (navigator.vibrate) navigator.vibrate([0, 30, 40, 15])
         setContent(''); setEmail(''); setNickname(''); setCategory('')
       }, 2600)
     } catch {
@@ -69,6 +97,7 @@ export default function Wish() {
   }
 
   const tossing = status === 'tossing'
+  const overlayOpen = status === 'tossing' || status === 'done'
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -90,64 +119,18 @@ export default function Wish() {
           </p>
         </header>
 
-        {/* Wishing well — hand-drawn illustration + animation overlay */}
-        <div ref={wellRef} className="wish-well mx-auto mb-3">
-          <svg viewBox="0 0 240 210" className="wish-illu" aria-hidden="true">
-            {/* soft ground shadow */}
-            <ellipse cx="120" cy="172" rx="80" ry="13" fill="#000000" opacity="0.06" />
-            {/* outer stone rim */}
-            <ellipse cx="120" cy="120" rx="94" ry="62" fill="#f4ecd8" stroke="#5f4530" strokeWidth="4" />
-            {/* inner well wall */}
-            <ellipse cx="120" cy="120" rx="74" ry="46" fill="#e6d6b6" stroke="#5f4530" strokeWidth="2.5" />
-            {/* water */}
-            <ellipse cx="120" cy="122" rx="68" ry="40" fill="#74c4b2" stroke="#46897a" strokeWidth="3" />
-            {/* water highlight */}
-            <ellipse cx="98" cy="110" rx="30" ry="11" fill="#ffffff" opacity="0.22" />
-            {/* hand-drawn ripple lines */}
-            <path d="M86 128 Q120 142 154 128" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
-            <path d="M98 137 Q120 146 142 137" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.38" />
-            {/* twinkling sparkles */}
-            <g transform="translate(206 48)">
-              <path className="wish-spark" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
-            </g>
-            <g transform="translate(32 66) scale(0.7)">
-              <path className="wish-spark s2" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#46897a" />
-            </g>
-            <g transform="translate(214 152) scale(0.6)">
-              <path className="wish-spark s3" d="M0,-7 C1.2,-1.2 1.2,-1.2 7,0 C1.2,1.2 1.2,1.2 0,7 C-1.2,1.2 -1.2,1.2 -7,0 C-1.2,-1.2 -1.2,-1.2 0,-7 Z" fill="#d97706" />
-            </g>
-          </svg>
-
-          <div className="wish-stage">
-            {tossing && (
-              <>
-                <span className="wish-coin">$</span>
-                <span className="wish-ripple" />
-                <span className="wish-ripple r2" />
-                {tossText && <span className="wish-float">「{tossText}」</span>}
-              </>
-            )}
-          </div>
+        {/* Wishing well — static illustration on the page */}
+        <div className="wish-well mx-auto mb-3">
+          <WishWell />
         </div>
         <p className="text-center text-xs text-gray-400 mb-8">投一塊錢，許個願</p>
-
-        {/* States */}
-        {status === 'done' && (
-          <div className="text-center py-6">
-            <p className="text-base font-medium text-gray-800 mb-1">願望已投入許願池</p>
-            <p className="text-sm text-gray-500 mb-4">謝謝你的許願，我會認真考慮這個方向。</p>
-            <button onClick={wishAgain} className="text-sm bg-gray-900 text-white px-5 py-2 rounded-lg hover:bg-gray-700">
-              再許一個
-            </button>
-          </div>
-        )}
 
         {status === 'limited' && (
           <p className="text-center text-sm text-amber-600 py-4">許願太快囉，請 30 秒後再試一次。</p>
         )}
 
-        {/* Form */}
-        {(status === 'idle' || status === 'sending' || status === 'tossing' || status === 'error' || status === 'limited') && (
+        {/* Form (hidden while the toss overlay is open) */}
+        {(status === 'idle' || status === 'sending' || status === 'error' || status === 'limited') && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -218,10 +201,10 @@ export default function Wish() {
 
             <button
               type="submit"
-              disabled={status === 'sending' || status === 'tossing'}
+              disabled={status === 'sending'}
               className="w-full sm:w-auto text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50"
             >
-              {status === 'sending' ? '投幣中…' : tossing ? '許願中…' : '投一塊錢許願'}
+              {status === 'sending' ? '投幣中…' : '投一塊錢許願'}
             </button>
           </form>
         )}
@@ -248,6 +231,59 @@ export default function Wish() {
           )}
         </section>
       </main>
+
+      {/* Coin-toss overlay — immersive, always centered in the viewport */}
+      {overlayOpen && (
+        <div
+          className="wish-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={status === 'done' ? wishAgain : undefined}
+        >
+          <div className="wish-overlay-card" onClick={e => e.stopPropagation()}>
+            <div className="wish-well wish-well-lg mx-auto">
+              <WishWell />
+              <div className="wish-stage">
+                {tossing && (
+                  <>
+                    <span className="wish-coin">$</span>
+                    <span className="wish-ripple" />
+                    <span className="wish-ripple r2" />
+                    <span className="wish-plus">+1</span>
+                    {BURST.map((b, i) => (
+                      <span key={i} className="wish-burst" style={{ '--tx': b.tx, '--ty': b.ty }} />
+                    ))}
+                    {tossText && <span className="wish-float">「{tossText}」</span>}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {tossing && (
+              <p className="text-center text-sm text-gray-500 mt-2">投入許願池中…</p>
+            )}
+
+            {status === 'done' && (
+              <div className="text-center mt-2 wish-done-in">
+                <p className="text-lg font-bold text-gray-900 mb-1">願望已投入許願池</p>
+                <p className="text-sm text-gray-500 mb-5">謝謝你的許願，我會認真考慮這個方向。</p>
+                <button
+                  onClick={wishAgain}
+                  className="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-700"
+                >
+                  再許一個
+                </button>
+                <button
+                  onClick={wishAgain}
+                  className="block mx-auto mt-3 text-xs text-gray-400 hover:text-gray-600"
+                >
+                  關閉
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
