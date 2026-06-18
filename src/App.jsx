@@ -13,6 +13,7 @@ const BlogPost = lazy(() => import('./pages/BlogPost'))
 const About = lazy(() => import('./pages/About'))
 const Services = lazy(() => import('./pages/Services'))
 const FAQ = lazy(() => import('./pages/FAQ'))
+const Wish = lazy(() => import('./pages/Wish'))
 const Saved = lazy(() => import('./pages/Saved'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Login = lazy(() => import('./pages/Login'))
@@ -34,6 +35,7 @@ const AdminPhotos = lazy(() => import('./pages/admin/AdminPhotos'))
 const AdminFAQs = lazy(() => import('./pages/admin/AdminFAQs'))
 const AdminFAQEdit = lazy(() => import('./pages/admin/AdminFAQEdit'))
 const AdminSubmissions = lazy(() => import('./pages/admin/AdminSubmissions'))
+const AdminWishes = lazy(() => import('./pages/admin/AdminWishes'))
 const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'))
 const AdminLinkedIn = lazy(() => import('./pages/admin/AdminLinkedIn'))
 const Notifications = lazy(() => import('./pages/Notifications'))
@@ -99,6 +101,7 @@ function AppRoutes() {
         <Route path="/about" element={<HiddenRoute pageKey="about"><About /></HiddenRoute>} />
         <Route path="/services" element={<HiddenRoute pageKey="services"><Services /></HiddenRoute>} />
         <Route path="/faq" element={<HiddenRoute pageKey="faq"><FAQ /></HiddenRoute>} />
+        <Route path="/wish" element={<HiddenRoute pageKey="wish"><Wish /></HiddenRoute>} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/login" element={<Login />} />
         <Route path="/photo" element={<HiddenRoute pageKey="photo"><PhotoHome /></HiddenRoute>} />
@@ -124,6 +127,7 @@ function AppRoutes() {
           <Route path="faqs" element={<AdminFAQs />} />
           <Route path="faqs/:id" element={<AdminFAQEdit />} />
           <Route path="submissions" element={<AdminSubmissions />} />
+          <Route path="wishes" element={<AdminWishes />} />
           <Route path="subscribers" element={<AdminSubscribers />} />
           <Route path="linkedin" element={<AdminLinkedIn />} />
         </Route>

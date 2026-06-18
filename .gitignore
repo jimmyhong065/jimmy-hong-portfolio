@@ -24,3 +24,5 @@ outputs/
 .superpowers/
 download.txt
 docs/.obsidian/workspace.json
+.dev.vars
+.wrangler/

@@ -11,6 +11,7 @@ const DESKTOP_LINKS = [
   { key: 'blog', to: '/blog', label: '部落格' },
   { key: 'saved', to: '/saved', label: '收藏' },
   { key: 'faq', to: '/faq', label: 'FAQ' },
+  { key: 'wish', to: '/wish', label: '許願池' },
   { key: 'about', to: '/about', label: '關於我' },
 ]
 

@@ -329,3 +329,33 @@ DROP POLICY IF EXISTS "auth full access notifications" ON notifications;
 CREATE POLICY "auth full access notifications"
   ON notifications FOR ALL TO authenticated
   USING (true) WITH CHECK (true);
+
+-- Article wishes (許願池). Reader submissions for desired article topics.
+-- Public submit goes through /api/wish-submit (service role). Public wall reads
+-- featured wishes through /api/wishes (service role). Admin reads via client (authenticated).
+CREATE TABLE IF NOT EXISTS article_wishes (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  content    text NOT NULL,
+  email      text,
+  nickname   text,
+  category   text,
+  status     text DEFAULT 'pending',   -- pending | featured | archived
+  ip         text,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+DROP TRIGGER IF EXISTS article_wishes_set_updated_at ON article_wishes;
+CREATE TRIGGER article_wishes_set_updated_at
+  BEFORE UPDATE ON article_wishes
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE INDEX IF NOT EXISTS article_wishes_status_created_idx ON article_wishes (status, created_at DESC);
+
+ALTER TABLE article_wishes ENABLE ROW LEVEL SECURITY;
+
+-- No anon policies: submit + public wall both go through service-role functions.
+DROP POLICY IF EXISTS "auth full access article wishes" ON article_wishes;
+CREATE POLICY "auth full access article wishes"
+  ON article_wishes FOR ALL TO authenticated
+  USING (true) WITH CHECK (true);

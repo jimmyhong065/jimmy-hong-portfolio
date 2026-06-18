@@ -14,6 +14,7 @@ export const SVG_MAP = {
   chart:    <svg {...S} width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
   code:     <svg {...S} width="20" height="20"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
   bell:     <svg {...S} width="20" height="20"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  coin:     <svg {...S} width="20" height="20"><circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.4 0-2.5.8-2.5 2s1.1 1.8 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2A2.5 2.5 0 0 1 9.5 15"/><path d="M12 6v1.5M12 16.5V18"/></svg>,
 }
 
 export const ICON_KEYS = Object.keys(SVG_MAP)
@@ -23,5 +24,6 @@ export const FALLBACK_TABS = [
   { id: '2', label: '部落格', url: '/blog',     icon_key: 'blog',     visible: true, order: 1 },
   { id: '3', label: '收藏',   url: '/saved',    icon_key: 'saved',    visible: true, order: 2 },
   { id: '4', label: 'FAQ',    url: '/faq',      icon_key: 'faq',      visible: true, order: 3 },
-  { id: '5', label: '關於我', url: '/about',    icon_key: 'about',    visible: true, order: 4 },
+  { id: '5', label: '許願池', url: '/wish',     icon_key: 'coin',     visible: true, order: 4 },
+  { id: '6', label: '關於我', url: '/about',    icon_key: 'about',    visible: true, order: 5 },
 ]
