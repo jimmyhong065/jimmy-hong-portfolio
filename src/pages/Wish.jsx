@@ -19,6 +19,7 @@ export default function Wish() {
   const [wishes, setWishes] = useState([])
   const [wallLoading, setWallLoading] = useState(true)
   const tossTimer = useRef(null)
+  const wellRef = useRef(null)
 
   useEffect(() => {
     fetch('/api/wishes')
@@ -46,9 +47,10 @@ export default function Wish() {
       }
       if (!res.ok) throw new Error()
 
-      // 播丟幣動畫
+      // 播丟幣動畫 — 先把許願井捲回畫面，手機填完表單已捲到下方才看得到
       setTossText(content.trim().slice(0, 24))
       setStatus('tossing')
+      wellRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'wish_submit', { category: category || 'none' })
       }
@@ -89,7 +91,7 @@ export default function Wish() {
         </header>
 
         {/* Wishing well — hand-drawn illustration + animation overlay */}
-        <div className="wish-well mx-auto mb-3">
+        <div ref={wellRef} className="wish-well mx-auto mb-3">
           <svg viewBox="0 0 240 210" className="wish-illu" aria-hidden="true">
             {/* soft ground shadow */}
             <ellipse cx="120" cy="172" rx="80" ry="13" fill="#000000" opacity="0.06" />
