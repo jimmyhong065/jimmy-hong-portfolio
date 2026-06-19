@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import SEOHead from '../components/SEOHead'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
@@ -98,6 +99,14 @@ export default function Wish() {
 
   const tossing = status === 'tossing'
   const overlayOpen = status === 'tossing' || status === 'done'
+
+  // Lock body scroll while the overlay is open (keeps the fixed modal stable on iOS)
+  useEffect(() => {
+    if (!overlayOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [overlayOpen])
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -232,8 +241,8 @@ export default function Wish() {
         </section>
       </main>
 
-      {/* Coin-toss overlay — immersive, always centered in the viewport */}
-      {overlayOpen && (
+      {/* Coin-toss overlay — portaled to body so it always centers in the viewport */}
+      {overlayOpen && createPortal(
         <div
           className="wish-overlay"
           role="dialog"
@@ -282,7 +291,8 @@ export default function Wish() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <Footer />
