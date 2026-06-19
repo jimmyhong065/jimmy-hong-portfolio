@@ -21,6 +21,7 @@ const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
 const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
 const AdminPosts = lazy(() => import('./pages/admin/AdminPosts'))
+const AdminTags = lazy(() => import('./pages/admin/AdminTags'))
 const AdminPostEdit = lazy(() => import('./pages/admin/AdminPostEdit'))
 const AdminProjects = lazy(() => import('./pages/admin/AdminProjects'))
 const AdminProjectEdit = lazy(() => import('./pages/admin/AdminProjectEdit'))
@@ -114,6 +115,7 @@ function AppRoutes() {
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="posts" element={<AdminPosts />} />
           <Route path="posts/:id" element={<AdminPostEdit />} />
+          <Route path="tags" element={<AdminTags />} />
           <Route path="projects" element={<AdminProjects />} />
           <Route path="projects/:id" element={<AdminProjectEdit />} />
           <Route path="settings" element={<AdminSettings />} />
