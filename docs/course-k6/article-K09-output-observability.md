@@ -24,6 +24,9 @@ k6 run --out json=raw.json script.js      # 逐筆原始數據（檔案會很大
 想自己決定報告長相（例如輸出 HTML 或自訂 JSON），用 `handleSummary`：
 
 ```javascript
+// textSummary 不是內建，要從 k6 的 jslib 匯入
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js'
+
 export function handleSummary(data) {
   return {
     'summary.json': JSON.stringify(data),

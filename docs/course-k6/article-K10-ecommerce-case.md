@@ -25,6 +25,10 @@ import { SharedArray } from 'k6/data'
 
 const BASE = __ENV.BASE_URL || 'https://staging.shop.example.com'
 
+// 把 409（庫存售罄、被拒）也視為「預期內」，否則內建 http_req_failed
+// 會把它當失敗，配上 abortOnFail 會在賣完瞬間直接中止整場測試。
+http.setResponseCallback(http.expectedStatuses({ min: 200, max: 399 }, 409))
+
 // 熱點：少數爆品 + 一般商品（照權重抽，模擬 80-20）
 const hotSkus = new SharedArray('hot', () => JSON.parse(open('./data/hot_skus.json')))
 const skus    = new SharedArray('skus', () => JSON.parse(open('./data/skus.json')))
@@ -103,7 +107,7 @@ export function seckill() {
 
 - **兩個 scenario 併行**：`browse`（固定到達率）+ `seckill`（階梯到達率錯開 1 分鐘起跑）——還原讀多寫少 + 開賣尖峰。
 - **熱點集中**：`Math.random() < 0.9` 讓九成下單打爆品池，才壓得出行鎖競爭（不然就是觀念課說的假測試）。
-- **不超賣的驗證**：庫存扣完回 409 是**正常**的（被拒絕），不該算失敗——所以 check 把 200 和 409 都當通過，真正要抓的是 5xx 和超賣。
+- **不超賣的驗證**：庫存扣完回 409 是**正常**的（被拒絕），不該算失敗——所以 check 把 200 和 409 都當通過，真正要抓的是 5xx 和超賣。注意這還不夠：k6 內建的 `http_req_failed` 預設把所有 4xx（含 409）算失敗，配上 `abortOnFail` 會在賣完瞬間中止整場測試，所以開頭用 `setResponseCallback` 把 409 也標成預期內。
 - **分交易門檻**：瀏覽 p95<100、下單 p95<300，各有各的線。
 - **預熱**：`setup()` 先打一輪暖快取。
 
