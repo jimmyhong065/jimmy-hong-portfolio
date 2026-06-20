@@ -20,7 +20,6 @@ status: draft
 用 `restful-booker` 示範一條「登入 → 建立 → 部分更新 → 刪除」的流程：
 
 ```python
-import json
 import requests
 
 BASE = "https://restful-booker.herokuapp.com"
@@ -87,6 +86,8 @@ assert forbidden.status_code in (401, 403)
 ```
 
 兩個 session 的 cookie、header 各自獨立，互不污染——這正好對上 B08 講的越權測試。
+
+（這段是通用示意：`login()` 與兩個帳號是假設的寫法。要注意 `restful-booker` 這類練習站故意不做擁有權檢查——任何有效 token 都能刪別人的 booking，所以這條斷言對它會 fail。而那個 fail，本身就是越權測試該抓到的漏洞。換成有做權限控管的真實系統，它才會如預期被擋。）
 
 ## 帶得走
 
