@@ -1,7 +1,7 @@
 ---
-title: k6 的輸出與觀測：從 summary 到 Prometheus、Grafana、New Relic
-excerpt: 終端機那份 summary 只是起點。要做趨勢看板、要把壓測數據跟伺服器端監控對齊，就得把 k6 的指標串流到 Prometheus + Grafana 或 New Relic。這篇講各種輸出與客製化報告。
-tags: [k6, 觀測性, Grafana, Prometheus]
+title: k6 的輸出與觀測：從 summary 到 Grafana 即時看板
+excerpt: 終端機那份 summary 只是起點。用 Docker Compose 五分鐘就能讓 k6 指標串進 InfluxDB + Grafana，壓測跑到一半圖就在動。這篇從本機快速起手到 CI 長期趨勢，把 k6 的輸出選項講清楚。
+tags: [k6, 觀測性, Grafana, InfluxDB, Docker]
 status: draft
 ---
 
@@ -37,15 +37,44 @@ export function handleSummary(data) {
 
 `data` 裡有所有指標的統計，你能自由轉成任何格式。
 
-## 3. 串流到 Prometheus + Grafana（做趨勢看板）
+## 3. 視覺化：把指標送進 Grafana
 
-這是做「效能看板」（觀念課常態化篇）的主流：
+### 3a. 本機五分鐘看到圖：Docker Compose 方案
+
+最快的起手方式是用這個開源模板，一條指令就把 InfluxDB + Grafana 跑起來，k6 直接把指標推進去：
 
 ```bash
-k6 run --out experimental-prometheus-rw script.js
+git clone https://github.com/luketn/docker-k6-grafana-influxdb
+cd docker-k6-grafana-influxdb
+docker compose up -d influxdb grafana   # 起 InfluxDB（port 8086）與 Grafana（port 3000）
 ```
 
-搭配環境變數指到 Prometheus 的 remote-write 端點：
+等兩秒服務就緒後，跑你自己的腳本：
+
+```bash
+K6_OUT=influxdb=http://localhost:8086/k6 k6 run your-script.js
+```
+
+開 `http://localhost:3000`，匿名登入（不用帳密），點進已預載的 k6 dashboard，就能即時看到 VU 曲線、p95 RT、錯誤率——壓測還沒跑完圖就在動。
+
+**這個方案的架構：**
+
+```
+k6 → InfluxDB（時間序列儲存）→ Grafana（視覺化）
+```
+
+InfluxDB 1.x 在這個組合裡只是「指標存放桶」，不需要額外設定；Grafana 已預載好 datasource 和 dashboard，開箱即用。
+
+**想改成測自己的 API？** 最簡單的做法是把你前幾課寫的 script.js 放進 `scripts/` 資料夾，用 docker compose 的 k6 服務跑：
+
+```bash
+# docker-compose.yml 裡的 k6 服務已設好 K6_OUT，volumes 掛好 scripts/
+docker compose run k6 run /scripts/your-script.js
+```
+
+### 3b. CI/生產端：Prometheus remote-write 方案
+
+這是做長期趨勢看板的主流（觀念課常態化篇的對應實作）：
 
 ```bash
 K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write \
@@ -53,6 +82,14 @@ k6 run --out experimental-prometheus-rw script.js
 ```
 
 數據進 Prometheus 後，用 Grafana 的 k6 官方 dashboard 看趨勢——每次跑的 p95、錯誤率、吞吐都留下歷史，就能抓「每週慢一點」的緩慢退化。
+
+**兩個方案的差別：**
+
+| | Docker Compose（3a）| Prometheus（3b）|
+|---|---|---|
+| 適合 | 本機手動跑、快速驗證 | CI 排程跑、長期留存 |
+| 複雜度 | 一條 clone + compose up | 需要 Prometheus + Grafana 基礎設施 |
+| 資料保留 | 重啟 container 就清 | 持久存在 Prometheus 裡 |
 
 ## 4. New Relic / DataDog / OTel（跟服務端對齊）
 
