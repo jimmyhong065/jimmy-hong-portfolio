@@ -94,19 +94,20 @@ def driver():
 
 ## 疊 fixture：登入狀態重用
 
-session scope 的 driver 搭配一個「已登入」fixture，可以讓所有需要登入後才能操作的測試跳過重複登入：
+把登入動作包成獨立 fixture，讓需要登入才能操作的測試不必自己呼叫登入步驟：
 
 ```python
 # conftest.py（續）
 from pages.login_page import LoginPage
 
-@pytest.fixture(scope="session")
+@pytest.fixture                            # function scope（與 driver 一致）
 def logged_in_driver(driver):              # 疊在 driver fixture 上
     page = LoginPage(driver)
     page.login("qa_user@example.com", "test_pw")
-    yield driver                           # 傳出已登入狀態的 driver
-    # 不需要額外清理，driver fixture 的 quit() 會處理
+    return driver                          # 傳出已登入狀態的 driver
 ```
+
+注意：疊在上面的 fixture scope 不能比它依賴的 fixture 更廣——若 `driver` 是 function scope，`logged_in_driver` 也必須是 function scope 或更窄；反過來宣告 `scope="session"` 會讓 pytest 拋出 `ScopeMismatch` 錯誤。
 
 測試宣告 `logged_in_driver` 就能直接操作登入後的頁面：
 
@@ -119,11 +120,11 @@ def test_profile_display(logged_in_driver):
     assert page.username_is_shown()        # 不用自己登入
 ```
 
-同一個 session 裡，`logged_in_driver` 只執行一次登入動作；後續所有測試共享同一個已登入的 driver。
+每個測試各自拿到一個全新的已登入 driver，登入步驟由 fixture 負責，測試主體保持乾淨。
 
 ## 帶得走
 
 - `conftest.py` 放在測試根目錄，fixture 自動對全專案可見，不用手動 import。
 - `scope="function"` 隔離最乾淨，適合寫入型測試；`scope="session"` 最快，適合唯讀驗證。
 - `yield` 後的程式碼等同 `finally`，測試失敗也一定執行——`quit()` 永遠放在 `yield` 後。
-- 用 fixture 疊 fixture（`logged_in_driver` 疊在 `driver` 上），登入成本只付一次，測試主體更乾淨。
+- 用 fixture 疊 fixture（`logged_in_driver` 疊在 `driver` 上），登入邏輯集中在一處，測試主體更乾淨；疊的 fixture scope 不能比依賴的 fixture 更廣，否則 pytest 拋 `ScopeMismatch`。
