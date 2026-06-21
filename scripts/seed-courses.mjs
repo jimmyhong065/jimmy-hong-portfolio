@@ -14,7 +14,7 @@ const DRY = process.argv.includes('--dry-run')
 const supabase = createClient(SUPABASE_URL, KEY)
 
 // 課程顯示順序（穩定預設）
-const ORDER = { 'course-perf': 1, 'course-k6': 2, 'course-api': 3, 'course-quality': 4, 'course-comm': 5, 'course-second-brain': 6 }
+const ORDER = { 'course-perf': 1, 'course-k6': 2, 'course-api': 3, 'course-quality': 4, 'course-comm': 5, 'course-second-brain': 6, 'course-bughunt': 7 }
 
 function parseFrontmatter(content) {
   const m = content.match(/^---\n([\s\S]*?)\n---\n/)
