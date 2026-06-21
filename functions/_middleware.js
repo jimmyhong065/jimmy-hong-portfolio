@@ -178,13 +178,29 @@ async function fetchPost(slug) {
 
 export async function onRequest(context) {
   const { request, next } = context
+  const url = new URL(request.url)
+  const path = url.pathname.replace(/\/$/, '') || '/'
+
+  if (path.startsWith('/assets/')) {
+    const res = await next()
+    const ct = res.headers.get('content-type') || ''
+    if (res.status === 200 && ct.includes('text/html')) {
+      return new Response('Asset not found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      })
+    }
+    return res
+  }
+
   const ua = request.headers.get('user-agent') || ''
 
   // 非 bot → 原樣 SPA，零影響
   if (!isBot(ua)) return next()
-
-  const url = new URL(request.url)
-  const path = url.pathname.replace(/\/$/, '') || '/'
 
   // 決定注入器：文章頁 / 首頁 / 列表頁，其餘（既有 functions 等）放行
   let inject = null

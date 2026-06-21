@@ -1,5 +1,5 @@
-const CACHE = 'qa-lens-v2'
-const PRECACHE = ['/', '/pwa-icon.png', '/favicon.svg', '/favicon-camera.svg']
+const CACHE = 'qa-lens-v3'
+const PRECACHE = ['/pwa-icon.png', '/favicon.svg', '/favicon-camera.svg']
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -23,7 +23,7 @@ self.addEventListener('fetch', event => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/'))
+      fetch(request, { cache: 'no-store' })
     )
     return
   }
