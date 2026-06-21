@@ -70,6 +70,7 @@ class BasePage:
 # pages/login_page.py
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_page import BasePage
+from pages.home_page import HomePage
 
 class LoginPage(BasePage):           # 繼承 BasePage
     USERNAME  = (AppiumBy.ACCESSIBILITY_ID, "username")
