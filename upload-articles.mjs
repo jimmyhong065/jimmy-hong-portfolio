@@ -190,6 +190,7 @@ const published = [
   join(docsDir, 'vision-ai-mobile-testing.md'),
   join(docsDir, 'visual-regression-testing.md'),
   join(docsDir, 'when-to-ship.md'),
+  join(docsDir, 'http-for-qa.md'),
 ]
 
 const drafts = readdirSync(draftsDir)
