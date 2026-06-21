@@ -52,14 +52,11 @@
 - `src/pages/BlogPost.jsx`：prev/next 與 tags 系列查詢同樣排除 `course_id`
   （`.is('course_id', null)`），讓 /blog 文章導航不會連進課程章節。
 
-## 重用渲染（針對性重構）
+## 重用渲染
 
-`BlogPost.jsx` 已 450+ 行。將其中 markdown 內文渲染段抽成
-`src/components/ArticleBody.jsx`，由 `BlogPost` 與 `CourseChapter` 共用，避免兩套渲染分岔。
-
-- `ArticleBody` 輸入：文章內容（markdown 字串）與必要 props（如 `data-slug`）。
-- 抽出後 `BlogPost` 行為不變（既有測試應仍通過）。
-- 範圍限定於支援本次工作，不順手改動 BlogPost 其他邏輯（收藏、進度、infinite read 等）。
+`BlogPost.jsx` 的內文已透過 `src/components/MarkdownContent.jsx`（`props: { content }`）渲染。
+`CourseChapter` 直接重用 `MarkdownContent`，**不需**另抽 ArticleBody（YAGNI）。
+同樣可直接重用 `TableOfContents`、`useReadingProgress`、`useReadHistory`、`useActiveHeading`、`parseHeadings`。
 
 ## 閱讀體驗（對應「比較好學習」，全用現有 hook）
 
@@ -73,12 +70,11 @@
 - `src/pages/CourseLanding.jsx`
 - `src/pages/CourseChapter.jsx`
 - `src/hooks/useCourse.js`
-- `src/components/ArticleBody.jsx`（從 BlogPost 抽出）
 
 改檔：
 - `src/App.jsx`（加兩條路由，lazy import）
 - `src/hooks/usePosts.js`（排除 course_id）
-- `src/pages/BlogPost.jsx`（prev/next + 系列排除 course_id；改用 ArticleBody）
+- `src/pages/BlogPost.jsx`（prev/next + 系列排除 course_id）
 - `src/pages/admin/AdminCourses.jsx`、`src/pages/admin/AdminCourseEdit.jsx`（加預覽鈕）
 
 ## 本輪不做（follow-up）
