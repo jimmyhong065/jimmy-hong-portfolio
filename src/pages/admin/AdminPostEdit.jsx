@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { marked } from 'marked'
 import RichTextEditor from '../../components/RichTextEditor'
 import MarkdownEditorPane from '../../components/MarkdownEditorPane'
 
@@ -201,7 +202,6 @@ export default function AdminPostEdit() {
           markPendingSave()
           setForm(f => ({ ...f, content: md }))
         } else if (newMode === 'wysiwyg' && !form.content.trimStart().startsWith('<')) {
-          const { marked } = await import('marked')
           const html = await marked(form.content)
           markPendingSave()
           setForm(f => ({ ...f, content: html }))
