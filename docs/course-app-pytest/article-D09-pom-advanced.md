@@ -91,10 +91,11 @@ class SettingsPage(BasePage):
 
 ```python
 # ✅ 拆成 section component，SettingsPage 只負責組合
-# pages/settings/security_section.py   → change_password, logout
-# pages/settings/profile_section.py    → change_avatar, set_language
-# pages/settings/notification_section.py → toggle_notification
-# pages/settings/payment_section.py    → manage_payment
+from pages.base_page import BasePage
+from pages.settings.security_section import SecuritySection        # change_password, logout
+from pages.settings.profile_section import ProfileSection          # change_avatar, set_language
+from pages.settings.notification_section import NotificationSection  # toggle_notification
+from pages.settings.payment_section import PaymentSection          # manage_payment
 
 class SettingsPage(BasePage):
     def __init__(self, driver):
