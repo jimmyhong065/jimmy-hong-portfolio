@@ -28,6 +28,8 @@ const AdminProjectEdit = lazy(() => import('./pages/admin/AdminProjectEdit'))
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
 const AdminPhotoProjects = lazy(() => import('./pages/admin/AdminPhotoProjects'))
 const AdminPhotoProjectEdit = lazy(() => import('./pages/admin/AdminPhotoProjectEdit'))
+const AdminCourses = lazy(() => import('./pages/admin/AdminCourses'))
+const AdminCourseEdit = lazy(() => import('./pages/admin/AdminCourseEdit'))
 const AdminServices = lazy(() => import('./pages/admin/AdminServices'))
 const AdminServiceEdit = lazy(() => import('./pages/admin/AdminServiceEdit'))
 const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements'))
@@ -121,6 +123,8 @@ function AppRoutes() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="photo-projects" element={<AdminPhotoProjects />} />
           <Route path="photo-projects/:id" element={<AdminPhotoProjectEdit />} />
+          <Route path="courses" element={<AdminCourses />} />
+          <Route path="courses/:id" element={<AdminCourseEdit />} />
           <Route path="services" element={<AdminServices />} />
           <Route path="services/:id" element={<AdminServiceEdit />} />
           <Route path="announcements" element={<AdminAnnouncements />} />

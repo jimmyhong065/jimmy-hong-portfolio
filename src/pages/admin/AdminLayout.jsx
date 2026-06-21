@@ -45,6 +45,7 @@ export default function AdminLayout() {
 
           {sectionLabel('內容')}
           <NavLink to="/admin/posts" className={navClass}>📝 文章管理</NavLink>
+          <NavLink to="/admin/courses" className={navClass}>🎓 課程管理</NavLink>
           <NavLink to="/admin/tags" className={navClass}>🏷 標籤總覽</NavLink>
           <NavLink to="/admin/announcements" className={navClass}>📢 最新消息</NavLink>
           <NavLink to="/admin/services" className={navClass}>🤝 合作方式</NavLink>
