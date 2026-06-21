@@ -61,13 +61,9 @@ pytest test_login.py -v
 
 ## 為什麼這樣還不夠
 
-這個測試能動，但有兩個明顯的痛點。
+**第一，locator 散在測試裡。** `"username"`、`"login_btn"` 直接寫在 test function 裡，app 改一個 accessibility ID 就要全文搜尋。解法是 Page Object Model（POM）——後面章節集中到 Page class。
 
-**第一，locator 散在測試裡。** `"username"`、`"login_btn"`、`"home_title"` 直接寫在 test function 裡，只要 app 改一個 accessibility ID，你要全文搜尋才找得到要改哪裡。測試案例一多，維護成本呈線性成長。解法是 Page Object Model（POM）——後面的章節會把定位邏輯集中到 Page class 裡。
-
-**第二，沒有等待。** `find_element` 找不到元件就立刻拋 `NoSuchElementException`，不等頁面載入或動畫結束。真實 app 有非同步渲染、轉場動畫、網路延遲，硬找會讓測試隨機失敗（又稱 flaky test）。解法是 Explicit Wait——用 `WebDriverWait` 等條件成立，不是 `time.sleep`。
-
-這兩件事不處理，測試的維護成本和穩定性都撐不住規模。接下來兩篇就處理這兩個問題。
+**第二，沒有等待。** `find_element` 找不到就立刻拋 `NoSuchElementException`，不等頁面載入或動畫結束；真實 app 有非同步渲染與網路延遲，硬找會讓測試 flaky。解法是 Explicit Wait——`WebDriverWait` 等條件成立，不是 `time.sleep`。接下來兩篇處理這兩個問題。
 
 ## 帶得走
 
