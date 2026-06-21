@@ -99,6 +99,8 @@ export default function AdminCourseEdit() {
       {!isNew && (
         <div className="mb-5">
           <h2 className="text-sm font-bold mb-2">章節（{chapters.length}）</h2>
+          <a href={`/course/${form.slug}?preview=1`} target="_blank" rel="noreferrer"
+            className="inline-block text-xs border px-3 py-2 rounded mb-4 hover:bg-gray-100">預覽課程頁</a>
           <div className="space-y-2">
             {chapters.map((c, i) => (
               <div key={c.id} className="flex items-center gap-3 border rounded p-2">
