@@ -111,9 +111,9 @@ export default function BlogPost() {
   useEffect(() => {
     if (!post?.published_at) return
     Promise.all([
-      supabase.from('posts').select('title, slug').eq('published', true)
+      supabase.from('posts').select('title, slug').eq('published', true).is('course_id', null)
         .lt('published_at', post.published_at).order('published_at', { ascending: false }).limit(1),
-      supabase.from('posts').select('title, slug').eq('published', true)
+      supabase.from('posts').select('title, slug').eq('published', true).is('course_id', null)
         .gt('published_at', post.published_at).order('published_at', { ascending: true }).limit(1),
     ]).then(([prev, next]) => {
       setAdjacent({ prev: prev.data?.[0] ?? null, next: next.data?.[0] ?? null })
@@ -126,7 +126,7 @@ export default function BlogPost() {
     const seriesTag = post.tags.find(t => t.includes('系列'))
     if (!seriesTag) return
     supabase.from('posts').select('title, slug, published_at')
-      .eq('published', true).contains('tags', [seriesTag])
+      .eq('published', true).is('course_id', null).contains('tags', [seriesTag])
       .order('published_at', { ascending: true })
       .then(({ data }) => {
         if (data && data.length > 1) setSeriesPosts(data)
