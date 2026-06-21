@@ -20,6 +20,7 @@ describe('usePosts', () => {
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
       order: vi.fn().mockResolvedValue({ data: mockPosts, error: null }),
     })
   })
@@ -34,6 +35,7 @@ describe('usePosts', () => {
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
       contains: vi.fn().mockReturnThis(),
       order: vi.fn().mockResolvedValue({
         data: [mockPosts[0]],
@@ -44,5 +46,18 @@ describe('usePosts', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.posts).toHaveLength(1)
     expect(result.current.posts[0].title).toBe('Post A')
+  })
+
+  it('excludes course chapters via .is(course_id, null)', async () => {
+    const isSpy = vi.fn().mockReturnThis()
+    supabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: isSpy,
+      order: vi.fn().mockResolvedValue({ data: mockPosts, error: null }),
+    })
+    const { result } = renderHook(() => usePosts())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(isSpy).toHaveBeenCalledWith('course_id', null)
   })
 })

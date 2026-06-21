@@ -14,6 +14,7 @@ export function usePosts(tag = null) {
       .from('posts')
       .select('id, title, slug, excerpt, tags, published_at')
       .eq('published', true)
+      .is('course_id', null)
 
     if (tag) {
       query = query.contains('tags', [tag])
