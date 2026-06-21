@@ -28,6 +28,7 @@ class LoginPage:
     USERNAME  = (AppiumBy.ACCESSIBILITY_ID, "username")
     PASSWORD  = (AppiumBy.ACCESSIBILITY_ID, "password")
     LOGIN_BTN = (AppiumBy.ACCESSIBILITY_ID, "login_btn")
+    ERROR_MSG = (AppiumBy.ACCESSIBILITY_ID, "error_msg")
 
     def __init__(self, driver):
         self.driver = driver
@@ -39,6 +40,9 @@ class LoginPage:
         self.driver.find_element(*self.LOGIN_BTN).click()
         # 3. 回傳下一頁 page 物件
         return HomePage(self.driver)
+
+    def error_is_shown(self) -> bool:
+        return self.driver.find_element(*self.ERROR_MSG).is_displayed()
 ```
 
 locator 全都在最上面，看一眼就知道這個頁面管了哪些元件；`find_element(*self.USERNAME)` 用解包，不需要重複寫策略字串。
@@ -71,15 +75,13 @@ def test_login_success(driver):
     assert home.welcome_message_is_displayed()   # 斷言在 test，不在 page
 
 def test_login_wrong_password(driver):
-    LoginPage(driver).login("demo", "wrong_pw")
-    # 登入失敗不跳頁，所以不需要回傳值
-    error = driver.find_element(
-        AppiumBy.ACCESSIBILITY_ID, "error_msg"
-    )
-    assert error.is_displayed()
+    # 登入失敗不跳頁，頁面仍在 LoginPage，所以直接對同一個物件查詢狀態
+    login = LoginPage(driver)
+    login.login("demo", "wrong_pw")
+    assert login.error_is_shown()
 ```
 
-`test_login_success` 甚至連 `AppiumBy` 都不用 import——所有 locator 都藏在 `LoginPage` 裡。test 讀起來就是業務語言：登入，然後驗歡迎訊息有沒有顯示。
+兩個 test 都不需要 import `AppiumBy`——所有 locator 都藏在 `LoginPage` 裡。test 讀起來就是業務語言：登入成功驗歡迎訊息、登入失敗驗錯誤提示，沒有任何定位細節外漏。
 
 失敗訊息也更清楚：如果 `login()` 噴錯，代表操作壞了；如果 `assert` 失敗，代表預期行為沒達到。兩件事分得很開。
 
