@@ -69,6 +69,32 @@ CREATE TRIGGER photo_projects_set_updated_at
   BEFORE UPDATE ON photo_projects
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
+-- Courses (課程實體；章節內文存在 posts，以 course_id 關聯)
+CREATE TABLE IF NOT EXISTS courses (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug          text UNIQUE NOT NULL,
+  title         text NOT NULL,
+  subtitle      text,
+  description   text,
+  cover_url     text,
+  tags          text[] DEFAULT '{}',
+  published     boolean DEFAULT false,
+  display_order int DEFAULT 0,
+  created_at    timestamptz DEFAULT now(),
+  updated_at    timestamptz DEFAULT now()
+);
+
+DROP TRIGGER IF EXISTS courses_set_updated_at ON courses;
+CREATE TRIGGER courses_set_updated_at
+  BEFORE UPDATE ON courses
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- Course chapters live in posts: link + per-chapter cover.
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS course_id    uuid REFERENCES courses(id) ON DELETE SET NULL;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS course_order int;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS cover_url    text;
+CREATE INDEX IF NOT EXISTS posts_course_idx ON posts (course_id, course_order);
+
 -- Singleton site settings row. The app reads id = 1.
 CREATE TABLE IF NOT EXISTS settings (
   id                    int PRIMARY KEY DEFAULT 1 CHECK (id = 1),
@@ -262,6 +288,18 @@ CREATE POLICY "anon read photo projects"
 DROP POLICY IF EXISTS "auth full access photo projects" ON photo_projects;
 CREATE POLICY "auth full access photo projects"
   ON photo_projects FOR ALL TO authenticated
+  USING (true) WITH CHECK (true);
+
+ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "anon read published courses" ON courses;
+CREATE POLICY "anon read published courses"
+  ON courses FOR SELECT TO anon
+  USING (published = true);
+
+DROP POLICY IF EXISTS "auth full access courses" ON courses;
+CREATE POLICY "auth full access courses"
+  ON courses FOR ALL TO authenticated
   USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "anon read settings" ON settings;
