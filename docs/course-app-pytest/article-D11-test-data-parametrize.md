@@ -39,8 +39,9 @@ def test_login(driver, user, pw, expected):
 
 隨著情境增多，把資料硬寫在腳本裡會讓 `parametrize` 清單越來越長，而且測試資料和程式邏輯綁在一起——行銷要加一組測試帳號，還得動程式碼。把資料改放 JSON，腳本只負責讀進來：
 
+檔案 `tests/data/login_cases.json`：
+
 ```json
-// tests/data/login_cases.json
 [
   {"user": "demo",  "pw": "correct", "expected": "home_title"},
   {"user": "demo",  "pw": "wrong",   "expected": "error_msg"},
@@ -73,28 +74,27 @@ def test_login_from_file(driver, user, pw, expected):
 
 ## 帳號池：避免併發干擾
 
-用 `pytest-xdist` 開多個 worker 跑測試時，如果所有 worker 都用同一組帳號登入，後台 session 會互踢，測試互相干擾。解法是帳號池：每個 worker 拿走一個專屬帳號，跑完再還回去。
+用 `pytest-xdist` 開多個 worker 跑測試時，如果所有 worker 都用同一組帳號登入，後台 session 會互踢，測試互相干擾。解法是用 worker id 分帳號：xdist 給每個 worker 一個唯一 id（`gw0`、`gw1`……），依 id 的數字取帳號索引，每個 worker 自然拿到不同帳號，不需要跨進程同步。
+
+> 注意：`queue.Queue` 是 in-memory 物件，xdist 的每個 worker 是獨立進程，各有自己的記憶體空間，不能共享同一個 Queue。
 
 ```python
 # conftest.py（加在 driver fixture 旁）
-import queue
 import pytest
 
-# 準備足夠 worker 數量的測試帳號
-_ACCOUNT_POOL: queue.Queue = queue.Queue()
-for _acc in [
-    {"user": "qa_worker_1", "pw": "pw1"},
-    {"user": "qa_worker_2", "pw": "pw2"},
-    {"user": "qa_worker_3", "pw": "pw3"},
-]:
-    _ACCOUNT_POOL.put(_acc)
+ACCOUNTS = [
+    {"user": "qa_pool_01", "pw": "pw01"},
+    {"user": "qa_pool_02", "pw": "pw02"},
+    {"user": "qa_pool_03", "pw": "pw03"},
+    {"user": "qa_pool_04", "pw": "pw04"},
+]
 
 @pytest.fixture
-def account():
-    """每個測試從池子拿一組帳號，測完歸還。"""
-    acc = _ACCOUNT_POOL.get(timeout=30)   # 超過 30 秒拿不到就 fail，避免死等
-    yield acc
-    _ACCOUNT_POOL.put(acc)
+def account(request):
+    # xdist 會給每個 worker 一個 id：gw0, gw1, ...；單進程跑時沒有這個 key
+    worker = getattr(request.config, "workerinput", {}).get("workerid", "gw0")
+    index = int(worker.replace("gw", ""))
+    return ACCOUNTS[index % len(ACCOUNTS)]
 ```
 
 ```python
@@ -108,11 +108,11 @@ def test_profile_display(driver, account):
     assert page.username_is_shown()
 ```
 
-每個 worker 各自拿到不同帳號，同時跑三個測試也不會互踢 session。帳號數量設成和 `-n` 的 worker 數一致，多了浪費、少了 `get(timeout=30)` 會讓測試 fail 而不是卡死。
+每個 worker 各自拿到不同帳號，同時跑多個測試也不會互踢 session。帳號數量對齊 `-n` 的 worker 數即可；`% len(ACCOUNTS)` 確保 index 不越界，帳號比 worker 少時會循環復用。
 
 ## 帶得走
 
 - `@pytest.mark.parametrize` 把資料和流程分開；一份腳本展開成多筆測試，失敗訊息帶參數值，定位問題快。
 - 情境超過五組就考慮外部化——JSON/YAML 檔只放資料，腳本只負責讀；新增情境零改程式。
-- 併發跑測試時，共用帳號會互踢 session；帳號池（`queue.Queue`）讓每個 worker 各拿一組，跑完自動歸還。
-- 帳號池數量對齊 `-n` 的 worker 數；用 `timeout` 而非無限等待，跑不到帳號就快速 fail，不卡 CI。
+- 併發跑測試時，共用帳號會互踢 session；用 xdist worker id 對應帳號索引，每個 worker 拿到自己的帳號，不需要跨進程同步。
+- `queue.Queue` 是 in-memory 物件，xdist workers 是獨立進程，無法共享；正確做法是依 worker id 直接取帳號，帳號數量對齊 `-n` 的 worker 數即可。
