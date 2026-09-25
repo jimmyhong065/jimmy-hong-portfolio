@@ -11,7 +11,7 @@ status: draft
 
 ## 把 SLO 翻成 threshold
 
-觀念課說過，一條好 SLO 要有「百分位 + 閾值 + 條件」。在 k6 直接寫進 `options.thresholds`：
+觀念系列說過，一條好 SLO 要有「百分位 + 閾值 + 條件」。在 k6 直接寫進 `options.thresholds`：
 
 ```javascript
 export const options = {
@@ -36,11 +36,11 @@ thresholds: {
 }
 ```
 
-`delayAbortEval: '10s'` 是給暖機一點緩衝（觀念課說的暖機段數據不可信），10 秒後才開始認真判定。
+`delayAbortEval: '10s'` 是給暖機一點緩衝（觀念系列說的暖機段數據不可信），10 秒後才開始認真判定。
 
 ## 對特定請求下門檻（用 tag）
 
-整體 `http_req_duration` 會把所有請求混在一起。但你常常只在乎「下單」這條關鍵鏈（觀念課：SLO 要分交易）。用 tag 區隔：
+整體 `http_req_duration` 會把所有請求混在一起。但你常常只在乎「下單」這條關鍵鏈（觀念系列：SLO 要分交易）。用 tag 區隔：
 
 ```javascript
 const res = http.post(`${BASE}/orders`, body, {

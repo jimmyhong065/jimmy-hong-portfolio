@@ -7,7 +7,7 @@ status: draft
 
 # 把 k6 接進 GitHub Actions
 
-觀念課的最後一課講「效能常態化」——把效能測試接進 CI、用門檻擋退化。這篇就把它做出來：k6 + GitHub Actions。
+觀念系列的最後一篇講「效能常態化」——把效能測試接進 CI、用門檻擋退化。這篇就把它做出來：k6 + GitHub Actions。
 
 ## 為什麼這件事成立
 

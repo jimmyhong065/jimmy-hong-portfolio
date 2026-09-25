@@ -65,7 +65,7 @@ k6 → InfluxDB（時間序列儲存）→ Grafana（視覺化）
 
 InfluxDB 1.x 在這個組合裡只是「指標存放桶」，不需要額外設定；Grafana 已預載好 datasource 和 dashboard，開箱即用。
 
-**想改成測自己的 API？** 最簡單的做法是把你前幾課寫的 script.js 放進 `scripts/` 資料夾，用 docker compose 的 k6 服務跑：
+**想改成測自己的 API？** 最簡單的做法是把你前幾篇寫的 script.js 放進 `scripts/` 資料夾，用 docker compose 的 k6 服務跑：
 
 ```bash
 # docker-compose.yml 裡的 k6 服務已設好 K6_OUT，volumes 掛好 scripts/
@@ -74,7 +74,7 @@ docker compose run k6 run /scripts/your-script.js
 
 ### 3b. CI/生產端：Prometheus remote-write 方案
 
-這是做長期趨勢看板的主流（觀念課常態化篇的對應實作）：
+這是做長期趨勢看板的主流（觀念系列常態化篇的對應實作）：
 
 ```bash
 K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write \
@@ -93,7 +93,7 @@ k6 run --out experimental-prometheus-rw script.js
 
 ## 4. New Relic / DataDog / OTel（跟服務端對齊）
 
-把 k6 指標送到 APM 平台，最大的價值是**跟服務端監控放在同一條時間軸**——壓測的 RT 飆高時，正好對照看伺服器的 CPU、GC、DB 連接池發生什麼（這就是觀念課「客戶端 vs 服務端對照」）。
+把 k6 指標送到 APM 平台，最大的價值是**跟服務端監控放在同一條時間軸**——壓測的 RT 飆高時，正好對照看伺服器的 CPU、GC、DB 連接池發生什麼（這就是觀念系列「客戶端 vs 服務端對照」）。
 
 常見做法：
 
@@ -102,7 +102,7 @@ k6 run --out experimental-prometheus-rw script.js
 
 ## 客戶端數據 ≠ 全部
 
-提醒一個觀念課反覆講的點：k6 報的是**客戶端視角**的數字（含網路往返）。它告訴你「慢了、錯了」，但「為什麼慢」要靠服務端監控回答。所以觀測的終極目標，是讓 k6 的曲線和服務端的 USE/RED 指標能對在一起看。
+提醒一個觀念系列反覆講的點：k6 報的是**客戶端視角**的數字（含網路往返）。它告訴你「慢了、錯了」，但「為什麼慢」要靠服務端監控回答。所以觀測的終極目標，是讓 k6 的曲線和服務端的 USE/RED 指標能對在一起看。
 
 ## 帶得走
 
@@ -111,4 +111,4 @@ k6 run --out experimental-prometheus-rw script.js
 - 送 New Relic / OTel 的最大價值，是跟服務端監控對齊時間軸找根因。
 - k6 是客戶端視角，定位根因仍要服務端監控。
 
-下一篇（最後一課）：把全部串起來，寫一個電商下單的完整 k6 實戰腳本。
+下一篇（最後一篇）：把全部串起來，寫一個電商下單的完整 k6 實戰腳本。

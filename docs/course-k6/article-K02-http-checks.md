@@ -32,7 +32,7 @@ PUT / PATCH / DELETE 同理（`http.put` / `http.patch` / `http.del`）。
 
 ## 關聯：把多步請求接起來
 
-真實業務是一連串請求，後一步要用前一步回傳的值（觀念課腳本設計篇講的「關聯」）。在 k6 就是純 JS：
+真實業務是一連串請求，後一步要用前一步回傳的值（觀念系列腳本設計篇講的「關聯」）。在 k6 就是純 JS：
 
 ```javascript
 const login = http.post(`${BASE}/login`, JSON.stringify({ user, pass }), params)

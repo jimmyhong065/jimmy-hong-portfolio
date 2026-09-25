@@ -7,7 +7,7 @@ status: draft
 
 # k6 指標體系：內建 + 自訂
 
-觀念課說過「看懂指標是第一門功課」。這篇看 k6 實際提供哪些指標，以及怎麼量到 HTTP 之外的「業務級」數字。
+觀念系列說過「看懂指標是第一門功課」。這篇看 k6 實際提供哪些指標，以及怎麼量到 HTTP 之外的「業務級」數字。
 
 ## 內建指標：先認得這幾個
 
@@ -20,7 +20,7 @@ status: draft
 | `vus` / `vus_max` | 當前 / 最大虛擬用戶數 |
 | `checks` | check 通過率 |
 
-`http_req_duration` 還能再拆：`http_req_waiting`（TTFB，伺服器處理時間）、`http_req_connecting`、`http_req_sending`/`receiving`。當總耗時高但 waiting 正常，瓶頸就在連線或網路，不在後端——這正是觀念課「響應時間拆分」的 k6 版。
+`http_req_duration` 還能再拆：`http_req_waiting`（TTFB，伺服器處理時間）、`http_req_connecting`、`http_req_sending`/`receiving`。當總耗時高但 waiting 正常，瓶頸就在連線或網路，不在後端——這正是觀念系列「響應時間拆分」的 k6 版。
 
 ## 自訂指標：量業務級的東西
 

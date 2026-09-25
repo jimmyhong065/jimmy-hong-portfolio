@@ -76,7 +76,7 @@ export const options = {
 
 ## ⚠️ 壓 production 的護欄
 
-能一鍵壓 production 很方便，但也危險（觀念課線上壓測篇講的風險控管）。至少要：
+能一鍵壓 production 很方便，但也危險（觀念系列線上壓測篇講的風險控管）。至少要：
 
 - 用 GitHub **Environments** 對 production 設 **required reviewers**，跑前要人核准。
 - production 的負載先從 light 開始，別讓人手滑直接 heavy。

@@ -64,7 +64,7 @@ class BasePage:
 
 ## page 繼承 BasePage
 
-上一課的 `LoginPage` 直接用 `find_element` 加上手動等待，現在改成繼承 `BasePage`、呼叫 `self.tap` / `self.type`：
+上一篇的 `LoginPage` 直接用 `find_element` 加上手動等待，現在改成繼承 `BasePage`、呼叫 `self.tap` / `self.type`：
 
 ```python
 # pages/login_page.py

@@ -11,7 +11,7 @@ status: draft
 
 ## group：把業務流分層
 
-`group` 讓 summary 按業務邏輯分組，報表一看就懂哪條流程慢（對應觀念課的「用戶旅程」）。
+`group` 讓 summary 按業務邏輯分組，報表一看就懂哪條流程慢（對應觀念系列的「用戶旅程」）。
 
 ```javascript
 import { group } from 'k6'
@@ -29,7 +29,7 @@ export default function () {
 
 ## 參數化：用 SharedArray（重要）
 
-觀念課強調參數化要還原真實分佈、帳號池要夠大。在 k6 做參數化**一定要用 `SharedArray`**——否則每個 VU 都會複製一份資料，幾萬 VU 時記憶體直接爆。
+觀念系列強調參數化要還原真實分佈、帳號池要夠大。在 k6 做參數化**一定要用 `SharedArray`**——否則每個 VU 都會複製一份資料，幾萬 VU 時記憶體直接爆。
 
 ```javascript
 import { SharedArray } from 'k6/data'
@@ -46,7 +46,7 @@ export default function () {
 }
 ```
 
-`__VU`（第幾個虛擬用戶）和 `__ITER`（第幾次迭代）是 k6 內建變數，常用來分配資料、避免所有 VU 都打同一筆（觀念課說的「假瓶頸 / 假快取命中」）。
+`__VU`（第幾個虛擬用戶）和 `__ITER`（第幾次迭代）是 k6 內建變數，常用來分配資料、避免所有 VU 都打同一筆（觀念系列說的「假瓶頸 / 假快取命中」）。
 
 ## env：切換環境與設定
 
