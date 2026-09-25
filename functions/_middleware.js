@@ -7,6 +7,7 @@ import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
 const SITE_URL = 'https://qa-lens.com'
+const ALT_HOSTS = ['jimmy-hong-portfolio.pages.dev', 'www.qa-lens.com']
 
 // 已知會抓取/索引的 bot（含 AI 搜尋）。比對小寫 UA 子字串即可。
 const BOT_UA = [
@@ -254,6 +255,14 @@ function notFoundResponse() {
 export async function onRequest(context) {
   const { request, next } = context
   const url = new URL(request.url)
+
+  // 非正式網域 301 到 qa-lens.com，避免重複內容。
+  // 只轉 production 的 pages.dev 與 www；<hash>.pages.dev preview 照常可用。
+  // 只轉 GET/HEAD，301 會把 POST 變 GET，API 呼叫會壞。
+  if (ALT_HOSTS.includes(url.hostname) && (request.method === 'GET' || request.method === 'HEAD')) {
+    return Response.redirect(`${SITE_URL}${url.pathname}${url.search}`, 301)
+  }
+
   const path = url.pathname.replace(/\/$/, '') || '/'
 
   if (path.startsWith('/assets/')) {
