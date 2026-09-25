@@ -23,10 +23,9 @@ export default function RelatedPosts({ currentSlug, tags }) {
   const [related, setRelated] = useState([])
 
   useEffect(() => {
-    if (!tags?.length) return
     supabase
       .from('posts')
-      .select('id, title, slug, tags')
+      .select('id, title, slug, tags, created_at')
       .eq('published', true)
       .neq('slug', currentSlug)
       .then(({ data }) => {
@@ -34,10 +33,9 @@ export default function RelatedPosts({ currentSlug, tags }) {
         const scored = data
           .map(p => ({
             ...p,
-            score: (p.tags ?? []).filter(t => tags.includes(t)).length,
+            score: (p.tags ?? []).filter(t => (tags ?? []).includes(t)).length,
           }))
-          .filter(p => p.score > 0)
-          .sort((a, b) => b.score - a.score)
+          .sort((a, b) => b.score - a.score || new Date(b.created_at) - new Date(a.created_at))
           .slice(0, 3)
         setRelated(scored)
       })

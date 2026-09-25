@@ -437,10 +437,10 @@ export default function BlogPost() {
             {/* Author bio */}
             <AuthorCard />
 
-            <EmailSubscribeForm />
-
             {/* Related posts */}
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />
+
+            <EmailSubscribeForm />
 
             {/* Prev / Next */}
             {(adjacent.prev || adjacent.next) && (
