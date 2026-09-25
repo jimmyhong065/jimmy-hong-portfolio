@@ -57,24 +57,41 @@ async function uploadArticle({ filePath, published }) {
 
   const shouldPublish = published && !REVIEW_MODE
 
-  const payload = {
+  // 檢查是否已存在
+  const { data: existing } = await supabase
+    .from('posts')
+    .select('id, published')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  const isNew = !existing
+
+  // 內容欄位（永遠更新）
+  const contentPayload = {
     title,
     slug,
     content,
     excerpt,
-    // 只有明確發布且非 REVIEW_MODE 才帶 published 欄位
-    ...(shouldPublish ? { published: true, published_at: new Date().toISOString() } : {}),
     ...(tags ? { tags } : {}),
   }
 
-  const { error } = await supabase
-    .from('posts')
-    .upsert(payload, { onConflict: 'slug' })
+  // published 狀態只有新文章才設，已存在的由 admin 管理
+  const statusPayload = isNew
+    ? { published: shouldPublish, published_at: shouldPublish ? new Date().toISOString() : null }
+    : {}
+
+  const payload = { ...contentPayload, ...statusPayload }
+
+  const { error } = isNew
+    ? await supabase.from('posts').insert(payload)
+    : await supabase.from('posts').update(contentPayload).eq('slug', slug)
 
   if (error) {
     console.error(`❌ ${slug}: ${error.message}`)
   } else {
-    const label = shouldPublish ? '✅ [發佈]' : REVIEW_MODE ? '👀 [待審]' : '📝 [草稿]'
+    const label = isNew
+      ? (shouldPublish ? '🆕 [新增+發佈]' : '🆕 [新增草稿]')
+      : '✅ [內容更新]'
     console.log(`${label} ${title}`)
   }
 }
