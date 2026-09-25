@@ -57,14 +57,18 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GPNHE3PPP"></script>
+  <!-- Google Analytics 4 — 不在 /admin 載入 -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    // 關閉自動 page_view，改由 SPA 路由手動送（排除 /admin）— 見 src/App.jsx GAPageView
-    gtag('config', 'G-9GPNHE3PPP', { send_page_view: false });
+    if (!window.location.pathname.startsWith('/admin')) {
+      var _ga = document.createElement('script');
+      _ga.async = true;
+      _ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-9GPNHE3PPP';
+      document.head.appendChild(_ga);
+      gtag('js', new Date());
+      gtag('config', 'G-9GPNHE3PPP', { send_page_view: false });
+    }
   </script>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bb83b950ea2c472f868954ebe430b1ae"}'></script>
