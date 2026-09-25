@@ -46,6 +46,21 @@ describe('CourseLanding', () => {
     expect(screen.getByText('1 / 2 章已讀')).toBeInTheDocument()
   })
 
+  it('shows default thumbnail only for chapters without cover', () => {
+    useCourse.mockReturnValue({
+      course: { title: 'QA 溝通課', cover_url: null },
+      chapters: [
+        { slug: 'c1', title: '第一章', course_order: 1, cover_url: null },
+        { slug: 'c2', title: '第二章', course_order: 2, cover_url: 'https://example.com/c2.png' },
+      ],
+      loading: false,
+      notFound: false,
+    })
+    const { container } = renderAt('/course/qa-comm')
+    expect(screen.getAllByTestId('chapter-cover-fallback')).toHaveLength(1)
+    expect(container.querySelector('img[src="https://example.com/c2.png"]')).toBeInTheDocument()
+  })
+
   it('shows not found message', () => {
     useCourse.mockReturnValue({ course: null, chapters: [], loading: false, notFound: true })
     renderAt('/course/missing')

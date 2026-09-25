@@ -5,6 +5,21 @@ import Footer from '../components/Footer'
 import { useCourse } from '../hooks/useCourse'
 import { useReadHistory } from '../hooks/useReadHistory'
 
+// 章節沒封面時的預設縮圖：teal 漸層 + 書本圖示，跟 SeriesCard 的 teal 主色一致
+function ChapterCoverFallback() {
+  return (
+    <div
+      data-testid="chapter-cover-fallback"
+      className="w-full h-full bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center"
+    >
+      <svg viewBox="0 0 24 24" className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z" />
+        <path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z" />
+      </svg>
+    </div>
+  )
+}
+
 export default function CourseLanding() {
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
@@ -53,8 +68,10 @@ export default function CourseLanding() {
                 className="flex items-center gap-4 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <span className="text-sm text-gray-300 w-6 flex-shrink-0">{i + 1}</span>
-                <div className="w-14 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                  {c.cover_url && <img src={c.cover_url} alt="" className="w-full h-full object-cover" />}
+                <div className="w-14 h-10 rounded overflow-hidden flex-shrink-0">
+                  {c.cover_url
+                    ? <img src={c.cover_url} alt="" className="w-full h-full object-cover" />
+                    : <ChapterCoverFallback />}
                 </div>
                 <span className="flex-1 min-w-0 text-sm truncate">{c.title}</span>
                 {isRead(c.slug) && <span className="text-xs text-green-600 flex-shrink-0">✓ 已讀</span>}
