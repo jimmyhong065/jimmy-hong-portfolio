@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 讓 QA 少回報 flaky bug 的幾件事，RD 可以主動做
 
 ---

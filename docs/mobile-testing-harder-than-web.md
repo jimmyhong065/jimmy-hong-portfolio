@@ -1,5 +1,6 @@
 ---
 tags: ['行動測試', 'Appium', '測試策略', '自動化測試']
+status: published
 ---
 
 # App 測試為什麼比網頁測試難這麼多？

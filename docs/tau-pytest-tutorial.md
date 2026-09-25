@@ -1,5 +1,6 @@
 ---
 tags: ['pytest', 'Python', '自動化測試', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # pytest 從零開始：TAU 課程完整筆記

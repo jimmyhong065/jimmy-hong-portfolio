@@ -1,5 +1,6 @@
 ---
 tags: ['API 測試', '觀念', 'HTTP', '測試基礎']
+status: draft
 ---
 
 # QA 必懂的 HTTP：你每天都在用，但未必說得清楚

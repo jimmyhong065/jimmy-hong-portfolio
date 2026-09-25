@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 手動測試 App 的我，用 Claude Code 省了多少時間
 
 Capgemini《World Quality Report 2024–25》調查發現，QA 工程師有大量工時消耗在測試本體以外的週邊事務：整理 log、撰寫 bug report、解讀 API response。這些事不難，但它們吃掉你真正用來思考和判斷的精力。Claude Code 改變的就是這一塊。

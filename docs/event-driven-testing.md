@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 測試 Event-Driven 系統：當你沒辦法直接 assert 結果
 
 ---

@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Slack Command 讓 QA 流程少開三個工具
 
 ---

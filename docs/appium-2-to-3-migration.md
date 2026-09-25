@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Appium 2 升 Appium 3，我踩了哪些坑
 
 ---

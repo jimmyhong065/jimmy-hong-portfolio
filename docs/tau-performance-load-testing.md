@@ -1,5 +1,6 @@
 ---
 tags: ['效能測試', '負載測試', 'Performance Testing', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # QA 也要懂效能測試：TAU 課程完整筆記

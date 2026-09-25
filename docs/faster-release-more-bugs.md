@@ -1,3 +1,6 @@
+---
+status: published
+---
 # 為什麼加快 release 頻率之後，bug 反而變多了
 
 ---

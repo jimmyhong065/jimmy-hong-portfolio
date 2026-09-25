@@ -1,5 +1,6 @@
 ---
 tags: ['工程文化', 'Google', '新創', 'Code Review', '測試文化', 'Postmortem']
+status: published
 ---
 
 # 《Software Engineering at Google》讀完，我才知道新創少了什麼

@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 我怎麼跟 RD 說「這不是 bug，是 spec 沒定義」
 
 ---

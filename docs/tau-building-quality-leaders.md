@@ -1,5 +1,6 @@
 ---
 tags: ['QA 領導力', '職涯成長', '軟技能', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # 不需要 Manager 頭銜，QA 也能成為領導者

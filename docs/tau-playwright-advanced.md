@@ -1,5 +1,6 @@
 ---
 tags: ['Playwright', 'E2E 測試', '測試架構', 'CI/CD', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # Playwright 進階：讓測試從能跑，變成團隊敢信任的東西

@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # API contract 沒定清楚，QA 踩的坑長這樣
 
 ---

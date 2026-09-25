@@ -1,3 +1,6 @@
+---
+status: published
+---
 # 為什麼你的 unit test 覆蓋率 100% 但 QA 還是找到 bug
 
 ---

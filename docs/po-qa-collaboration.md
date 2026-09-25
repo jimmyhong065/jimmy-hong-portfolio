@@ -1,5 +1,6 @@
 ---
 tags: ['QA 流程', '團隊協作', 'Agile', '需求分析', 'QA 思維']
+status: draft
 ---
 
 # PO 和 QA 其實是同一個問題的兩面

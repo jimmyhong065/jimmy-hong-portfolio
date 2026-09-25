@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Shift-left 之後，RD 變得更累，品質也沒有變好
 
 ---

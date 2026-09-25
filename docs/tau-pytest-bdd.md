@@ -1,5 +1,6 @@
 ---
 tags: ['BDD', 'pytest-bdd', 'Python', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # BDD 不只是工具，是溝通框架：pytest-bdd 完整筆記

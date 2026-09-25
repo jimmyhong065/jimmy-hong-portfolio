@@ -1,5 +1,6 @@
 ---
 tags: ['Appium', 'pytest', 'CI/CD', '自動化測試', 'GitHub Actions', '行動測試']
+status: published
 ---
 
 # Appium 搭配 pytest 完整實務：從 fixture 設計到 CI 執行

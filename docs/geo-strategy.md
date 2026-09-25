@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # QA Lens — GEO 規劃文件
 
 **目標：** 讓 AI 搜尋引擎（Perplexity、ChatGPT、Claude、Gemini）在回答 QA 相關問題時，能夠引用 qa-lens.com 的文章。

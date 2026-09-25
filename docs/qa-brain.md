@@ -1,3 +1,6 @@
+---
+status: published
+---
 # QA Brain：讓 AI 真的懂你的產品，而不是亂猜
 
 ---

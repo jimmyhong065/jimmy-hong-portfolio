@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Contract Testing：前後端分離之後，誰來保證 API 不爛
 
 ---

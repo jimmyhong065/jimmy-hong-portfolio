@@ -1,5 +1,6 @@
 ---
 tags: ['Unit Testing', '單元測試', 'App 開發', '測試策略', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # App 工程師的 Unit Test 實戰課：你的測試真的在測東西嗎？

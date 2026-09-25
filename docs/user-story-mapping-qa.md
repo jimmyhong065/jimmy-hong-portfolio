@@ -1,5 +1,6 @@
 ---
 tags: ['User Story Mapping', '需求分析', 'QA 流程', '測試策略', 'Agile']
+status: published
 ---
 
 # 拿到票單的時候，QA 已經輸了

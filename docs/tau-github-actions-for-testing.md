@@ -1,5 +1,6 @@
 ---
 tags: ['GitHub Actions', 'CI/CD', '自動化測試', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # 用 GitHub Actions 跑測試：TAU 課程完整筆記

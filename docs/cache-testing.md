@@ -1,3 +1,6 @@
+---
+status: published
+---
 # Cache 測試：快取讓 bug 更難找，也讓 bug 更難修
 
 ---

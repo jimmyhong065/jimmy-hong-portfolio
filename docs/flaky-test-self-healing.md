@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Flaky Test 吃掉 40% 工時：Self-healing 自動化真的能解決嗎
 
 ---

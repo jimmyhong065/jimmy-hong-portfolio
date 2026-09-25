@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # QA 在 code review 能看到什麼，RD 自己不容易看到的
 
 ---

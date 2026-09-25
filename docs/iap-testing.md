@@ -1,3 +1,6 @@
+---
+status: published
+---
 # 測 IAP 和第三方整合：Apple、Google 的沙盒環境有多難搞
 
 ---

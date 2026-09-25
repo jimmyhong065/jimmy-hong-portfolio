@@ -1,3 +1,6 @@
+---
+status: published
+---
 # QA 工程師的第一條 GitHub Actions Pipeline
 
 ---

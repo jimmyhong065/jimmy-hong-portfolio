@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Visual Regression Testing：截圖比對不是你想的那麼簡單
 
 ---

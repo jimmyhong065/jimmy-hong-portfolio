@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 一張讓 RD 看不懂的 bug ticket，我學到了什麼
 
 ---

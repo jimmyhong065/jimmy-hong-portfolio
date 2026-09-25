@@ -1,3 +1,6 @@
+---
+status: published
+---
 # 一個 QA 搭幾個 RD 才夠用？我的判斷依據
 
 ---

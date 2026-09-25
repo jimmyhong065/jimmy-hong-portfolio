@@ -1,5 +1,6 @@
 ---
 tags: ['CI/CD', 'DevOps', 'GitHub Actions', '測試工具', 'QA 思維']
+status: published
 ---
 
 # GitHub Actions vs Jenkins：CI 工具怎麼選

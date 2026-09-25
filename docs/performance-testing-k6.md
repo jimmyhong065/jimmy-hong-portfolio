@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Performance Testing 不只是壓測：用 k6 找出真正的瓶頸
 
 ---

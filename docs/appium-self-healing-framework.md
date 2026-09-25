@@ -1,5 +1,6 @@
 ---
 tags: ['Appium', '自動化測試', 'AI 測試', '手機測試', 'Python']
+status: published
 ---
 
 # Self-Healing Appium 框架：讓定位器斷掉也能自動修復

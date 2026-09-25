@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Database Migration 測試：Schema 改了，舊資料會怎樣
 
 ---

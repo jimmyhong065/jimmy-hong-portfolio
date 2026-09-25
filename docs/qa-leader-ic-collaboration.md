@@ -1,5 +1,6 @@
 ---
 tags: ['團隊協作', 'QA 流程', 'Leader']
+status: published
 ---
 
 # Leader 說要改善流程，但我不知道怎麼配合

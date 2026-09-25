@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # AI 寫的 Code，QA 怎麼測？Copilot 時代的測試新挑戰
 
 ---

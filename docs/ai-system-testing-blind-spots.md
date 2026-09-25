@@ -1,3 +1,6 @@
+---
+status: published
+---
 # AI 系統上線前，你測過這些嗎？Taco Bell 和 McDonald's 的慘痛教訓
 
 ---

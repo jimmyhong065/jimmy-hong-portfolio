@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # 把 Appium 測試串進 GitHub Actions，讓手機測試自動跑
 
 ---

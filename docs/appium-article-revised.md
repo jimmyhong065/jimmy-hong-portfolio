@@ -1,3 +1,6 @@
+---
+status: published
+---
 # 那次 CI 全紅，我才搞懂 Appium 到底在做什麼
 
 > 改寫草稿｜原文：從 Appium 架構到元件定位

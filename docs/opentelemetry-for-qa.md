@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # OpenTelemetry 對 QA 的意義：Trace 讓除錯少問了一半的問題
 
 ---

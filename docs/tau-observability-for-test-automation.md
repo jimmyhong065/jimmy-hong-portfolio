@@ -1,5 +1,6 @@
 ---
 tags: ['自動化測試', '可觀測性', 'Observability', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # 測試自動化的可觀測性：TAU 課程完整筆記

@@ -1,5 +1,6 @@
 ---
 tags: ['CI/CD', 'DevOps', '測試策略', 'GitHub Actions', '自動化測試']
+status: published
 ---
 
 # CI 測試跑太慢？平行化策略與最佳化

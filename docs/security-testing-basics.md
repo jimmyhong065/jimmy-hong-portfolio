@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Security Testing 入門：不懂資安的 QA 能做的第一步
 
 ---

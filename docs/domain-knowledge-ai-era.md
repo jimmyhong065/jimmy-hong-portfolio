@@ -1,5 +1,6 @@
 ---
 tags: ['AI', '測試策略', '職涯']
+status: published
 ---
 
 # AI 時代，測試的 Domain Knowledge 比過去更重要

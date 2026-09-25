@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # ReportPortal AI 分析功能實戰：讓它真的幫你省時間
 
 自動化測試跑完之後，有多少時間花在「看為什麼這個測試失敗了」？Capgemini《World Quality Report》調查指出，分析測試結果與分類失敗原因是自動化 QA 工程師最耗時的工作之一，而這正是 ReportPortal 的 Auto-Analysis 設計要解決的問題——前提是你知道怎麼設定它。

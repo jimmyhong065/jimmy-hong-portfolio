@@ -1,5 +1,6 @@
 ---
 tags: ['DevOps', 'CI/CD', '測試策略', 'Pipeline', 'TAU 課程筆記', 'QA 學習']
+status: published
 ---
 
 # CI 過了不代表沒問題：DevOps 時代的測試策略全貌

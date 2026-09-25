@@ -1,3 +1,6 @@
+---
+status: draft
+---
 # Playwright 和 Appium 的取捨：我在 Mobile Web 兩個都用過
 
 ---
