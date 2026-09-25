@@ -29,3 +29,7 @@ docs/.obsidian/workspace.json
 docs/**/_preview.html
 *.epub
 images/
+
+# Local tooling / exports
+.obsidian/
+qa-lens.com-Coverage-*/
