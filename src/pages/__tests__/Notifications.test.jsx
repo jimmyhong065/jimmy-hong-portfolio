@@ -3,6 +3,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest'
 import Notifications from '../Notifications'
 
 vi.mock('../../components/Nav', () => ({ default: () => null }))
+vi.mock('react-helmet-async', () => ({ Helmet: () => null }))
 
 const mockMarkAllRead = vi.fn()
 let mockNotifications = [
