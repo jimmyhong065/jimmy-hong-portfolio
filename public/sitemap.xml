@@ -138,6 +138,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://qa-lens.com/blog/qa-to-rd-ratio</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://qa-lens.com/blog/tau-performance-load-testing</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -308,6 +314,18 @@
   <url>
     <loc>https://qa-lens.com/blog/domain-knowledge-ai-era</loc>
     <lastmod>2026-06-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/improve-company-quality</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://qa-lens.com/blog/bughunt-a03-consistency-oracles</loc>
+    <lastmod>2026-09-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
