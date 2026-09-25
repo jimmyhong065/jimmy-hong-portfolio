@@ -2,7 +2,7 @@
 title: 缺陷分級：Severity 不等於 Priority
 excerpt: 很多人把「嚴重度」和「優先級」混為一談，結果跟 RD、PM 雞同鴨講。這篇把兩者拆清楚——Severity 是技術影響、客觀、QA 定；Priority 是業務急迫、主觀、PM 定——再講 P0-P2 怎麼分與 Known Issue 取捨。
 tags: [缺陷分級, severity, priority, 缺陷管理, QA 流程]
-status: draft
+status: published
 ---
 
 # 缺陷分級：Severity 不等於 Priority
