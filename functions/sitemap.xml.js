@@ -9,6 +9,7 @@ const STATIC_PAGES = [
   { url: '/services', priority: '0.7', changefreq: 'monthly' },
   { url: '/about', priority: '0.7', changefreq: 'monthly' },
   { url: '/photo', priority: '0.8', changefreq: 'weekly' },
+  { url: '/faq', priority: '0.6', changefreq: 'monthly' },
 ]
 
 const XML_HEADERS = {
@@ -16,7 +17,7 @@ const XML_HEADERS = {
   'Cache-Control': 'public, max-age=3600',
 }
 
-function buildXml(posts) {
+function buildXml(posts, projects) {
   const staticUrls = STATIC_PAGES.map(p => `
   <url>
     <loc>${SITE_URL}${p.url}</loc>
@@ -32,8 +33,16 @@ function buildXml(posts) {
     <priority>0.6</priority>
   </url>`).join('') : ''
 
+  const projectUrls = Array.isArray(projects) ? projects.map(p => `
+  <url>
+    <loc>${SITE_URL}/projects/${p.id}</loc>
+    <lastmod>${p.created_at ? p.created_at.slice(0, 10) : ''}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`).join('') : ''
+
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}${projectUrls}
 </urlset>`
 }
 
@@ -44,12 +53,15 @@ export async function onRequest() {
   const timer = setTimeout(() => controller.abort(), 8000)
 
   try {
-    const postsRes = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal })
+    const [postsRes, projectsRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal }),
+      fetch(`${SUPABASE_URL}/rest/v1/projects?select=id,created_at`, { headers, signal: controller.signal }),
+    ])
     clearTimeout(timer)
-    const posts = await postsRes.json()
-    return new Response(buildXml(posts), { headers: XML_HEADERS })
+    const [posts, projects] = await Promise.all([postsRes.json(), projectsRes.json()])
+    return new Response(buildXml(posts, projects), { headers: XML_HEADERS })
   } catch {
     clearTimeout(timer)
-    return new Response(buildXml([]), { headers: XML_HEADERS })
+    return new Response(buildXml([], []), { headers: XML_HEADERS })
   }
 }
