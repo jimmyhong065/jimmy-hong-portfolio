@@ -7,7 +7,9 @@ import SEOHead from '../components/SEOHead'
 import BlogRow from '../components/BlogRow'
 import BlogCard from '../components/BlogCard'
 import TagFilter from '../components/TagFilter'
+import SeriesCard from '../components/SeriesCard'
 import { usePosts } from '../hooks/usePosts'
+import { useSeries } from '../hooks/useSeries'
 import { useBookmarks } from '../hooks/useBookmarks'
 import { useReadHistory } from '../hooks/useReadHistory'
 
@@ -34,6 +36,7 @@ export default function Blog() {
   const [page, setPage] = useState(1)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const { posts, loading } = usePosts()
+  const { series } = useSeries()
   const { isBookmarked } = useBookmarks()
   const { isRead } = useReadHistory()
   const [specialFilter, setSpecialFilter] = useState(null)
@@ -83,6 +86,17 @@ export default function Blog() {
       <main className="max-w-5xl mx-auto px-4 md:px-12 py-16">
         <p className="text-xs tracking-widest text-gray-400 uppercase mb-2">Blog</p>
         <h1 className="text-xl font-bold mb-8">文章</h1>
+        {series.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-4">
+              <h2 className="text-sm font-semibold text-gray-700">系列：一個主題從頭讀到尾</h2>
+              <a href="/series" className="text-xs text-gray-500 hover:text-gray-900 border-b border-gray-300 pb-px">全部系列 →</a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {series.slice(0, 3).map(s => <SeriesCard key={s.id} series={s} />)}
+            </div>
+          </section>
+        )}
         <div className="relative mb-6">
           <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

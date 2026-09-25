@@ -2,6 +2,8 @@
 // 真人 / 非 bot 一律原樣放行，SPA 行為不變。
 // 解決 SPA 對爬蟲是空殼的問題（Perplexity / GPTBot / Googlebot 才讀得到內容）。
 
+import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
+
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
 const SITE_URL = 'https://qa-lens.com'
@@ -35,6 +37,7 @@ function escapeHtml(str = '') {
 // 極簡 markdown → 純文字（給爬蟲讀，不求排版精準）
 function markdownToText(md = '') {
   return md
+    .replace(/<[^>]+>/g, ' ')                // 後台編輯過的文章是 HTML
     .replace(/```[\s\S]*?```/g, ' ')        // code block
     .replace(/`([^`]+)`/g, '$1')             // inline code
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')   // images
@@ -51,8 +54,8 @@ function buildDescription(post) {
 }
 
 // 把文章內容注入 index.html 殼
-function injectArticle(html, post) {
-  const url = `${SITE_URL}/blog/${post.slug}`
+function injectArticle(html, post, path = `/blog/${post.slug}`) {
+  const url = `${SITE_URL}${path}`
   const title = escapeHtml(post.title)
   const desc = buildDescription(post)
   const bodyText = escapeHtml(markdownToText(post.content))
@@ -128,12 +131,13 @@ function injectHome(html) {
 }
 
 // 列表頁 meta + 文章連結清單（幫爬蟲發現所有文章）
-function injectBlogList(html, posts) {
+function injectBlogList(html, posts, courses = []) {
   const title = '文章列表｜QA Lens'
   const desc = 'QA Lens 全部文章：軟體測試、QA 自動化、AI 測試、測試策略與職涯主題。'
   let out = injectHead(html, metaHead({ title, desc, url: `${SITE_URL}/blog` }))
+  const slugById = courseSlugMap(courses)
   const items = (Array.isArray(posts) ? posts : []).map(p => {
-    const u = `${SITE_URL}/blog/${p.slug}`
+    const u = `${SITE_URL}${postPath(p, slugById)}`
     return `  <li><a href="${u}">${escapeHtml(p.title)}</a>${p.excerpt ? ` — ${escapeHtml(p.excerpt.slice(0, 120))}` : ''}</li>`
   }).join('\n')
   out = injectBody(out, `<section>
@@ -151,7 +155,7 @@ async function fetchPostList() {
   const timer = setTimeout(() => controller.abort(), 6000)
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/posts?select=slug,title,excerpt&published=eq.true&order=published_at.desc`,
+      `${SUPABASE_URL}/rest/v1/posts?select=slug,course_id,title,excerpt&published=eq.true&order=published_at.desc`,
       { headers, signal: controller.signal },
     )
     clearTimeout(timer)
@@ -169,7 +173,7 @@ async function fetchPost(slug) {
   const timer = setTimeout(() => controller.abort(), 6000)
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/posts?select=slug,title,excerpt,content,tags,published_at&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+      `${SUPABASE_URL}/rest/v1/posts?select=slug,course_id,title,excerpt,content,tags,published_at&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`,
       { headers, signal: controller.signal },
     )
     clearTimeout(timer)
@@ -179,6 +183,48 @@ async function fetchPost(slug) {
     clearTimeout(timer)
     return null
   }
+}
+
+// 系列首頁 meta + 章節連結清單
+function injectCourse(html, course, chapters) {
+  const url = `${SITE_URL}/course/${course.slug}`
+  const desc = course.description || course.subtitle || course.title
+  let out = injectHead(html, metaHead({ title: `${course.title}｜QA Lens`, desc: desc.slice(0, 160), url }))
+  const items = chapters.map(c =>
+    `  <li><a href="${url}/${c.slug}">${escapeHtml(c.title)}</a>${c.excerpt ? ` — ${escapeHtml(c.excerpt.slice(0, 120))}` : ''}</li>`,
+  ).join('\n')
+  out = injectBody(out, `<section>
+  <h1>${escapeHtml(course.title)}</h1>
+  ${course.description ? `<p>${escapeHtml(course.description)}</p>` : ''}
+  <ol>
+${items}
+  </ol>
+</section>`)
+  return out
+}
+
+async function fetchJson(path) {
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 6000)
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers, signal: controller.signal })
+    clearTimeout(timer)
+    const rows = await res.json()
+    return Array.isArray(rows) ? rows : []
+  } catch {
+    clearTimeout(timer)
+    return []
+  }
+}
+
+async function fetchCourse(slug) {
+  const [course] = await fetchJson(`courses?select=id,slug,title,subtitle,description&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`)
+  return course ?? null
+}
+
+async function fetchChapters(courseId) {
+  return fetchJson(`posts?select=slug,title,excerpt&published=eq.true&course_id=eq.${courseId}&order=course_order`)
 }
 
 // 給爬蟲的真 404：狀態碼 404 + noindex，並留一條回文章列表的路讓爬蟲繼續走。
@@ -244,12 +290,30 @@ export async function onRequest(context) {
     // 舊做法 return next() 會讓已刪除的文章變成 soft 404（200 + 「找不到此文章」），
     // Google 會持續抓取並歸類成「未建立索引」，拖累整站索引狀況。
     if (!post) return notFoundResponse()
+    // 已發布系列的章節：正式網址在 /course/ 底下
+    if (post.course_id) {
+      const target = postPath(post, courseSlugMap(await fetchPublishedCourses()))
+      if (target !== path) return Response.redirect(`${SITE_URL}${target}`, 301)
+    }
     inject = html => injectArticle(html, post)
+  } else if (path.startsWith('/course/')) {
+    const [, , courseSlug, chapterSlug, extra] = path.split('/').map(decodeURIComponent)
+    if (extra !== undefined) return next()
+    const course = await fetchCourse(courseSlug)
+    if (!course) return notFoundResponse()
+    if (chapterSlug) {
+      const post = await fetchPost(chapterSlug)
+      if (!post || post.course_id !== course.id) return notFoundResponse()
+      inject = html => injectArticle(html, post, path)
+    } else {
+      const chapters = await fetchChapters(course.id)
+      inject = html => injectCourse(html, course, chapters)
+    }
   } else if (path === '/') {
     inject = injectHome
   } else if (path === '/blog') {
-    const posts = await fetchPostList()
-    inject = html => injectBlogList(html, posts)
+    const [posts, courses] = await Promise.all([fetchPostList(), fetchPublishedCourses()])
+    inject = html => injectBlogList(html, posts, courses)
   } else {
     return next()
   }

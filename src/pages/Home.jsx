@@ -3,7 +3,9 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import SEOHead from '../components/SEOHead'
 import ProjectCard from '../components/ProjectCard'
+import SeriesCard from '../components/SeriesCard'
 import { usePosts } from '../hooks/usePosts'
+import { useSeries } from '../hooks/useSeries'
 import { useProjects } from '../hooks/useProjects'
 import { useSiteSettings } from '../contexts/SiteSettingsContext'
 import { useServices } from '../hooks/useServices'
@@ -28,6 +30,7 @@ function useFadeIn() {
 export default function Home() {
   useFadeIn()
   const { posts } = usePosts()
+  const { series } = useSeries()
   const { projects } = useProjects()
   const { settings } = useSiteSettings()
   const hiddenSections = settings.hidden_sections ?? []
@@ -211,6 +214,22 @@ export default function Home() {
             </div>
           </section>
         </div>
+        )}
+
+        {/* ── Series — white（非同步載入，不加 data-fade） ── */}
+        {!hiddenSections.includes('series') && series.length > 0 && (
+          <section className="max-w-5xl mx-auto px-4 md:px-12 py-16">
+            <div className="flex items-baseline justify-between mb-8">
+              <div>
+                <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">系列</p>
+                <h2 className="text-xl font-bold">一個主題，從頭讀到尾</h2>
+              </div>
+              <a href="/series" className="text-xs text-gray-500 hover:text-gray-900 border-b border-gray-300 pb-px">全部系列 →</a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {series.slice(0, 3).map(s => <SeriesCard key={s.id} series={s} />)}
+            </div>
+          </section>
         )}
 
         {/* ── Dual identity — white ── */}

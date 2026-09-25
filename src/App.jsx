@@ -31,6 +31,7 @@ const AdminPhotoProjectEdit = lazy(() => import('./pages/admin/AdminPhotoProject
 const AdminCourses = lazy(() => import('./pages/admin/AdminCourses'))
 const AdminCourseEdit = lazy(() => import('./pages/admin/AdminCourseEdit'))
 const CourseLanding = lazy(() => import('./pages/CourseLanding'))
+const Series = lazy(() => import('./pages/Series'))
 const CourseChapter = lazy(() => import('./pages/CourseChapter'))
 const AdminServices = lazy(() => import('./pages/admin/AdminServices'))
 const AdminServiceEdit = lazy(() => import('./pages/admin/AdminServiceEdit'))
@@ -102,6 +103,7 @@ function AppRoutes() {
         <Route path="/projects/:id" element={<HiddenRoute pageKey="projects"><ProjectDetail /></HiddenRoute>} />
         <Route path="/blog" element={<HiddenRoute pageKey="blog"><Blog /></HiddenRoute>} />
         <Route path="/blog/:slug" element={<HiddenRoute pageKey="blog"><BlogPost /></HiddenRoute>} />
+        <Route path="/series" element={<HiddenRoute pageKey="series"><Series /></HiddenRoute>} />
         <Route path="/course/:slug" element={<CourseLanding />} />
         <Route path="/course/:slug/:chapterSlug" element={<CourseChapter />} />
         <Route path="/saved" element={<Saved />} />

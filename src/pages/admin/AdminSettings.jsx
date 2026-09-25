@@ -20,6 +20,7 @@ const FONT_OPTIONS = [
 
 const PAGE_OPTIONS = [
   { key: 'blog', label: '部落格' },
+  { key: 'series', label: '系列' },
   { key: 'projects', label: '作品集' },
   { key: 'services', label: '服務' },
   { key: 'faq', label: 'FAQ' },
@@ -31,6 +32,7 @@ const SECTION_OPTIONS = [
   { key: 'dual_identity',     label: '雙身份介紹' },
   { key: 'featured_projects', label: '精選作品' },
   { key: 'recent_posts',      label: '最新文章' },
+  { key: 'series',            label: '系列' },
   { key: 'services',          label: '服務區塊' },
 ]
 

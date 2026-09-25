@@ -1,19 +1,23 @@
+import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
+
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
 const SITE_URL = 'https://qa-lens.com'
 
 export async function onRequest() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/posts?select=title,slug,excerpt,tags,published_at&published=eq.true&order=published_at.desc`,
+    `${SUPABASE_URL}/rest/v1/posts?select=title,slug,course_id,excerpt,tags,published_at&published=eq.true&order=published_at.desc`,
     { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
   ).catch(() => null)
 
   const posts = res?.ok ? await res.json() : []
+  const courses = await fetchPublishedCourses()
+  const slugById = courseSlugMap(courses)
 
   const articleLines = posts.map(p => {
     const tags = (p.tags ?? []).join(', ')
     const desc = p.excerpt ? ` ${p.excerpt}` : (tags ? ` 主題：${tags}` : '')
-    return `- [${p.title}](${SITE_URL}/blog/${p.slug}):${desc}`
+    return `- [${p.title}](${SITE_URL}${postPath(p, slugById)}):${desc}`
   }).join('\n')
 
   const body = `# QA Lens — 測試工程師的技術筆記
@@ -27,6 +31,11 @@ Jimmy Hong，QA Engineer，任職於台灣科技業。專長：測試流程設�
 ## 部落格文章
 
 ${articleLines}
+${courses.length ? `
+## 系列
+
+${courses.map(c => `- [${c.title}](${SITE_URL}/course/${c.slug})${c.description ? `: ${c.description}` : ''}`).join('\n')}
+` : ''}
 
 ## 分類主題
 

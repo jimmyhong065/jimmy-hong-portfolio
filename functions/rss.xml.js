@@ -1,10 +1,12 @@
+import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
+
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
 const SITE_URL = 'https://qa-lens.com'
 
 export async function onRequest() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/posts?select=title,slug,excerpt,published_at&published=eq.true&order=published_at.desc`,
+    `${SUPABASE_URL}/rest/v1/posts?select=title,slug,course_id,excerpt,published_at&published=eq.true&order=published_at.desc`,
     {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -14,12 +16,13 @@ export async function onRequest() {
   )
 
   const posts = await res.json()
+  const slugById = courseSlugMap(await fetchPublishedCourses())
 
   const items = posts.map(p => `
     <item>
       <title><![CDATA[${p.title}]]></title>
-      <link>${SITE_URL}/blog/${p.slug}</link>
-      <guid isPermaLink="true">${SITE_URL}/blog/${p.slug}</guid>
+      <link>${SITE_URL}${postPath(p, slugById)}</link>
+      <guid isPermaLink="true">${SITE_URL}${postPath(p, slugById)}</guid>
       <description><![CDATA[${p.excerpt ?? ''}]]></description>
       <pubDate>${new Date(p.published_at).toUTCString()}</pubDate>
     </item>`).join('')

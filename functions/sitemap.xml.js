@@ -1,3 +1,5 @@
+import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
+
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
 const SITE_URL = 'https://qa-lens.com'
@@ -17,7 +19,8 @@ const XML_HEADERS = {
   'Cache-Control': 'public, max-age=3600',
 }
 
-function buildXml(posts, projects) {
+function buildXml(posts, projects, courses = []) {
+  const slugById = courseSlugMap(courses)
   const staticUrls = STATIC_PAGES.map(p => `
   <url>
     <loc>${SITE_URL}${p.url}</loc>
@@ -27,7 +30,7 @@ function buildXml(posts, projects) {
 
   const postUrls = Array.isArray(posts) ? posts.map(p => `
   <url>
-    <loc>${SITE_URL}/blog/${p.slug}</loc>
+    <loc>${SITE_URL}${postPath(p, slugById)}</loc>
     <lastmod>${p.published_at ? p.published_at.slice(0, 10) : ''}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -41,8 +44,15 @@ function buildXml(posts, projects) {
     <priority>0.7</priority>
   </url>`).join('') : ''
 
+  const courseUrls = courses.map(c => `
+  <url>
+    <loc>${SITE_URL}/course/${c.slug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join('')
+
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${postUrls}${projectUrls}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${courseUrls}${postUrls}${projectUrls}
 </urlset>`
 }
 
@@ -53,13 +63,14 @@ export async function onRequest() {
   const timer = setTimeout(() => controller.abort(), 8000)
 
   try {
-    const [postsRes, projectsRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal }),
+    const [postsRes, projectsRes, courses] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/posts?select=slug,course_id,published_at&published=eq.true&order=published_at.desc`, { headers, signal: controller.signal }),
       fetch(`${SUPABASE_URL}/rest/v1/projects?select=id,created_at`, { headers, signal: controller.signal }),
+      fetchPublishedCourses(controller.signal),
     ])
     clearTimeout(timer)
     const [posts, projects] = await Promise.all([postsRes.json(), projectsRes.json()])
-    return new Response(buildXml(posts, projects), { headers: XML_HEADERS })
+    return new Response(buildXml(posts, projects, courses), { headers: XML_HEADERS })
   } catch {
     clearTimeout(timer)
     return new Response(buildXml([], []), { headers: XML_HEADERS })

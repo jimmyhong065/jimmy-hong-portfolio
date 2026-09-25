@@ -9,6 +9,7 @@ import { SVG_MAP, FALLBACK_TABS } from './NavIconMap'
 const DESKTOP_LINKS = [
   { key: 'projects', to: '/projects', label: '作品集' },
   { key: 'blog', to: '/blog', label: '部落格' },
+  { key: 'series', to: '/series', label: '系列' },
   { key: 'saved', to: '/saved', label: '收藏' },
   { key: 'faq', to: '/faq', label: 'FAQ' },
   { key: 'wish', to: '/wish', label: '許願池' },

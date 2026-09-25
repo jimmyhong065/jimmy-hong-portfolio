@@ -1,6 +1,6 @@
 // src/pages/BlogPost.jsx
 import { useState, useEffect, useRef } from 'react'
-import { useParams, Link, useSearchParams } from 'react-router-dom'
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
@@ -9,6 +9,9 @@ import TableOfContents from '../components/TableOfContents'
 import RelatedPosts from '../components/RelatedPosts'
 import EmailSubscribeForm from '../components/EmailSubscribeForm'
 import AuthorCard from '../components/AuthorCard'
+import SeriesCard from '../components/SeriesCard'
+import { useSeries } from '../hooks/useSeries'
+import { pickSeriesForTags } from '../lib/series'
 import ScrollToTop from '../components/ScrollToTop'
 import { useReadingProgress } from '../hooks/useReadingProgress'
 import { useActiveHeading } from '../hooks/useActiveHeading'
@@ -32,6 +35,8 @@ export default function BlogPost() {
   const [adjacent, setAdjacent] = useState({ prev: null, next: null })
   const [copied, setCopied] = useState(false)
   const [seriesPosts, setSeriesPosts] = useState([])
+  const navigate = useNavigate()
+  const { series: allSeries } = useSeries()
   const progress = useReadingProgress()
   const { fontSize, dark, incFontSize, decFontSize, toggleDark } = useArticleSettings()
   const swipeRef = useSwipeNav({
@@ -106,6 +111,15 @@ export default function BlogPost() {
       setLoading(false)
     })
   }, [slug, isPreview])
+
+  // 已發布系列的章節，正式網址在 /course/ 底下
+  useEffect(() => {
+    if (!post?.course_id || isPreview) return
+    supabase.from('courses').select('slug').eq('id', post.course_id).eq('published', true).maybeSingle()
+      .then(({ data }) => {
+        if (data) navigate(`/course/${data.slug}/${post.slug}`, { replace: true })
+      })
+  }, [post?.course_id, post?.slug, isPreview, navigate])
 
   // Prev/next
   useEffect(() => {
@@ -436,6 +450,14 @@ export default function BlogPost() {
 
             {/* Author bio */}
             <AuthorCard />
+
+            {/* Related series */}
+            {pickSeriesForTags(allSeries, post.tags, 1).map(s => (
+              <div key={s.id} className="mt-12">
+                <p className="text-xs font-medium text-gray-500 mb-3 uppercase tracking-widest">想讀完整一點？</p>
+                <SeriesCard series={s} />
+              </div>
+            ))}
 
             {/* Related posts */}
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />
