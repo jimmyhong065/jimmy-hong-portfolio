@@ -14,6 +14,11 @@ const BOT_UA = [
   'applebot', 'duckduckbot', 'yandexbot', 'baiduspider',
 ]
 
+// 改過 slug 的文章：舊網址 301 到新網址（真人與 bot 都轉）
+const SLUG_REDIRECTS = {
+  '2026-05-16-draft': 'closed-bug-ticket-real-bug-report',
+}
+
 function isBot(ua) {
   const s = ua.toLowerCase()
   return BOT_UA.some(b => s.includes(b))
@@ -220,6 +225,10 @@ export async function onRequest(context) {
     }
     return res
   }
+
+  const moved = path.match(/^\/blog\/([^/]+)$/)
+  const target = moved && SLUG_REDIRECTS[decodeURIComponent(moved[1])]
+  if (target) return Response.redirect(`${SITE_URL}/blog/${target}`, 301)
 
   const ua = request.headers.get('user-agent') || ''
 
