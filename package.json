@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name jimmy-hong-portfolio"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name jimmy-hong-portfolio",
+    "publish": "node scripts/publish.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
