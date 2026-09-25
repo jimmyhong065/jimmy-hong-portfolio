@@ -176,6 +176,30 @@ async function fetchPost(slug) {
   }
 }
 
+// 給爬蟲的真 404：狀態碼 404 + noindex，並留一條回文章列表的路讓爬蟲繼續走。
+function notFoundResponse() {
+  const body = `<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>找不到頁面｜QA Lens</title>
+</head>
+<body>
+<h1>找不到這篇文章</h1>
+<p>這個網址的文章已經下架或不存在。</p>
+<p><a href="${SITE_URL}/blog">回文章列表</a></p>
+</body>
+</html>`
+  return new Response(body, {
+    status: 404,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+    },
+  })
+}
+
 export async function onRequest(context) {
   const { request, next } = context
   const url = new URL(request.url)
@@ -207,7 +231,10 @@ export async function onRequest(context) {
   const m = path.match(/^\/blog\/([^/]+)$/)
   if (m) {
     const post = await fetchPost(decodeURIComponent(m[1]))
-    if (!post) return next()
+    // 文章不存在／已下架：回真正的 404，不要用 200 回空殼。
+    // 舊做法 return next() 會讓已刪除的文章變成 soft 404（200 + 「找不到此文章」），
+    // Google 會持續抓取並歸類成「未建立索引」，拖累整站索引狀況。
+    if (!post) return notFoundResponse()
     inject = html => injectArticle(html, post)
   } else if (path === '/') {
     inject = injectHome
