@@ -14,6 +14,7 @@ export default function AdminPosts() {
   const [sortDir, setSortDir] = useState('desc')
   const [page, setPage] = useState(1)
   const [batchTagInput, setBatchTagInput] = useState('')
+  const [courseFilter, setCourseFilter] = useState('')
   const PAGE_SIZE = 15
 
   function handleSort(key) {
@@ -26,7 +27,7 @@ export default function AdminPosts() {
   async function fetchPosts() {
     const { data } = await supabase
       .from('posts')
-      .select('id, title, slug, excerpt, tags, published, published_at')
+      .select('id, title, slug, excerpt, tags, published, published_at, course_id')
       .order('created_at', { ascending: false })
     setPosts(data ?? [])
     setSelectedIds(new Set())
@@ -43,11 +44,15 @@ export default function AdminPosts() {
 
   const visiblePosts = useMemo(() => {
     const filtered = posts.filter(p => {
-      const matchSearch = !search || p.title?.toLowerCase().includes(search.toLowerCase())
+      const q = search.toLowerCase()
+      const matchSearch = !search || p.title?.toLowerCase().includes(q) || p.slug?.toLowerCase().includes(q)
       const matchStatus = statusFilter === 'all' ? true
         : statusFilter === 'published' ? p.published : !p.published
       const matchTag = !tagFilter || (p.tags ?? []).includes(tagFilter)
-      return matchSearch && matchStatus && matchTag
+      const matchCourse = !courseFilter
+        ? true
+        : courseFilter === 'course' ? !!p.course_id : !p.course_id
+      return matchSearch && matchStatus && matchTag && matchCourse
     })
     return [...filtered].sort((a, b) => {
       let av = a[sortKey] ?? '', bv = b[sortKey] ?? ''
@@ -56,12 +61,12 @@ export default function AdminPosts() {
       if (av > bv) return sortDir === 'asc' ? 1 : -1
       return 0
     })
-  }, [posts, search, statusFilter, tagFilter, sortKey, sortDir])
+  }, [posts, search, statusFilter, tagFilter, courseFilter, sortKey, sortDir])
 
   const totalPages = Math.ceil(visiblePosts.length / PAGE_SIZE)
   const pagedPosts = visiblePosts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  useEffect(() => { setPage(1); setSelectAllFiltered(false) }, [search, statusFilter, tagFilter, sortKey, sortDir])
+  useEffect(() => { setPage(1); setSelectAllFiltered(false) }, [search, statusFilter, tagFilter, courseFilter, sortKey, sortDir])
 
   const publishedCount = posts.filter(p => p.published).length
   const draftCount = posts.filter(p => !p.published).length
@@ -183,6 +188,16 @@ export default function AdminPosts() {
             <button key={val} onClick={() => setStatusFilter(val)}
               className={`text-xs px-3 py-2 rounded-lg transition-colors ${
                 statusFilter === val ? 'bg-gray-900 text-white' : 'border border-gray-200 hover:border-gray-400'
+              }`}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1">
+          {[['', '全部'], ['regular', '一般'], ['course', '課程']].map(([val, label]) => (
+            <button key={val} onClick={() => setCourseFilter(val)}
+              className={`text-xs px-3 py-2 rounded-lg transition-colors ${
+                courseFilter === val ? 'bg-indigo-700 text-white' : 'border border-gray-200 hover:border-gray-400'
               }`}>
               {label}
             </button>
