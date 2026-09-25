@@ -194,7 +194,7 @@ export default function AdminPosts() {
           ))}
         </div>
         <div className="flex gap-1">
-          {[['', '全部'], ['regular', '一般'], ['course', '課程']].map(([val, label]) => (
+          {[['', '全部'], ['regular', '一般'], ['course', '系列']].map(([val, label]) => (
             <button key={val} onClick={() => setCourseFilter(val)}
               className={`text-xs px-3 py-2 rounded-lg transition-colors ${
                 courseFilter === val ? 'bg-indigo-700 text-white' : 'border border-gray-200 hover:border-gray-400'

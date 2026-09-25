@@ -62,7 +62,7 @@ export default function AdminCourseEdit() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl">
-      <h1 className="text-lg font-bold mb-4">{isNew ? '新增課程' : '編輯課程'}</h1>
+      <h1 className="text-lg font-bold mb-4">{isNew ? '新增系列' : '編輯系列'}</h1>
 
       <label className="block text-sm mb-1">課名</label>
       <input name="title" value={form.title} onChange={handleChange} required className="w-full border rounded px-3 py-2 mb-3" />
@@ -76,7 +76,7 @@ export default function AdminCourseEdit() {
       <label className="block text-sm mb-1">簡介</label>
       <textarea name="description" value={form.description} onChange={handleChange} rows={3} className="w-full border rounded px-3 py-2 mb-3" />
 
-      <label className="block text-sm mb-1">課程封面</label>
+      <label className="block text-sm mb-1">系列封面</label>
       <div className="flex items-center gap-3 mb-3">
         <div className="w-28 h-20 bg-gray-100 rounded overflow-hidden">
           {form.cover_url && <img src={form.cover_url} alt="封面" className="w-full h-full object-cover" />}
@@ -100,7 +100,7 @@ export default function AdminCourseEdit() {
         <div className="mb-5">
           <h2 className="text-sm font-bold mb-2">章節（{chapters.length}）</h2>
           <a href={`/course/${form.slug}?preview=1`} target="_blank" rel="noreferrer"
-            className="inline-block text-xs border px-3 py-2 rounded mb-4 hover:bg-gray-100">預覽課程頁</a>
+            className="inline-block text-xs border px-3 py-2 rounded mb-4 hover:bg-gray-100">預覽系列頁</a>
           <div className="space-y-2">
             {chapters.map((c, i) => (
               <div key={c.id} className="flex items-center gap-3 border rounded p-2">

@@ -1,4 +1,4 @@
-# API 自動化測試課程 — 從觀念到工程化
+# API 自動化測試系列 — 從觀念到工程化
 
 > 定位：獨立新課，講「API 自動化測試怎麼想、怎麼設計、怎麼用 Python 做出來、怎麼進 CI」。
 > 教學哲學：**觀念與方法論先行，Python 範例（requests + pytest + jsonschema）當落地支撐**——跟效能測試課（`docs/course-perf/`）同一個節奏。

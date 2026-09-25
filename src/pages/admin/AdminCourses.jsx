@@ -6,7 +6,7 @@ export default function AdminCourses() {
   const [courses, setCourses] = useState([])
 
   async function fetchCourses() {
-    // 課程 + 章節數（章節 = posts.course_id）
+    // 系列 + 章節數（章節 = posts.course_id）
     const { data } = await supabase
       .from('courses')
       .select('id, title, slug, cover_url, published, display_order, posts(count)')
@@ -22,9 +22,9 @@ export default function AdminCourses() {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h1 className="text-lg font-bold">課程管理</h1>
+        <h1 className="text-lg font-bold">系列管理</h1>
         <Link to="/admin/courses/new" className="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-          + 新增課程
+          + 新增系列
         </Link>
       </div>
       <div className="grid gap-3">

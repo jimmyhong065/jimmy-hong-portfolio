@@ -17,7 +17,7 @@ export default function CourseLanding() {
     return (
       <>
         <Nav />
-        <main className="max-w-3xl mx-auto px-6 py-24 text-center text-gray-500">找不到課程</main>
+        <main className="max-w-3xl mx-auto px-6 py-24 text-center text-gray-500">找不到系列</main>
         <Footer />
       </>
     )

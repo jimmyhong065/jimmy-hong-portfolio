@@ -49,6 +49,6 @@ describe('CourseLanding', () => {
   it('shows not found message', () => {
     useCourse.mockReturnValue({ course: null, chapters: [], loading: false, notFound: true })
     renderAt('/course/missing')
-    expect(screen.getByText('找不到課程')).toBeInTheDocument()
+    expect(screen.getByText('找不到系列')).toBeInTheDocument()
   })
 })

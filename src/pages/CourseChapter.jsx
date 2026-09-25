@@ -66,7 +66,7 @@ export default function CourseChapter() {
       <Nav />
       <main className="max-w-3xl mx-auto px-6 sm:px-12 py-16">
         <Link to={`/course/${slug}${qs}`} className="text-xs text-gray-400 hover:text-gray-700 mb-6 inline-block">
-          ← {course?.title ?? '課程'}
+          ← {course?.title ?? '系列'}
         </Link>
         <h1 className="text-2xl font-bold mb-8">{post.title}</h1>
         <MarkdownContent content={post.content?.replace(/^\s*#[^\n]*\n?/, '')} />
