@@ -1,6 +1,3 @@
----
-status: draft
----
 # QA Lens — Pillar-Cluster 主題權威群地圖
 
 ## Pillar 1：自動化測試策略
