@@ -93,14 +93,24 @@ function injectArticle(html, post, path = `/blog/${post.slug}`) {
   <div>${bodyText}</div>
 </article>`
 
-  let out = html.replace('</head>', `${headInject}</head>`)
+  let out = injectHead(html, headInject)
   out = out.replace(/(<div id="root">)(<\/div>|)/, `$1${bodyInject}`)
   return out
 }
 
 // --- 通用注入 helper ---
+// index.html 殼自帶首頁的 title/description/og/twitter，不先拿掉的話
+// 每頁 head 開頭都一樣（og:url 還指向首頁），Google 會把文章判成重複頁。
+const STATIC_META = [
+  /<title>[\s\S]*?<\/title>\s*/,
+  /<meta name="description"[^>]*>\s*/,
+  /<meta property="og:(title|description|type|url)"[^>]*>\s*/g,
+  /<meta name="twitter:(title|description)"[^>]*>\s*/g,
+  /<link rel="canonical"[^>]*>\s*/,
+]
 function injectHead(html, headHtml) {
-  return html.replace('</head>', `${headHtml}</head>`)
+  const stripped = STATIC_META.reduce((h, re) => h.replace(re, ''), html)
+  return stripped.replace('</head>', `${headHtml}</head>`)
 }
 function injectBody(html, bodyHtml) {
   return html.replace(/(<div id="root">)(<\/div>|)/, `$1${bodyHtml}`)
