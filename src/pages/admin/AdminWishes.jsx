@@ -24,7 +24,7 @@ export default function AdminWishes() {
       .from('article_wishes')
       .select('*')
       .order('created_at', { ascending: false })
-    setWishes(data ?? [])
+    setWishes((data ?? []).filter(w => w.status !== 'blocked'))
     setLoading(false)
   }
 
@@ -39,6 +39,15 @@ export default function AdminWishes() {
     if (!confirm('確定刪除這個願望？')) return
     await supabase.from('article_wishes').delete().eq('id', id)
     setWishes(prev => prev.filter(w => w.id !== id))
+  }
+
+  // Scrub the content but keep the row as an IP tombstone; wish-submit drops future posts from it.
+  async function block(w) {
+    if (!confirm('刪除這則並封鎖此 IP？之後這個 IP 送出的願望會被靜默丟棄。')) return
+    await supabase.from('article_wishes').update({
+      status: 'blocked', content: '[blocked]', email: null, nickname: null, category: null,
+    }).eq('id', w.id)
+    setWishes(prev => prev.filter(x => x.id !== w.id))
   }
 
   const pendingCount = wishes.filter(w => w.status === 'pending').length
@@ -117,6 +126,12 @@ export default function AdminWishes() {
                   className="text-xs text-red-400 hover:text-red-600 ml-auto">
                   刪除
                 </button>
+                {w.ip && (
+                  <button onClick={() => block(w)}
+                    className="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-md hover:border-red-400">
+                    刪除並封鎖
+                  </button>
+                )}
               </div>
             </div>
           ))}

@@ -39,8 +39,18 @@ export async function onRequestPost({ request, env }) {
     'Content-Type': 'application/json',
   }
 
-  // Rate limit: same IP at most once per 30s.
   if (ip) {
+    // Blocked IP (admin "刪除並封鎖" leaves a status=blocked tombstone). Pretend success, drop it.
+    const blockedRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/article_wishes?ip=eq.${encodeURIComponent(ip)}&status=eq.blocked&select=id&limit=1`,
+      { headers }
+    )
+    const blocked = await blockedRes.json().catch(() => [])
+    if (Array.isArray(blocked) && blocked.length > 0) {
+      return json({ status: 'ok' })
+    }
+
+    // Rate limit: same IP at most once per 30s.
     const since = new Date(Date.now() - 30_000).toISOString()
     const recentRes = await fetch(
       `${env.SUPABASE_URL}/rest/v1/article_wishes?ip=eq.${encodeURIComponent(ip)}&created_at=gte.${encodeURIComponent(since)}&select=id&limit=1`,
