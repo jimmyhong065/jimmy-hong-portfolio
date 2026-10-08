@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useUpload } from '../../hooks/useUpload'
-
-const SECRET = import.meta.env.VITE_UPLOAD_SECRET
+import { adminAuthHeader } from '../../lib/adminAuth'
 
 async function r2List(cursor) {
   const url = cursor ? `/r2-manage?cursor=${cursor}` : '/r2-manage'
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${SECRET}` } })
+  const res = await fetch(url, { headers: await adminAuthHeader() })
   return res.json()
 }
 
 async function r2Delete(key) {
   const res = await fetch('/r2-manage', {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
+    headers: { ...(await adminAuthHeader()), 'Content-Type': 'application/json' },
     body: JSON.stringify({ key }),
   })
   return res.json()

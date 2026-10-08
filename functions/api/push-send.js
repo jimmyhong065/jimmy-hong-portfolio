@@ -1,9 +1,10 @@
 // functions/api/push-send.js
 import { buildVapidAuth, encryptPushPayload } from './_push.js'
 import { stripMarkdown } from './_utils.js'
+import { requireAdmin } from './_auth.js'
 
 const CORS = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://qa-lens.com',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, Content-Type',
 }
@@ -20,10 +21,8 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestPost({ request, env }) {
-  const auth = request.headers.get('Authorization') ?? ''
-  if (auth !== `Bearer ${env.PUSH_SECRET}`) {
-    return json({ error: 'Unauthorized' }, 401)
-  }
+  const denied = await requireAdmin(request, env)
+  if (denied) return denied
 
   const { title, excerpt = '', slug } = await request.json()
   if (!title || !slug) return json({ error: 'Missing title or slug' }, 400)

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { adminAuthHeader } from '../../lib/adminAuth'
 import { marked } from 'marked'
 import RichTextEditor from '../../components/RichTextEditor'
 import MarkdownEditorPane from '../../components/MarkdownEditorPane'
@@ -274,7 +275,7 @@ export default function AdminPostEdit() {
       const res = await fetch('/api/email-send', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_PUSH_SECRET}`,
+          ...(await adminAuthHeader()),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ title: form.title, excerpt: form.excerpt, slug: form.slug }),
@@ -296,7 +297,7 @@ export default function AdminPostEdit() {
       const res = await fetch('/api/push-send', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_PUSH_SECRET}`,
+          ...(await adminAuthHeader()),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

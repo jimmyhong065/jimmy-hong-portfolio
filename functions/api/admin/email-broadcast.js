@@ -1,8 +1,9 @@
 // functions/api/admin/email-broadcast.js
 import { stripMarkdown, chunkArray, escapeHtml } from '../_utils.js'
+import { requireAdmin } from '../_auth.js'
 
 const CORS = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://qa-lens.com',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, Content-Type',
 }
@@ -19,20 +20,8 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestPost({ request, env }) {
-  const authHeader = request.headers.get('Authorization') ?? ''
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
-  if (!token) return json({ error: 'Unauthorized' }, 401)
-
-  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-    headers: {
-      'apikey': env.SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${token}`,
-    },
-  })
-  if (!userRes.ok) return json({ error: 'Unauthorized' }, 401)
-
-  const user = await userRes.json()
-  if (user?.email !== env.ADMIN_EMAIL) return json({ error: 'Forbidden' }, 403)
+  const denied = await requireAdmin(request, env)
+  if (denied) return denied
 
   let title, excerpt, slug
   try {

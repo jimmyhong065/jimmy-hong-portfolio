@@ -1,5 +1,7 @@
+import { requireAdmin } from './api/_auth.js'
+
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://qa-lens.com',
   'Access-Control-Allow-Methods': 'GET, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, Content-Type',
 }
@@ -11,12 +13,8 @@ export async function onRequest(context) {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
 
-  const auth = request.headers.get('Authorization') ?? ''
-  if (auth !== `Bearer ${env.UPLOAD_SECRET}`) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
+  const denied = await requireAdmin(request, env)
+  if (denied) return denied
 
   if (request.method === 'GET') {
     const url = new URL(request.url)

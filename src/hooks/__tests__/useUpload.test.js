@@ -2,7 +2,13 @@ import { renderHook, act } from '@testing-library/react'
 import { vi } from 'vitest'
 import { useUpload } from '../useUpload'
 
-vi.stubEnv('VITE_UPLOAD_SECRET', 'test-secret')
+vi.mock('../../lib/supabase', () => ({
+  supabase: {
+    auth: {
+      getSession: vi.fn().mockResolvedValue({ data: { session: { access_token: 'jwt-123' } } }),
+    },
+  },
+}))
 
 describe('useUpload', () => {
   beforeEach(() => {
@@ -71,7 +77,7 @@ describe('useUpload', () => {
     expect(onEachSuccess).toHaveBeenNthCalledWith(2, 'https://r2.example.com/b.jpg')
   })
 
-  it('uploadMany: sets fetch Authorization header with secret', async () => {
+  it('uploadMany: sets fetch Authorization header with session token', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ url: 'https://r2.example.com/a.jpg' }),
@@ -86,7 +92,7 @@ describe('useUpload', () => {
 
     expect(fetch).toHaveBeenCalledWith('/upload', expect.objectContaining({
       method: 'POST',
-      headers: { Authorization: 'Bearer test-secret' },
+      headers: { Authorization: 'Bearer jwt-123' },
     }))
   })
 

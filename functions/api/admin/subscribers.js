@@ -1,6 +1,8 @@
 // functions/api/admin/subscribers.js
+import { requireAdmin } from '../_auth.js'
+
 const CORS = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://qa-lens.com',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, Content-Type',
 }
@@ -17,19 +19,8 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestGet({ request, env }) {
-  const auth = request.headers.get('Authorization') ?? ''
-  const token = auth.replace('Bearer ', '')
-  if (!token) return json({ error: 'Unauthorized' }, 401)
-
-  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-    headers: {
-      'apikey': env.SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${token}`,
-    },
-  })
-  if (!userRes.ok) return json({ error: 'Unauthorized' }, 401)
-  const user = await userRes.json()
-  if (user.email !== env.ADMIN_EMAIL) return json({ error: 'Forbidden' }, 403)
+  const denied = await requireAdmin(request, env)
+  if (denied) return denied
 
   const res = await fetch(
     `${env.SUPABASE_URL}/rest/v1/email_subscribers?select=email,confirmed,created_at&order=created_at.desc`,

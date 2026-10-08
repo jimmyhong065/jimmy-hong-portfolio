@@ -248,6 +248,15 @@ CREATE INDEX IF NOT EXISTS faq_submissions_status_created_idx ON faq_submissions
 CREATE INDEX IF NOT EXISTS notifications_sent_at_idx ON notifications (sent_at DESC);
 
 -- RLS
+-- Only the site owner may write. Signups are disabled in Supabase Auth, but
+-- policies must not trust "authenticated" alone in case that ever changes.
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE sql STABLE
+AS $$
+  SELECT lower(coalesce(auth.jwt() ->> 'email', '')) = 'rbingwork1030@gmail.com'
+$$;
+
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE photo_projects ENABLE ROW LEVEL SECURITY;
@@ -268,7 +277,7 @@ CREATE POLICY "anon read published posts"
 DROP POLICY IF EXISTS "auth full access posts" ON posts;
 CREATE POLICY "auth full access posts"
   ON posts FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read projects" ON projects;
 CREATE POLICY "anon read projects"
@@ -278,7 +287,7 @@ CREATE POLICY "anon read projects"
 DROP POLICY IF EXISTS "auth full access projects" ON projects;
 CREATE POLICY "auth full access projects"
   ON projects FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read photo projects" ON photo_projects;
 CREATE POLICY "anon read photo projects"
@@ -288,7 +297,7 @@ CREATE POLICY "anon read photo projects"
 DROP POLICY IF EXISTS "auth full access photo projects" ON photo_projects;
 CREATE POLICY "auth full access photo projects"
   ON photo_projects FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 
@@ -300,7 +309,7 @@ CREATE POLICY "anon read published courses"
 DROP POLICY IF EXISTS "auth full access courses" ON courses;
 CREATE POLICY "auth full access courses"
   ON courses FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read settings" ON settings;
 CREATE POLICY "anon read settings"
@@ -310,7 +319,7 @@ CREATE POLICY "anon read settings"
 DROP POLICY IF EXISTS "auth full access settings" ON settings;
 CREATE POLICY "auth full access settings"
   ON settings FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read services" ON services;
 CREATE POLICY "anon read services"
@@ -320,7 +329,7 @@ CREATE POLICY "anon read services"
 DROP POLICY IF EXISTS "auth full access services" ON services;
 CREATE POLICY "auth full access services"
   ON services FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read active announcements" ON announcements;
 CREATE POLICY "anon read active announcements"
@@ -330,7 +339,7 @@ CREATE POLICY "anon read active announcements"
 DROP POLICY IF EXISTS "auth full access announcements" ON announcements;
 CREATE POLICY "auth full access announcements"
   ON announcements FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon read published faqs" ON faqs;
 CREATE POLICY "anon read published faqs"
@@ -340,7 +349,7 @@ CREATE POLICY "anon read published faqs"
 DROP POLICY IF EXISTS "auth full access faqs" ON faqs;
 CREATE POLICY "auth full access faqs"
   ON faqs FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 DROP POLICY IF EXISTS "anon insert faq submissions" ON faq_submissions;
 CREATE POLICY "anon insert faq submissions"
@@ -350,7 +359,7 @@ CREATE POLICY "anon insert faq submissions"
 DROP POLICY IF EXISTS "auth full access faq submissions" ON faq_submissions;
 CREATE POLICY "auth full access faq submissions"
   ON faq_submissions FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- No direct client policies for email_subscribers.
 -- Admin subscriber APIs verify ADMIN_EMAIL and query with the service role key.
@@ -366,7 +375,7 @@ CREATE POLICY "anon read notifications"
 DROP POLICY IF EXISTS "auth full access notifications" ON notifications;
 CREATE POLICY "auth full access notifications"
   ON notifications FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- Article wishes (許願池). Reader submissions for desired article topics.
 -- Public submit goes through /api/wish-submit (service role). Public wall reads
@@ -396,4 +405,4 @@ ALTER TABLE article_wishes ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "auth full access article wishes" ON article_wishes;
 CREATE POLICY "auth full access article wishes"
   ON article_wishes FOR ALL TO authenticated
-  USING (true) WITH CHECK (true);
+  USING (public.is_admin()) WITH CHECK (public.is_admin());

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { adminAuthHeader } from '../lib/adminAuth'
 
 export function useUpload() {
   const [uploading, setUploading] = useState(false)
@@ -9,7 +10,7 @@ export function useUpload() {
     fd.append('file', file)
     const res = await fetch('/upload', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_UPLOAD_SECRET}` },
+      headers: await adminAuthHeader(),
       body: fd,
     })
     if (!res.ok) throw new Error('上傳失敗，請重試')

@@ -1,3 +1,5 @@
+import { requireAdmin } from './api/_auth.js'
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']
 const MAX_SIZE = 10 * 1024 * 1024 // 10MB
 
@@ -5,18 +7,13 @@ export async function onRequestPost(context) {
   const { request, env } = context
 
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'https://qa-lens.com',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Authorization',
   }
 
-  const auth = request.headers.get('Authorization') ?? ''
-  if (auth !== `Bearer ${env.UPLOAD_SECRET}`) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
+  const denied = await requireAdmin(request, env)
+  if (denied) return denied
 
   const formData = await request.formData()
   const file = formData.get('file')
@@ -67,7 +64,7 @@ export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://qa-lens.com',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Authorization',
     },
