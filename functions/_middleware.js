@@ -3,6 +3,7 @@
 // 解決 SPA 對爬蟲是空殼的問題（Perplexity / GPTBot / Googlebot 才讀得到內容）。
 
 import { fetchPublishedCourses, courseSlugMap, postPath } from './_courses.js'
+import { contentToBodyHtml } from './_bodyHtml.js'
 
 const SUPABASE_URL = 'https://sfzewfqqxvahnhjxstsw.supabase.co'
 const SUPABASE_ANON_KEY = 'sb_publishable_3BlJ87PFI0akUX4YcfKIrw_3szffex2'
@@ -59,7 +60,7 @@ function injectArticle(html, post, path = `/blog/${post.slug}`) {
   const url = `${SITE_URL}${path}`
   const title = escapeHtml(post.title)
   const desc = buildDescription(post)
-  const bodyText = escapeHtml(markdownToText(post.content))
+  const bodyHtml = contentToBodyHtml(post.content)
   const tags = Array.isArray(post.tags) ? post.tags : []
 
   const jsonLd = {
@@ -90,7 +91,7 @@ function injectArticle(html, post, path = `/blog/${post.slug}`) {
   const bodyInject = `<article>
   <h1>${title}</h1>
   ${tags.length ? `<p>${tags.map(t => `#${escapeHtml(t)}`).join(' ')}</p>` : ''}
-  <div>${bodyText}</div>
+  <div>${bodyHtml}</div>
 </article>`
 
   let out = injectHead(html, headInject)
