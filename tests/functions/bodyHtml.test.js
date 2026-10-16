@@ -37,3 +37,10 @@ describe('contentToBodyHtml callout markers', () => {
     expect(contentToBodyHtml('<blockquote><p>[!warning] 別加 retry</p></blockquote>')).not.toMatch(/\[!warning\]/i)
   })
 })
+
+describe('contentToBodyHtml compare markers', () => {
+  it('strips [!BAD] and [!GOOD]', () => {
+    const out = contentToBodyHtml('> [!BAD] 舊寫法\n\n> [!GOOD] 新寫法')
+    expect(out).not.toMatch(/\[!(BAD|GOOD)\]/)
+  })
+})

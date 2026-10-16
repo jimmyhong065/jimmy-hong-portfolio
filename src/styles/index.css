@@ -197,3 +197,35 @@ h1, h2, h3, h4 {
 .article-dark .prose blockquote.callout-case    { --callout-fg: #c4b5fd; --callout-bg: #221b35; }
 .article-dark .prose blockquote.callout-note    { --callout-fg: #93c5fd; --callout-bg: #172338; }
 .article-dark .prose blockquote.callout-key     { --callout-fg: #9ca3af; border-top-color: #e5e5e5; border-bottom-color: #333; }
+
+/* 對照卡：[!BAD] 緊接 [!GOOD] → 並排；單獨使用就是紅／綠框 */
+.prose blockquote.callout-bad  { --callout-fg: #b91c1c; --callout-bg: #fef2f2; }
+.prose blockquote.callout-good { --callout-fg: #15803d; --callout-bg: #f0fdf4; }
+.prose blockquote.callout-bad  > .callout-title::before { content: '✕'; }
+.prose blockquote.callout-good > .callout-title::before { content: '✓'; }
+.article-dark .prose blockquote.callout-bad  { --callout-fg: #fca5a5; --callout-bg: #2d1515; }
+.article-dark .prose blockquote.callout-good { --callout-fg: #86efac; --callout-bg: #132a1b; }
+
+.prose .compare-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.75rem 0;
+}
+.prose .compare-pair > blockquote.callout { margin: 0; min-width: 0; }
+@media (max-width: 640px) {
+  .prose .compare-pair { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* callout 裡的程式碼：拿掉 prose pre 外框（md 路徑已有 SyntaxHighlighter 底），收外距、字小一點 */
+.prose blockquote.callout pre:has(> .relative) {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+.prose blockquote.callout pre,
+.prose blockquote.callout .relative > div {
+  margin: 0.5rem 0 !important;
+  font-size: 0.75rem !important;
+}
+.prose blockquote.callout > p:not(.callout-title) { font-size: 0.9375em; }

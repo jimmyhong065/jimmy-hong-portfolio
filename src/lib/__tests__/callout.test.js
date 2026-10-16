@@ -36,3 +36,27 @@ describe('applyCalloutsToHtml', () => {
     expect(unknown).not.toContain('callout')
   })
 })
+
+describe('compare pair (BAD + GOOD)', () => {
+  it('wraps adjacent BAD then GOOD callouts in a compare container', () => {
+    const out = applyCalloutsToHtml(
+      '<blockquote><p>[!BAD]</p><pre><code>time.sleep(3)</code></pre></blockquote>' +
+      '<blockquote><p>[!GOOD]</p><pre><code>WebDriverWait</code></pre></blockquote>'
+    )
+    const doc = new DOMParser().parseFromString(out, 'text/html')
+    const pair = doc.querySelector('.compare-pair')
+    expect(pair).not.toBeNull()
+    const cols = pair.querySelectorAll(':scope > blockquote')
+    expect(cols).toHaveLength(2)
+    expect(cols[0].classList.contains('callout-bad')).toBe(true)
+    expect(cols[1].classList.contains('callout-good')).toBe(true)
+    expect(cols[0].querySelector('.callout-title').textContent).toBe(CALLOUT_LABELS.bad)
+  })
+
+  it('does not wrap a lone BAD, or GOOD before BAD', () => {
+    expect(applyCalloutsToHtml('<blockquote><p>[!BAD] x</p></blockquote><p>中間</p><blockquote><p>[!GOOD] y</p></blockquote>'))
+      .not.toContain('compare-pair')
+    expect(applyCalloutsToHtml('<blockquote><p>[!GOOD] y</p></blockquote><blockquote><p>[!BAD] x</p></blockquote>'))
+      .not.toContain('compare-pair')
+  })
+})

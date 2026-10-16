@@ -64,6 +64,23 @@ describe('MarkdownContent', () => {
     expect(bq.querySelector('.callout-title')).toHaveTextContent('實際案例')
   })
 
+  it('renders markdown BAD + GOOD as a side-by-side compare pair', () => {
+    const md = '> [!BAD]\n> ```python\n> time.sleep(3)\n> ```\n\n> [!GOOD]\n> 等到可點才點'
+    const { container } = render(<MarkdownContent content={md} />)
+    const pair = container.querySelector('.compare-pair')
+    expect(pair).not.toBeNull()
+    const cols = pair.querySelectorAll(':scope > blockquote')
+    expect(cols[0]).toHaveClass('callout-bad')
+    expect(cols[1]).toHaveClass('callout-good')
+    expect(cols[1]).toHaveTextContent('等到可點才點')
+  })
+
+  it('leaves a lone markdown BAD callout unwrapped', () => {
+    const { container } = render(<MarkdownContent content={'> [!BAD] 別這樣寫'} />)
+    expect(container.querySelector('.compare-pair')).toBeNull()
+    expect(container.querySelector('blockquote')).toHaveClass('callout-bad')
+  })
+
   it('handles null/undefined content without crashing', () => {
     const { container } = render(<MarkdownContent content={null} />)
     expect(container.firstChild).toBeInTheDocument()
