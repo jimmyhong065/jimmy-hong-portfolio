@@ -353,9 +353,9 @@ h1, h2, h3, h4 {
 }
 .article-dark .prose blockquote.callout-related li a { color: #e5e5e5; }
 
-/* 程式碼區塊（MarkdownContent 的 SyntaxHighlighter，useInlineStyles=false）
-   token 只有 hljs-* class，淺色用 GitHub light、.article-dark 用 GitHub dark */
-.prose .code-block {
+/* 程式碼區塊：有語言的走 SyntaxHighlighter（.code-block，token 只有 hljs-* class），
+   沒語言的 md 和後台 HTML 文章走 <pre>；兩者共用外框。淺色 GitHub light、.article-dark 用 GitHub dark */
+.prose {
   --code-bg: #f6f8fa;
   --code-line: #e5e7eb;
   --code-fg: #1f2328;
@@ -366,6 +366,9 @@ h1, h2, h3, h4 {
   --tk-title: #8250df;
   --tk-builtin: #953800;
   --tk-tag: #116329;
+}
+.prose .code-block,
+.prose pre {
   margin: 1.5rem 0;
   padding: 0.9rem 1rem;
   border: 1px solid var(--code-line);
@@ -376,7 +379,8 @@ h1, h2, h3, h4 {
   line-height: 1.7;
   overflow-x: auto;
 }
-.prose .code-block code {
+.prose .code-block code,
+.prose pre code {
   background: none;
   padding: 0;
   color: inherit;
@@ -385,7 +389,9 @@ h1, h2, h3, h4 {
   white-space: pre;
 }
 .prose .code-block code::before,
-.prose .code-block code::after { content: none; }
+.prose .code-block code::after,
+.prose pre code::before,
+.prose pre code::after { content: none; }
 .code-block .hljs-keyword,
 .code-block .hljs-selector-tag,
 .code-block .hljs-deletion { color: var(--tk-keyword); }
@@ -408,7 +414,7 @@ h1, h2, h3, h4 {
 .code-block .hljs-name,
 .code-block .hljs-tag,
 .code-block .hljs-bullet { color: var(--tk-tag); }
-.article-dark .prose .code-block {
+.article-dark .prose {
   --code-bg: #161b22;
   --code-line: #30363d;
   --code-fg: #e6edf3;
