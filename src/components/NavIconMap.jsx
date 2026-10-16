@@ -25,6 +25,5 @@ export const FALLBACK_TABS = [
   { id: '2', label: '部落格', url: '/blog',     icon_key: 'blog',     visible: true, order: 1 },
   { id: '3', label: '收藏',   url: '/saved',    icon_key: 'saved',    visible: true, order: 2 },
   { id: '4', label: 'FAQ',    url: '/faq',      icon_key: 'faq',      visible: true, order: 3 },
-  { id: '5', label: '許願池', url: '/wish',     icon_key: 'coin',     visible: true, order: 4 },
-  { id: '6', label: '關於我', url: '/about',    icon_key: 'about',    visible: true, order: 5 },
+  { id: '6', label: '關於我', url: '/about',    icon_key: 'about',    visible: true, order: 4 },
 ]
