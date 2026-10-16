@@ -30,3 +30,10 @@ describe('contentToBodyHtml', () => {
     expect(contentToBodyHtml('## 標題\n![圖](/a.png) 內文')).toBe('標題 內文')
   })
 })
+
+describe('contentToBodyHtml callout markers', () => {
+  it('strips [!TIP] style markers from markdown and HTML', () => {
+    expect(contentToBodyHtml('> [!TIP]\n> 把等待收進 BasePage')).not.toContain('[!TIP]')
+    expect(contentToBodyHtml('<blockquote><p>[!warning] 別加 retry</p></blockquote>')).not.toMatch(/\[!warning\]/i)
+  })
+})

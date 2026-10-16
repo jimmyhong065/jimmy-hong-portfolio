@@ -33,6 +33,37 @@ describe('MarkdownContent', () => {
     expect(img?.getAttribute('onerror')).toBeNull()
   })
 
+  it('renders markdown callout with type class and title', () => {
+    const { container } = render(<MarkdownContent content={'> [!TIP]\n> 把等待收進 BasePage'} />)
+    const bq = container.querySelector('blockquote')
+    expect(bq).toHaveClass('callout', 'callout-tip')
+    expect(bq.querySelector('.callout-title')).toHaveTextContent('小技巧')
+    expect(bq).not.toHaveTextContent('[!TIP]')
+    expect(bq).toHaveTextContent('把等待收進 BasePage')
+  })
+
+  it('renders markdown callout when content follows marker on same line', () => {
+    const { container } = render(<MarkdownContent content={'> [!WARNING] 別直接加 **retry**'} />)
+    const bq = container.querySelector('blockquote')
+    expect(bq).toHaveClass('callout-warning')
+    expect(bq.querySelector('strong')).toHaveTextContent('retry')
+    expect(bq).not.toHaveTextContent('[!WARNING]')
+  })
+
+  it('keeps plain markdown blockquote unchanged', () => {
+    const { container } = render(<MarkdownContent content={'> 一般引用'} />)
+    expect(container.querySelector('blockquote')).not.toHaveClass('callout')
+  })
+
+  it('renders HTML callout from admin-edited content', () => {
+    const { container } = render(
+      <MarkdownContent content="<blockquote><p>[!CASE] 回歸套件 180 條</p></blockquote>" />
+    )
+    const bq = container.querySelector('blockquote')
+    expect(bq).toHaveClass('callout', 'callout-case')
+    expect(bq.querySelector('.callout-title')).toHaveTextContent('實際案例')
+  })
+
   it('handles null/undefined content without crashing', () => {
     const { container } = render(<MarkdownContent content={null} />)
     expect(container.firstChild).toBeInTheDocument()

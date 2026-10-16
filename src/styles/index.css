@@ -141,3 +141,59 @@ h1, h2, h3, h4 {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Callout — `> [!TIP]` 等標記轉成的提示框（src/lib/callout.js） */
+.prose blockquote.callout {
+  --callout-fg: #334155;
+  --callout-bg: #f1f5f9;
+  border-left: 0;
+  border-radius: 0.625rem;
+  padding: 0.9rem 1.1rem;
+  margin: 1.75rem 0;
+  background: var(--callout-bg);
+  color: inherit;
+  font-style: normal;
+  font-weight: 400;
+  quotes: none;
+}
+.prose blockquote.callout p::before,
+.prose blockquote.callout p::after { content: none; }
+.prose blockquote.callout > p { margin: 0.5rem 0; }
+.prose blockquote.callout > :last-child { margin-bottom: 0; }
+.prose blockquote.callout > ul,
+.prose blockquote.callout > ol { margin: 0.5rem 0; }
+.prose blockquote.callout > .callout-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.875em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--callout-fg);
+}
+.prose blockquote.callout > .callout-title::before { margin-right: 0.4em; }
+.prose blockquote.callout-tip     { --callout-fg: #0f766e; --callout-bg: #ecfdf8; }
+.prose blockquote.callout-warning { --callout-fg: #b45309; --callout-bg: #fff7eb; }
+.prose blockquote.callout-case    { --callout-fg: #6d28d9; --callout-bg: #f5f1ff; }
+.prose blockquote.callout-note    { --callout-fg: #1d4ed8; --callout-bg: #eff6ff; }
+.prose blockquote.callout-tip     > .callout-title::before { content: '💡'; }
+.prose blockquote.callout-warning > .callout-title::before { content: '⚠️'; }
+.prose blockquote.callout-case    > .callout-title::before { content: '📌'; }
+.prose blockquote.callout-note    > .callout-title::before { content: '📝'; }
+
+/* 重點：不用底色，上粗線＋放大字，當段落收束句 */
+.prose blockquote.callout-key {
+  --callout-fg: #64748b;
+  background: transparent;
+  border-radius: 0;
+  border-top: 2px solid #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 0.25rem;
+}
+.prose blockquote.callout-key > .callout-title { font-size: 0.75em; letter-spacing: 0.12em; }
+.prose blockquote.callout-key > p:not(.callout-title) { font-size: 1.2em; font-weight: 700; line-height: 1.55; }
+
+.article-dark .prose blockquote.callout { color: #e5e5e5; }
+.article-dark .prose blockquote.callout-tip     { --callout-fg: #5eead4; --callout-bg: #0f2a27; }
+.article-dark .prose blockquote.callout-warning { --callout-fg: #fbbf24; --callout-bg: #2c2112; }
+.article-dark .prose blockquote.callout-case    { --callout-fg: #c4b5fd; --callout-bg: #221b35; }
+.article-dark .prose blockquote.callout-note    { --callout-fg: #93c5fd; --callout-bg: #172338; }
+.article-dark .prose blockquote.callout-key     { --callout-fg: #9ca3af; border-top-color: #e5e5e5; border-bottom-color: #333; }

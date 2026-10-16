@@ -11,6 +11,7 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash'
 import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml'
 import MermaidChart from './MermaidChart'
 import { slugify, headingId, headingText } from '../lib/toc'
+import { remarkCallout, applyCalloutsToHtml } from '../lib/callout'
 import Lightbox from './Lightbox'
 
 SyntaxHighlighter.registerLanguage('javascript', js)
@@ -181,13 +182,13 @@ export default function MarkdownContent({ content }) {
       <div
         ref={containerRef}
         className="prose prose-gray max-w-none [&_pre]:overflow-x-auto"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(addHeadingIds(content ?? '')) }}
+        dangerouslySetInnerHTML={{ __html: applyCalloutsToHtml(DOMPurify.sanitize(addHeadingIds(content ?? ''))) }}
       />
     )
     : (
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
+          remarkPlugins={[remarkGfm, remarkCallout]}
           components={{ code: MdCode, h2: MdH2, h3: MdH3, img: MdImg, a: MdLink }}
         >
           {content ?? ''}
