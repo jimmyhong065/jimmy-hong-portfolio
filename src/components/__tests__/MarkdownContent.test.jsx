@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import MarkdownContent from '../MarkdownContent'
 
 vi.mock('../MermaidChart', () => ({
@@ -92,6 +93,16 @@ describe('MarkdownContent', () => {
     const lis = bq.querySelectorAll('li')
     expect(lis[1]).toHaveClass('bug-expected')
     expect(lis[2]).toHaveClass('bug-actual')
+  })
+
+  it('renders markdown related card with internal links', () => {
+    const md = '> [!RELATED]\n>\n> - [等待策略](/blog/wait-strategy)\n> - [BasePage](/blog/basepage)'
+    const { container } = render(<MemoryRouter><MarkdownContent content={md} /></MemoryRouter>)
+    const bq = container.querySelector('blockquote')
+    expect(bq).toHaveClass('callout', 'callout-related')
+    expect(bq.querySelector('.callout-title')).toHaveTextContent('延伸閱讀')
+    expect(bq.querySelectorAll('li a')).toHaveLength(2)
+    expect(bq).not.toHaveTextContent('[!RELATED]')
   })
 
   it('handles null/undefined content without crashing', () => {

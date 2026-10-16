@@ -13,6 +13,7 @@ export const CALLOUT_LABELS = {
   bad: '不建議',
   good: '建議',
   bug: 'Bug',
+  related: '延伸閱讀',
 }
 
 const FIELD_CLASS = [

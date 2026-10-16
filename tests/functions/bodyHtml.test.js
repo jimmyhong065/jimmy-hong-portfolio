@@ -50,3 +50,11 @@ describe('contentToBodyHtml bug marker', () => {
     expect(contentToBodyHtml('> [!BUG] 冷啟動沒反應')).not.toContain('[!BUG]')
   })
 })
+
+describe('contentToBodyHtml related marker', () => {
+  it('strips [!RELATED] and keeps the links', () => {
+    const out = contentToBodyHtml('> [!RELATED]\n>\n> - [等待策略](/blog/wait-strategy)')
+    expect(out).not.toContain('[!RELATED]')
+    expect(out).toContain('<a href="https://qa-lens.com/blog/wait-strategy">等待策略</a>')
+  })
+})

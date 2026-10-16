@@ -294,3 +294,49 @@ h1, h2, h3, h4 {
   --bug-good: #86efac;
   --bug-bad: #fca5a5;
 }
+
+/* 延伸閱讀卡：[!RELATED] + 連結清單 → 整列可點、右側箭頭 */
+.prose blockquote.callout-related {
+  --callout-fg: #6b7280;
+  --callout-bg: transparent;
+  --related-line: #e5e7eb;
+  --related-hover: #f9fafb;
+  border: 1px solid var(--related-line);
+  padding: 0.9rem 0 0.25rem;
+}
+.prose blockquote.callout-related > .callout-title { padding: 0 1.1rem; letter-spacing: 0.08em; }
+.prose blockquote.callout-related > .callout-title::before { content: '📚'; }
+.prose blockquote.callout-related > ul { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.prose blockquote.callout-related > ul > li { margin: 0; padding: 0; border-top: 1px solid var(--related-line); }
+.prose blockquote.callout-related > ul > li::before { content: none; }
+.prose blockquote.callout-related > ul > li > p { margin: 0; }
+.prose blockquote.callout-related li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1.1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.15s;
+}
+.prose blockquote.callout-related li a::after {
+  content: '→';
+  flex: none;
+  color: var(--callout-fg);
+  transition: transform 0.15s;
+}
+.prose blockquote.callout-related li a:hover,
+.prose blockquote.callout-related li a:focus-visible { background: var(--related-hover); }
+.prose blockquote.callout-related li a:hover::after { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .prose blockquote.callout-related li a,
+  .prose blockquote.callout-related li a::after { transition: none; }
+}
+.article-dark .prose blockquote.callout-related {
+  --callout-fg: #9ca3af;
+  --related-line: #333;
+  --related-hover: #242424;
+}
+.article-dark .prose blockquote.callout-related li a { color: #e5e5e5; }

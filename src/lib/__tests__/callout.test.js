@@ -84,3 +84,13 @@ describe('bug card', () => {
     expect(out).not.toContain('bug-expected')
   })
 })
+
+describe('related card', () => {
+  it('turns [!RELATED] into a titled link list', () => {
+    const out = applyCalloutsToHtml('<blockquote><p>[!RELATED]</p><ul><li><p><a href="/blog/a">A 文</a></p></li></ul></blockquote>')
+    const bq = new DOMParser().parseFromString(out, 'text/html').querySelector('blockquote')
+    expect(bq.classList.contains('callout-related')).toBe(true)
+    expect(bq.querySelector('.callout-title').textContent).toBe(CALLOUT_LABELS.related)
+    expect(bq.querySelector('li a').getAttribute('href')).toBe('/blog/a')
+  })
+})
