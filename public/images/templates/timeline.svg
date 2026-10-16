@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <!-- 模板：時間軸（5 階段）
+       改這些：階段名稱、兩行說明、負責角色；強調節點改成實心藍；回頭虛線可刪 -->
+  <rect x="1" y="1" width="798" height="258" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <text x="28" y="40" font-size="18" font-weight="700" fill="#1d232b">Bug 生命週期</text>
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker></defs>
+
+  <!-- 回頭線：驗證失敗重開 -->
+  <path d="M556 106Q480 52 404 106" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+  <text x="480" y="66" text-anchor="middle" font-size="12" fill="#b45309">沒過 → 重開</text>
+
+  <path d="M80 130H720" stroke="#c3cad3" stroke-width="3"/>
+  <g fill="#ffffff" stroke="#5d6875" stroke-width="3">
+    <circle cx="80" cy="130" r="12"/><circle cx="240" cy="130" r="12"/><circle cx="400" cy="130" r="12"/><circle cx="720" cy="130" r="12"/>
+  </g>
+  <!-- 強調節點 -->
+  <circle cx="560" cy="130" r="14" fill="#2563eb"/>
+
+  <g font-size="16" font-weight="700" fill="#1d232b" text-anchor="middle">
+    <text x="80" y="100">新建</text><text x="240" y="100">確認</text><text x="400" y="100">修復</text>
+    <text x="560" y="100" fill="#2563eb">驗證</text><text x="720" y="100">關閉</text>
+  </g>
+  <g font-size="13" fill="#5d6875" text-anchor="middle">
+    <text x="80" y="170">附重現步驟</text><text x="80" y="190">與截圖</text>
+    <text x="240" y="170">判斷嚴重度</text><text x="240" y="190">排進迭代</text>
+    <text x="400" y="170">RD 修正</text><text x="400" y="190">附修改範圍</text>
+    <text x="560" y="170">原步驟重測</text><text x="560" y="190">加回歸案例</text>
+    <text x="720" y="170">記錄根因</text><text x="720" y="190">更新知識庫</text>
+  </g>
+  <g font-size="12" font-weight="700" text-anchor="middle">
+    <rect x="62" y="206" width="36" height="22" rx="11" fill="#ecfdf8"/><text x="80" y="221" fill="#0f766e">QA</text>
+    <rect x="222" y="206" width="36" height="22" rx="11" fill="#f5f1ff"/><text x="240" y="221" fill="#6d28d9">PM</text>
+    <rect x="382" y="206" width="36" height="22" rx="11" fill="#fff7eb"/><text x="400" y="221" fill="#b45309">RD</text>
+    <rect x="542" y="206" width="36" height="22" rx="11" fill="#ecfdf8"/><text x="560" y="221" fill="#0f766e">QA</text>
+    <rect x="702" y="206" width="36" height="22" rx="11" fill="#ecfdf8"/><text x="720" y="221" fill="#0f766e">QA</text>
+  </g>
+</svg>

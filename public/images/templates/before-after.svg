@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <!-- 模板：前後對照（Before → After）
+       改這些：做法（上方膠囊）、左右大數字、單位說明、補充說明 -->
+  <rect x="1" y="1" width="798" height="338" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <rect x="220" y="18" width="360" height="34" rx="17" fill="#eef1f5"/>
+  <text x="400" y="41" text-anchor="middle" font-size="15" fill="#1d232b">做法：先修「等待時機」那 27 條</text>
+
+  <!-- Before -->
+  <rect x="24" y="68" width="340" height="248" rx="12" fill="#fef2f2"/>
+  <text x="194" y="108" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="2" fill="#b91c1c">改善前</text>
+  <text x="194" y="196" text-anchor="middle" font-size="64" font-weight="900" fill="#b91c1c">9<tspan font-size="24" font-weight="700"> 條</tspan></text>
+  <text x="194" y="236" text-anchor="middle" font-size="16" fill="#1d232b">每晚假紅燈</text>
+  <text x="194" y="270" text-anchor="middle" font-size="13" fill="#5d6875">團隊開始忽略 CI 報告</text>
+
+  <!-- 箭頭 -->
+  <path d="M376 192H414" stroke="#5d6875" stroke-width="3" stroke-linecap="round"/>
+  <path d="M410 182L424 192L410 202z" fill="#5d6875"/>
+
+  <!-- After -->
+  <rect x="436" y="68" width="340" height="248" rx="12" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+  <text x="606" y="108" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="2" fill="#15803d">兩週後</text>
+  <text x="606" y="196" text-anchor="middle" font-size="64" font-weight="900" fill="#15803d">&lt;1<tspan font-size="24" font-weight="700"> 條</tspan></text>
+  <text x="606" y="236" text-anchor="middle" font-size="16" fill="#1d232b">每晚假紅燈</text>
+  <text x="606" y="270" text-anchor="middle" font-size="13" fill="#5d6875">紅燈重新有人看</text>
+</svg>

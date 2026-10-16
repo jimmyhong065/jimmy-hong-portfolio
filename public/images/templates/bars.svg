@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <!-- 模板：橫向比例條（4 列）
+       改這些：標題、每列名稱、數值；長條寬度 = 數值% × 4.7（滿格 470） -->
+  <rect x="1" y="1" width="798" height="358" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <text x="28" y="44" font-size="20" font-weight="700" fill="#1d232b">flaky 成因分布</text>
+
+  <!-- 底軌 -->
+  <g fill="#eef1f5">
+    <rect x="210" y="76" width="470" height="30" rx="6"/><rect x="210" y="146" width="470" height="30" rx="6"/>
+    <rect x="210" y="216" width="470" height="30" rx="6"/><rect x="210" y="286" width="470" height="30" rx="6"/>
+  </g>
+  <!-- 數值條：第一列強調色，其餘灰藍 -->
+  <rect x="210" y="76" width="211.5" height="30" rx="6" fill="#0f766e"/>
+  <rect x="210" y="146" width="117.5" height="30" rx="6" fill="#94a3b8"/>
+  <rect x="210" y="216" width="94" height="30" rx="6" fill="#94a3b8"/>
+  <rect x="210" y="286" width="47" height="30" rx="6" fill="#94a3b8"/>
+
+  <g font-size="16" fill="#1d232b" text-anchor="end">
+    <text x="190" y="97" font-weight="700">等待時機</text><text x="190" y="167">測試資料共用</text>
+    <text x="190" y="237">環境 / 雲端裝置</text><text x="190" y="307">執行順序依賴</text>
+  </g>
+  <g font-size="17" font-weight="700" fill="#1d232b">
+    <text x="696" y="98" fill="#0f766e">45%</text><text x="696" y="168">25%</text><text x="696" y="238">20%</text><text x="696" y="308">10%</text>
+  </g>
+  <text x="772" y="342" text-anchor="end" font-size="12" fill="#8a94a0">範例：一季 120 次 flaky 失敗</text>
+</svg>
