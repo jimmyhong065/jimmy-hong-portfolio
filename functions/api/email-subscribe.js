@@ -16,7 +16,12 @@ export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS })
 }
 
+// Email 訂閱暫停：Brevo key 失效，待改 Resend 後改回 false
+const SUBSCRIBE_PAUSED = true
+
 export async function onRequestPost({ request, env }) {
+  if (SUBSCRIBE_PAUSED) return json({ error: 'Subscription temporarily unavailable' }, 503)
+
   const { email } = await request.json()
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Invalid email' }, 400)
