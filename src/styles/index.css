@@ -50,6 +50,7 @@ h1, h2, h3, h4 {
 /* 行內程式碼（不含程式碼區塊）：prose 預設深色字，深色模式下看不見 */
 .article-dark .prose :not(pre):not(.code-block) > code {
   color: #f0f0f0;
+  background: #2c2c2c;
 }
 
 .article-dark .prose blockquote {
@@ -106,6 +107,17 @@ h1, h2, h3, h4 {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* 行內程式碼：拿掉 typography 預設的反引號，改成淺灰底膠囊 */
+.prose :not(pre):not(.code-block) > code {
+  padding: 0.15em 0.4em;
+  border-radius: 0.3em;
+  background: #f1f3f5;
+  font-size: 0.875em;
+  font-weight: 500;
+}
+.prose :not(pre):not(.code-block) > code::before,
+.prose :not(pre):not(.code-block) > code::after { content: none; }
 
 .prose table {
   display: block;
