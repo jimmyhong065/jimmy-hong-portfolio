@@ -4,7 +4,6 @@ import DOMPurify from 'dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
 import python from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
 import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash'
@@ -65,14 +64,21 @@ function MdCode({ inline, className, children }) {
     return (
       <div className="relative group">
         <CopyButton text={code} />
-        <SyntaxHighlighter language={lang} style={githubGist} PreTag="div"
-          customStyle={{ borderRadius: '0.5rem', fontSize: '0.8rem', margin: '1.5rem 0', overflowX: 'auto' }}>
+        {/* 不用 inline 主題色：token 只輸出 hljs-* class，深淺配色在 index.css（.code-block） */}
+        <SyntaxHighlighter language={lang} useInlineStyles={false} PreTag="div" className="code-block">
           {code}
         </SyntaxHighlighter>
       </div>
     )
   }
   return <code className={className}>{children}</code>
+}
+
+// 有語言的 code block 由 MdCode 自己出外框（或 MermaidChart），拿掉 react-markdown 預設包的 <pre>
+function MdPre({ node, children }) {
+  const cls = node?.children?.[0]?.properties?.className
+  const hasLang = Array.isArray(cls) && cls.some(c => String(c).startsWith('language-'))
+  return hasLang ? <>{children}</> : <pre>{children}</pre>
 }
 
 function MdH2({ children }) {
@@ -189,7 +195,7 @@ export default function MarkdownContent({ content }) {
       <div className="prose prose-gray max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkCallout]}
-          components={{ code: MdCode, h2: MdH2, h3: MdH3, img: MdImg, a: MdLink }}
+          components={{ pre: MdPre, code: MdCode, h2: MdH2, h3: MdH3, img: MdImg, a: MdLink }}
         >
           {content ?? ''}
         </ReactMarkdown>

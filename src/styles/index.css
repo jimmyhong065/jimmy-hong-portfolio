@@ -47,6 +47,11 @@ h1, h2, h3, h4 {
   color: #f0f0f0;
 }
 
+/* 行內程式碼（不含程式碼區塊）：prose 預設深色字，深色模式下看不見 */
+.article-dark .prose :not(pre):not(.code-block) > code {
+  color: #f0f0f0;
+}
+
 .article-dark .prose blockquote {
   border-left-color: #444;
   color: #aaaaaa;
@@ -217,12 +222,7 @@ h1, h2, h3, h4 {
   .prose .compare-pair { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* callout 裡的程式碼：拿掉 prose pre 外框（md 路徑已有 SyntaxHighlighter 底），收外距、字小一點 */
-.prose blockquote.callout pre:has(> .relative) {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-}
+/* callout 裡的程式碼：收外距、字小一點 */
 .prose blockquote.callout pre,
 .prose blockquote.callout .relative > div {
   margin: 0.5rem 0 !important;
@@ -340,3 +340,71 @@ h1, h2, h3, h4 {
   --related-hover: #242424;
 }
 .article-dark .prose blockquote.callout-related li a { color: #e5e5e5; }
+
+/* 程式碼區塊（MarkdownContent 的 SyntaxHighlighter，useInlineStyles=false）
+   token 只有 hljs-* class，淺色用 GitHub light、.article-dark 用 GitHub dark */
+.prose .code-block {
+  --code-bg: #f6f8fa;
+  --code-line: #e5e7eb;
+  --code-fg: #1f2328;
+  --tk-keyword: #cf222e;
+  --tk-string: #0a3069;
+  --tk-number: #0550ae;
+  --tk-comment: #6e7781;
+  --tk-title: #8250df;
+  --tk-builtin: #953800;
+  --tk-tag: #116329;
+  margin: 1.5rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--code-line);
+  border-radius: 0.5rem;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+.prose .code-block code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  white-space: pre;
+}
+.prose .code-block code::before,
+.prose .code-block code::after { content: none; }
+.code-block .hljs-keyword,
+.code-block .hljs-selector-tag,
+.code-block .hljs-deletion { color: var(--tk-keyword); }
+.code-block .hljs-string,
+.code-block .hljs-regexp,
+.code-block .hljs-addition { color: var(--tk-string); }
+.code-block .hljs-number,
+.code-block .hljs-literal,
+.code-block .hljs-attr,
+.code-block .hljs-attribute,
+.code-block .hljs-meta,
+.code-block .hljs-symbol { color: var(--tk-number); }
+.code-block .hljs-comment,
+.code-block .hljs-quote { color: var(--tk-comment); font-style: italic; }
+.code-block .hljs-title,
+.code-block .hljs-section { color: var(--tk-title); }
+.code-block .hljs-built_in,
+.code-block .hljs-variable,
+.code-block .hljs-type { color: var(--tk-builtin); }
+.code-block .hljs-name,
+.code-block .hljs-tag,
+.code-block .hljs-bullet { color: var(--tk-tag); }
+.article-dark .prose .code-block {
+  --code-bg: #161b22;
+  --code-line: #30363d;
+  --code-fg: #e6edf3;
+  --tk-keyword: #ff7b72;
+  --tk-string: #a5d6ff;
+  --tk-number: #79c0ff;
+  --tk-comment: #8b949e;
+  --tk-title: #d2a8ff;
+  --tk-builtin: #ffa657;
+  --tk-tag: #7ee787;
+}

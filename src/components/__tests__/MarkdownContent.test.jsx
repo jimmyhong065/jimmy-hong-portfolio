@@ -118,6 +118,27 @@ describe('MarkdownContent', () => {
     expect(chart.getAttribute('data-definition')).toContain('graph TD')
   })
 
+  it('renders highlighted code with token classes and no wrapping <pre>', () => {
+    const { container } = render(<MarkdownContent content={'```python\ndef tap(self):\n    pass\n```'} />)
+    const block = container.querySelector('.code-block')
+    expect(block).not.toBeNull()
+    expect(block.closest('pre')).toBeNull()
+    const kw = container.querySelector('.hljs-keyword')
+    expect(kw).toHaveTextContent('def')
+    expect(kw.getAttribute('style')).toBeNull()
+  })
+
+  it('keeps <pre> for code blocks without a language', () => {
+    const { container } = render(<MarkdownContent content={'```\nplain text\n```'} />)
+    expect(container.querySelector('pre > code')).toHaveTextContent('plain text')
+  })
+
+  it('does not wrap mermaid charts in <pre>', () => {
+    const { container } = render(<MarkdownContent content={'```mermaid\ngraph TD\n  A-->B\n```'} />)
+    expect(screen.getByTestId('mermaid-chart').closest('pre')).toBeNull()
+    expect(container.querySelector('pre')).toBeNull()
+  })
+
   it('renders non-mermaid code blocks as regular code in markdown mode', () => {
     const { container } = render(<MarkdownContent content={'```js\nconsole.log(1)\n```'} />)
     expect(screen.queryByTestId('mermaid-chart')).toBeNull()
