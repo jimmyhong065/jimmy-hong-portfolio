@@ -44,3 +44,9 @@ describe('contentToBodyHtml compare markers', () => {
     expect(out).not.toMatch(/\[!(BAD|GOOD)\]/)
   })
 })
+
+describe('contentToBodyHtml bug marker', () => {
+  it('strips [!BUG]', () => {
+    expect(contentToBodyHtml('> [!BUG] 冷啟動沒反應')).not.toContain('[!BUG]')
+  })
+})

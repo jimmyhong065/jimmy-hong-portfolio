@@ -2,6 +2,7 @@
 // md 文章走 remarkCallout；後台編輯過的 HTML 文章走 applyCalloutsToHtml。
 // 兩邊都靠文字標記判斷（不靠 class），TipTap 存檔洗掉 class 也不會壞。
 // [!BAD] 緊接 [!GOOD] 時包成 .compare-pair 並排對照。
+// [!BUG] 同行文字當卡片標題；清單裡「預期／實際」那列另外上色。
 
 export const CALLOUT_LABELS = {
   tip: '小技巧',
@@ -11,6 +12,16 @@ export const CALLOUT_LABELS = {
   note: '補充',
   bad: '不建議',
   good: '建議',
+  bug: 'Bug',
+}
+
+const FIELD_CLASS = [
+  [/^(預期|期望|expected)/i, 'bug-expected'],
+  [/^(實際|actual)/i, 'bug-actual'],
+]
+
+function fieldClass(label) {
+  return FIELD_CLASS.find(([re]) => re.test(label.trim()))?.[1]
 }
 
 const TYPES = Object.keys(CALLOUT_LABELS).join('|')
@@ -39,9 +50,23 @@ function transformBlockquote(node) {
     if (para.children[0]?.type === 'break') para.children.shift()
   }
   if (!para.children.length) node.children.shift()
+  else if (type === 'bug') para.data = { hProperties: { className: ['bug-title'] } }
 
+  if (type === 'bug') tagBugFieldsMd(node)
   node.children.unshift(titleNode(type))
   node.data = { ...node.data, calloutType: type, hProperties: { className: ['callout', `callout-${type}`] } }
+}
+
+const textOf = node => node.value ?? (node.children ?? []).map(textOf).join('')
+
+function tagBugFieldsMd(node) {
+  node.children.filter(c => c.type === 'list').forEach(list => {
+    list.children.forEach(item => {
+      const strong = item.children[0]?.children?.[0]
+      const cls = strong?.type === 'strong' && fieldClass(textOf(strong))
+      if (cls) item.data = { hProperties: { className: [cls] } }
+    })
+  })
 }
 
 const typeOf = node => node?.type === 'blockquote' && node.data?.calloutType
@@ -85,6 +110,14 @@ export function applyCalloutsToHtml(html) {
     const title = doc.createElement('p')
     title.className = 'callout-title'
     title.textContent = CALLOUT_LABELS[type]
+    if (type === 'bug') {
+      if (first.isConnected) first.classList.add('bug-title')
+      bq.querySelectorAll('li').forEach(li => {
+        const strong = li.querySelector(':scope > strong:first-child, :scope > p:first-child > strong:first-child')
+        const cls = strong && fieldClass(strong.textContent)
+        if (cls) li.classList.add(cls)
+      })
+    }
     bq.prepend(title)
     bq.classList.add('callout', `callout-${type}`)
   })

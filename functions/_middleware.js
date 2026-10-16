@@ -44,7 +44,7 @@ function markdownToText(md = '') {
     .replace(/`([^`]+)`/g, '$1')             // inline code
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')   // images
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')  // links → 文字
-    .replace(/\[!(TIP|WARNING|CASE|KEY|NOTE|BAD|GOOD)\]/gi, ' ') // callout 標記
+    .replace(/\[!(TIP|WARNING|CASE|KEY|NOTE|BAD|GOOD|BUG)\]/gi, ' ') // callout 標記
     .replace(/^#{1,6}\s+/gm, '')             // headings 記號
     .replace(/[*_>#-]/g, ' ')                // 其餘 markdown 符號
     .replace(/\s+/g, ' ')

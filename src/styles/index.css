@@ -229,3 +229,68 @@ h1, h2, h3, h4 {
   font-size: 0.75rem !important;
 }
 .prose blockquote.callout > p:not(.callout-title) { font-size: 0.9375em; }
+
+/* Bug 卡：[!BUG] 標題 + 「**欄位：** 內容」清單 → 標籤｜內容兩欄 */
+.prose blockquote.callout-bug {
+  --callout-fg: #b91c1c;
+  --callout-bg: #ffffff;
+  --bug-line: #e5e7eb;
+  --bug-label: #6b7280;
+  --bug-good: #15803d;
+  --bug-bad: #b91c1c;
+  border: 1px solid var(--bug-line);
+  padding: 0;
+  overflow: hidden;
+}
+.prose blockquote.callout-bug > .callout-title { padding: 0.75rem 1.1rem 0; margin: 0; }
+.prose blockquote.callout-bug > .callout-title::before { content: '🐞'; }
+.prose blockquote.callout-bug > .bug-title {
+  margin: 0.15rem 0 0;
+  padding: 0 1.1rem 0.75rem;
+  border-bottom: 1px solid var(--bug-line);
+  font-size: 1.05em;
+  font-weight: 700;
+}
+.prose blockquote.callout-bug > :not(.callout-title):not(.bug-title) { margin-left: 1.1rem; margin-right: 1.1rem; }
+.prose blockquote.callout-bug > :last-child { margin-bottom: 0.9rem; }
+.prose blockquote.callout-bug > ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.75rem;
+}
+.prose blockquote.callout-bug > ul > li {
+  position: relative;
+  padding-left: 4.75em;
+  margin: 0.35rem 0;
+}
+.prose blockquote.callout-bug > ul > li::before { content: none; }
+.prose blockquote.callout-bug > ul > li > p { margin: 0; }
+.prose blockquote.callout-bug > ul > li > strong:first-child,
+.prose blockquote.callout-bug > ul > li > p:first-child > strong:first-child {
+  position: absolute;
+  left: 0;
+  width: 4.5em;
+  color: var(--bug-label);
+  font-size: 0.875em;
+  font-weight: 500;
+  line-height: 2; /* 小字配高行高，和內容基線對齊 */
+}
+.prose blockquote.callout-bug > ul > li.bug-expected { color: var(--bug-good); }
+.prose blockquote.callout-bug > ul > li.bug-actual { color: var(--bug-bad); }
+@media (max-width: 480px) {
+  .prose blockquote.callout-bug > ul > li { padding-left: 0; }
+  .prose blockquote.callout-bug > ul > li > strong:first-child,
+  .prose blockquote.callout-bug > ul > li > p:first-child > strong:first-child {
+    position: static;
+    display: block;
+    width: auto;
+  }
+}
+.article-dark .prose blockquote.callout-bug {
+  --callout-fg: #fca5a5;
+  --callout-bg: #232323;
+  --bug-line: #3a3a3a;
+  --bug-label: #9ca3af;
+  --bug-good: #86efac;
+  --bug-bad: #fca5a5;
+}

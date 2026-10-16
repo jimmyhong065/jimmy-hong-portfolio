@@ -81,6 +81,19 @@ describe('MarkdownContent', () => {
     expect(container.querySelector('blockquote')).toHaveClass('callout-bad')
   })
 
+  it('renders markdown bug card with title and field rows', () => {
+    const md = '> [!BUG] 冷啟動後點「開始」沒反應 🔴\n>\n> - **環境：** Android 14\n> - **預期：** 進入計時頁\n> - **實際：** 停在首頁'
+    const { container } = render(<MarkdownContent content={md} />)
+    const bq = container.querySelector('blockquote')
+    expect(bq).toHaveClass('callout', 'callout-bug')
+    expect(bq.querySelector('.callout-title')).toHaveTextContent('Bug')
+    expect(bq.querySelector('.bug-title')).toHaveTextContent('冷啟動後點「開始」沒反應')
+    expect(bq).not.toHaveTextContent('[!BUG]')
+    const lis = bq.querySelectorAll('li')
+    expect(lis[1]).toHaveClass('bug-expected')
+    expect(lis[2]).toHaveClass('bug-actual')
+  })
+
   it('handles null/undefined content without crashing', () => {
     const { container } = render(<MarkdownContent content={null} />)
     expect(container.firstChild).toBeInTheDocument()

@@ -60,3 +60,27 @@ describe('compare pair (BAD + GOOD)', () => {
       .not.toContain('compare-pair')
   })
 })
+
+describe('bug card', () => {
+  it('keeps the rest of the marker line as bug title and tags expected/actual rows (TipTap HTML)', () => {
+    const out = applyCalloutsToHtml(
+      '<blockquote><p>[!BUG] 冷啟動沒反應</p><ul>' +
+      '<li><p><strong>環境：</strong> Android 14</p></li>' +
+      '<li><p><strong>預期：</strong> 進入計時頁</p></li>' +
+      '<li><p><strong>實際：</strong> 停在首頁</p></li>' +
+      '</ul></blockquote>'
+    )
+    const bq = new DOMParser().parseFromString(out, 'text/html').querySelector('blockquote')
+    expect(bq.classList.contains('callout-bug')).toBe(true)
+    expect(bq.querySelector('.bug-title').textContent).toBe('冷啟動沒反應')
+    const lis = bq.querySelectorAll('li')
+    expect(lis[0].className).toBe('')
+    expect(lis[1].classList.contains('bug-expected')).toBe(true)
+    expect(lis[2].classList.contains('bug-actual')).toBe(true)
+  })
+
+  it('does not tag rows outside bug callouts', () => {
+    const out = applyCalloutsToHtml('<blockquote><p>[!TIP] x</p><ul><li><strong>預期：</strong> y</li></ul></blockquote>')
+    expect(out).not.toContain('bug-expected')
+  })
+})
