@@ -7,7 +7,7 @@ import Footer from '../components/Footer'
 import MarkdownContent from '../components/MarkdownContent'
 import TableOfContents from '../components/TableOfContents'
 import RelatedPosts from '../components/RelatedPosts'
-import EmailSubscribeForm from '../components/EmailSubscribeForm'
+// import EmailSubscribeForm from '../components/EmailSubscribeForm'
 import AuthorCard from '../components/AuthorCard'
 import SeriesCard from '../components/SeriesCard'
 import { useSeries } from '../hooks/useSeries'
@@ -462,7 +462,8 @@ export default function BlogPost() {
             {/* Related posts */}
             <RelatedPosts currentSlug={slug} tags={post.tags ?? []} />
 
-            <EmailSubscribeForm />
+            {/* Email 訂閱暫停：Brevo key 失效，待改 Resend 後恢復 */}
+            {/* <EmailSubscribeForm /> */}
 
             {/* Prev / Next */}
             {(adjacent.prev || adjacent.next) && (
