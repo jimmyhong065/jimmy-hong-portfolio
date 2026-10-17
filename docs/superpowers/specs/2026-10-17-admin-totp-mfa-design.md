@@ -92,8 +92,9 @@
 - 列出 verified factor 的友善名稱與狀態。
 - 新增並驗證另一個 TOTP factor。
 - 移除遺失或停用的 factor。
+- Supabase 沒有直接重新命名 factor 的 API；若要改名稱，必須先建立並驗證新 factor，再移除舊 factor。
 - 顯示至少保留兩個 factor 的原因與目前是否符合要求。
-- UI 不提供移除最後一個 verified factor 的操作。
+- UI 不允許移除後低於兩個 verified factors；更換裝置時必須先驗證新 factor，再移除舊 factor。
 
 新增與移除 factor 後立即重新載入 factor 清單與 AAL 狀態。任何管理操作失敗時保留目前畫面狀態，顯示可重試的錯誤，不假設操作已完成。
 
@@ -155,7 +156,7 @@ RLS 是資料存取的最終邊界。即使攻擊者改寫前端、直接使用 
 - `Login` 根據 MFA 狀態導向正確頁面。
 - setup 覆蓋 QR enrollment、正確／錯誤／過期代碼、重試及未完成 enrollment。
 - verify 覆蓋 factor 選擇、challenge、verify 與安全返回路徑。
-- 安全性設定不允許移除最後一個 verified factor。
+- 安全性設定不允許移除後低於兩個 verified factors。
 - `MFA_REQUIRED` API 回應會導向驗證流程。
 
 測試使用 mock Supabase Auth MFA API，不在測試輸出放入真實 secret 或 token。
