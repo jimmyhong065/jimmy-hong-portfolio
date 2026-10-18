@@ -17,6 +17,7 @@ const FAQ = lazy(() => import('./pages/FAQ'))
 const Saved = lazy(() => import('./pages/Saved'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Login = lazy(() => import('./pages/Login'))
+const MfaVerify = lazy(() => import('./pages/MfaVerify'))
 const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
 const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
@@ -111,6 +112,7 @@ function AppRoutes() {
         <Route path="/faq" element={<HiddenRoute pageKey="faq"><FAQ /></HiddenRoute>} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/mfa/verify" element={<MfaVerify />} />
         <Route path="/photo" element={<HiddenRoute pageKey="photo"><PhotoHome /></HiddenRoute>} />
         <Route path="/photo/:id" element={<HiddenRoute pageKey="photo"><PhotoDetail /></HiddenRoute>} />
         <Route path="/admin" element={
