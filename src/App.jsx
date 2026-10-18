@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
+import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { initBotDetection } from './lib/botDetection'
 import Home from './pages/Home'
@@ -149,12 +150,14 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <SiteSettingsProvider>
-          <PushNavigationHandler />
-          <GAPageView />
-          <BotDetection />
-          <AppRoutes />
-        </SiteSettingsProvider>
+        <AuthProvider>
+          <SiteSettingsProvider>
+            <PushNavigationHandler />
+            <GAPageView />
+            <BotDetection />
+            <AppRoutes />
+          </SiteSettingsProvider>
+        </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
   )
