@@ -25,6 +25,7 @@ export function AuthProvider({ children }) {
       return next
     } catch (error) {
       if (mounted.current && version === requestVersion.current) {
+        setAuth(current => ({ ...EMPTY_AUTH, session: current.session }))
         setAuthError(error)
         setAuthReady(true)
       }
@@ -39,7 +40,7 @@ export function AuthProvider({ children }) {
       // Invalidate in-flight MFA reads as soon as the session changes.
       requestVersion.current += 1
       window.clearTimeout(refreshTimer.current)
-      setAuth(current => ({ ...current, session }))
+      setAuth({ ...EMPTY_AUTH, session })
       setAuthReady(false)
       refreshTimer.current = window.setTimeout(() => refreshAuth().catch(() => {}), 0)
     })

@@ -89,6 +89,35 @@ describe('AuthProvider', () => {
     await act(async () => { await expect(result.current.refreshAuth()).rejects.toBe(error) })
   })
 
+  it('invalidates MFA privileges immediately when the session changes and refresh fails', async () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+    await waitFor(() => expect(result.current.authReady).toBe(true))
+    expect(result.current.currentLevel).toBe('aal2')
+    const session = { user: { id: 'password-only-user' } }
+    const error = new Error('MFA unavailable for new session')
+    loadMfaState.mockRejectedValueOnce(error)
+    act(() => onAuthStateChange('SIGNED_IN', session))
+    expect(result.current).toMatchObject({
+      session, currentLevel: null, nextLevel: null, verifiedFactors: [], authReady: false,
+    })
+    await waitFor(() => expect(result.current.authError).toBe(error))
+    expect(result.current).toMatchObject({
+      session, currentLevel: null, nextLevel: null, verifiedFactors: [], authReady: true,
+    })
+  })
+
+  it('clears prior MFA privileges when an explicit refresh fails', async () => {
+    const { result } = renderHook(() => useAuth(), { wrapper })
+    await waitFor(() => expect(result.current.authReady).toBe(true))
+    const error = new Error('MFA refresh failed')
+    loadMfaState.mockRejectedValueOnce(error)
+    await act(async () => { await expect(result.current.refreshAuth()).rejects.toBe(error) })
+    expect(result.current).toMatchObject({
+      session: authState.session, currentLevel: null, nextLevel: null,
+      verifiedFactors: [], authError: error, authReady: true,
+    })
+  })
+
   it('unsubscribes and cancels queued refresh on unmount', async () => {
     const { result, unmount } = renderHook(() => useAuth(), { wrapper })
     await waitFor(() => expect(result.current.authReady).toBe(true))
