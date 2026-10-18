@@ -27,6 +27,11 @@ export default function Login() {
 
     try {
       const nextAuthState = await refreshAuth()
+      if (!nextAuthState.session) {
+        setError('無法確認登入安全狀態，請稍後再試')
+        setLoading(false)
+        return
+      }
       const returnTo = new URLSearchParams(location.search).get('returnTo')
       navigate(mfaDestination({ ...nextAuthState, returnTo }))
     } catch {

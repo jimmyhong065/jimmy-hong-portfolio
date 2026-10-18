@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HelmetProvider } from 'react-helmet-async'
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
@@ -107,5 +107,37 @@ describe('Login', () => {
     expect(screen.getByRole('button', { name: '登入' })).toBeEnabled()
     expect(screen.getByTestId('location').textContent).toBe('/login?returnTo=%2Fadmin%2Fsettings')
     expect(screen.queryByText('Destination')).not.toBeInTheDocument()
+  })
+
+  it('allows retry without navigating when refreshed auth has no session', async () => {
+    refreshAuth.mockResolvedValue({ session: null, currentLevel: null, verifiedFactors: [] })
+    const user = renderLogin('/login?returnTo=%2Fadmin%2Fsettings')
+
+    await submitLogin(user)
+
+    expect(await screen.findByText('無法確認登入安全狀態，請稍後再試')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '登入' })).toBeEnabled()
+    expect(screen.getByTestId('location').textContent).toBe('/login?returnTo=%2Fadmin%2Fsettings')
+  })
+
+  it('keeps login disabled and waits for auth refresh before navigating', async () => {
+    let resolveRefresh
+    refreshAuth.mockReturnValue(new Promise(resolve => { resolveRefresh = resolve }))
+    const user = renderLogin('/login?returnTo=%2Fadmin%2Fsettings')
+
+    await submitLogin(user)
+
+    const button = screen.getByRole('button', { name: '登入中…' })
+    expect(button).toBeDisabled()
+    expect(refreshAuth).toHaveBeenCalledTimes(1)
+    expect(screen.getByTestId('location').textContent).toBe('/login?returnTo=%2Fadmin%2Fsettings')
+    await user.click(button)
+    expect(supabase.auth.signInWithPassword).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      resolveRefresh({ session, currentLevel: 'aal1', verifiedFactors: [one] })
+    })
+
+    expect(screen.getByTestId('location').textContent).toBe('/mfa/verify?returnTo=%2Fadmin%2Fsettings')
   })
 })
