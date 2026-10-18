@@ -3,16 +3,20 @@ import { supabase } from './supabase'
 export const REQUIRED_TOTP_FACTORS = 2
 
 export function safeAdminReturnTo(value) {
-  if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) {
+  if (typeof value !== 'string' || !/^\/admin(?:[/?#]|$)/.test(value)) {
     return '/admin'
   }
 
-  const origin = 'https://admin-mfa.invalid'
-  const parsed = new URL(value, origin)
-  const isAdminPath = parsed.pathname === '/admin' || parsed.pathname.startsWith('/admin/')
+  try {
+    const origin = 'https://admin-mfa.invalid'
+    const parsed = new URL(value, origin)
+    const isAdminPath = parsed.pathname === '/admin' || parsed.pathname.startsWith('/admin/')
 
-  if (parsed.origin !== origin || !isAdminPath) return '/admin'
-  return `${parsed.pathname}${parsed.search}${parsed.hash}`
+    if (parsed.origin !== origin || !isAdminPath) return '/admin'
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`
+  } catch {
+    return '/admin'
+  }
 }
 
 function mfaUrl(path, returnTo) {

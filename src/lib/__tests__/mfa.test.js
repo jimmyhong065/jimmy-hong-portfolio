@@ -10,6 +10,14 @@ import {
 } from '../mfa'
 
 describe('safeAdminReturnTo', () => {
+  it('falls back to admin when URL parsing fails', () => {
+    expect(safeAdminReturnTo('/\\[')).toBe('/admin')
+  })
+
+  it('rejects non-admin input that normalizes into an admin path', () => {
+    expect(safeAdminReturnTo('/login/../admin/posts')).toBe('/admin')
+  })
+
   it.each([
     '/admin',
     '/admin/posts',
