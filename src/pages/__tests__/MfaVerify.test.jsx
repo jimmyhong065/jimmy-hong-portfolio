@@ -192,4 +192,53 @@ describe('MfaVerify', () => {
     expect(await screen.findByText('無法確認登入安全狀態，請稍後再試')).toBeInTheDocument()
     expect(screen.getByTestId('location').textContent).toBe(entry)
   })
+
+  it.each([
+    [[one], '/mfa/setup?returnTo=%2Fadmin%2Fposts'],
+    [[one, two], '/admin/posts'],
+  ])('recovers cleared security state with factors %j without another code', async (factors, destination) => {
+    refreshAuth.mockImplementationOnce(async () => {
+      state = { ...state, verifiedFactors: [] }
+      throw new Error('private detail')
+    }).mockResolvedValueOnce({ session, currentLevel: 'aal2', verifiedFactors: factors })
+    const user = renderVerify()
+    await submit(user)
+    await user.click(await screen.findByRole('button', { name: '重新載入安全狀態' }))
+    await waitFor(() => expect(screen.getByTestId('location').textContent).toBe(destination))
+    expect(refreshAuth).toHaveBeenCalledTimes(2)
+    expect(supabase.auth.mfa.challengeAndVerify).toHaveBeenCalledTimes(1)
+  })
+
+  it.each(['error', 'no session'])('keeps recovery retryable after %s', async mode => {
+    refreshAuth.mockImplementationOnce(async () => {
+      state = { ...state, verifiedFactors: [] }
+      throw new Error('private detail')
+    })
+    if (mode === 'error') refreshAuth.mockRejectedValueOnce(new Error('private detail'))
+    else refreshAuth.mockResolvedValueOnce({ session: null })
+    const user = renderVerify()
+    await submit(user)
+    await user.click(await screen.findByRole('button', { name: '重新載入安全狀態' }))
+    expect(await screen.findByText('無法確認登入安全狀態，請稍後再試')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '重新載入安全狀態' })).toBeEnabled()
+    expect(screen.getByTestId('location').textContent).toBe(entry)
+    expect(refreshAuth).toHaveBeenCalledTimes(2)
+  })
+
+  it('prevents duplicate recovery and verification while recovery is pending', async () => {
+    let resolveRefresh
+    refreshAuth.mockRejectedValueOnce(new Error('private detail'))
+      .mockReturnValueOnce(new Promise(resolve => { resolveRefresh = resolve }))
+    const user = renderVerify()
+    await submit(user)
+    const retry = await screen.findByRole('button', { name: '重新載入安全狀態' })
+    await user.click(retry)
+    expect(retry).toBeDisabled()
+    await user.click(retry)
+    fireEvent.submit(screen.getByRole('button', { name: '驗證', exact: true }).closest('form'))
+    expect(refreshAuth).toHaveBeenCalledTimes(2)
+    expect(supabase.auth.mfa.challengeAndVerify).toHaveBeenCalledTimes(1)
+    await act(async () => resolveRefresh({ session, currentLevel: 'aal2', verifiedFactors: [one, two] }))
+    expect(screen.getByTestId('location').textContent).toBe('/admin/posts')
+  })
 })

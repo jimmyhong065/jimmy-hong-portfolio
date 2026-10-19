@@ -15,10 +15,37 @@ export default function MfaVerify() {
   const [selectedFactorId, setSelectedFactorId] = useState('')
   const [code, setCode] = useState('')
   const [error, setError] = useState(null)
+  const [recoveryRequired, setRecoveryRequired] = useState(false)
   const [loading, setLoading] = useState(false)
   const busy = useRef(false)
   const factorId = verifiedFactors.some(factor => factor.id === selectedFactorId)
     ? selectedFactorId : verifiedFactors[0]?.id
+
+  async function refreshAndNavigate() {
+    try {
+      const next = await refreshAuth()
+      if (!next?.session) throw new Error('Missing session')
+      setRecoveryRequired(false)
+      setError(null)
+      navigate(mfaDestination({ ...next, returnTo }), { replace: true })
+    } catch {
+      setRecoveryRequired(true)
+      setError(SECURITY_ERROR)
+    }
+  }
+
+  async function handleSecurityRetry() {
+    if (busy.current) return
+    busy.current = true
+    setLoading(true)
+    setError(null)
+    try {
+      await refreshAndNavigate()
+    } finally {
+      busy.current = false
+      setLoading(false)
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -48,13 +75,7 @@ export default function MfaVerify() {
         setError('驗證碼錯誤或已過期，請輸入目前顯示的代碼')
         return
       }
-      try {
-        const next = await refreshAuth()
-        if (!next?.session) throw new Error('Missing session')
-        navigate(mfaDestination({ ...next, returnTo }), { replace: true })
-      } catch {
-        setError(SECURITY_ERROR)
-      }
+      await refreshAndNavigate()
     } finally {
       busy.current = false
       setLoading(false)
@@ -80,7 +101,7 @@ export default function MfaVerify() {
 
   if (!authReady) return <div className="min-h-screen bg-gray-50" />
   // Refresh may clear context factors on failure; keep the error here for retry/sign-out.
-  if (!loading && error !== SECURITY_ERROR && (!session || verifiedFactors.length === 0 || currentLevel === 'aal2')) {
+  if (!loading && !recoveryRequired && error !== SECURITY_ERROR && (!session || verifiedFactors.length === 0 || currentLevel === 'aal2')) {
     return <Navigate to={mfaDestination({ session, currentLevel, verifiedFactors, returnTo })} replace />
   }
 
@@ -103,6 +124,7 @@ export default function MfaVerify() {
             {error && <p role="alert" className="text-xs text-red-500 mb-3">{error}</p>}
             <button type="submit" disabled={loading} aria-busy={loading} className="w-full text-sm bg-gray-900 text-white py-2.5 rounded-lg hover:bg-gray-700 disabled:opacity-50">驗證</button>
           </form>
+          {recoveryRequired && <button type="button" onClick={handleSecurityRetry} disabled={loading} className="w-full text-sm text-gray-700 mt-4 disabled:opacity-50">重新載入安全狀態</button>}
           <button type="button" onClick={handleSignOut} disabled={loading} className="w-full text-sm text-gray-500 mt-4 disabled:opacity-50">登出</button>
         </div>
       </div>
