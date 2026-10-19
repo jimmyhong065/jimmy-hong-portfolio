@@ -105,8 +105,8 @@ export default function Home() {
                 {/* CTA: primary buttons row + social icons row on mobile */}
                 <div className="flex flex-col items-center md:flex-row md:items-center gap-3">
                   <div className="flex items-center gap-3">
-                    <a href="/projects" className="text-xs bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
-                    <a href="/blog" className="text-xs border border-gray-300 text-gray-700 px-5 py-2.5 rounded-md hover:border-gray-500 hover:text-gray-900 transition-colors">閱讀文章</a>
+                    <a href="/projects" className="text-xs whitespace-nowrap bg-gray-900 text-white px-5 py-2.5 rounded-md hover:bg-gray-700">看作品集</a>
+                    <a href="/blog" className="text-xs whitespace-nowrap border border-gray-300 text-gray-700 px-5 py-2.5 rounded-md hover:border-gray-500 hover:text-gray-900 transition-colors">閱讀文章</a>
                   </div>
                   <div className="flex gap-2">
                     {settings.github_url && (
@@ -138,24 +138,30 @@ export default function Home() {
               ))}
             </div>
           </div>
-          {/* Desktop-only right panel */}
-          <div className="hidden md:block bg-gray-50 border border-gray-200 rounded-2xl p-7">
-            <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Services</p>
-            <div className="grid grid-cols-2 gap-2.5 mb-5">
-              {services.map(s => (
-                <div key={s.id} className="bg-white border border-gray-200 rounded-lg p-3">
-                  <div className="text-xs text-gray-600">{s.title}</div>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              {[['3+', '年 QA 經驗'], [`${projects.length}`, '專案'], [`${posts.length}`, '文章']].map(([n, l]) => (
-                <div key={l} className="flex-1 bg-gray-100 rounded-lg p-2.5 text-center">
-                  <div className="text-lg font-bold">{n}</div>
-                  <div className="text-xs text-gray-400">{l}</div>
-                </div>
-              ))}
-            </div>
+          {/* Illustration: above the intro on mobile, right column on desktop */}
+          <div className="order-first md:order-last">
+            <img
+              src="/images/home/qa-desk-1280.webp"
+              srcSet="/images/home/qa-desk-720.webp 720w, /images/home/qa-desk-1280.webp 1280w"
+              sizes="(min-width: 768px) 460px, 100vw"
+              width="1280"
+              height="720"
+              fetchPriority="high"
+              alt="QA 工程師的辦公桌：一排測試手機、寫著程式的螢幕和筆電，旁邊是 bug、放大鏡和檢查清單的小圖示"
+              className="w-full h-auto rounded-2xl border border-gray-200 shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* Desktop-only stats row */}
+        <div className="hidden md:flex max-w-5xl mx-auto px-12 pb-10 justify-end">
+          <div className="flex gap-2">
+            {[['3+', '年 QA 經驗'], [`${projects.length}`, '專案'], [`${posts.length}`, '文章']].map(([n, l]) => (
+              <div key={l} className="bg-gray-100 rounded-lg px-4 py-2 text-center">
+                <div className="text-lg font-bold">{n}</div>
+                <div className="text-xs text-gray-400">{l}</div>
+              </div>
+            ))}
           </div>
         </div>
 
