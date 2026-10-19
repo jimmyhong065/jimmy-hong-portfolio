@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <rect x="1" y="1" width="898" height="268" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <text x="28" y="42" font-size="20" font-weight="700" fill="#1d232b">一個人扛 App 自動化的一年多</text>
+  <path d="M70 136H830" stroke="#c3cad3" stroke-width="3"/>
+  <g fill="#ffffff" stroke="#5d6875" stroke-width="3">
+    <circle cx="70" cy="136" r="11"/><circle cx="197" cy="136" r="11"/><circle cx="450" cy="136" r="11"/><circle cx="577" cy="136" r="11"/><circle cx="703" cy="136" r="11"/><circle cx="830" cy="136" r="11"/>
+  </g>
+  <circle cx="323" cy="136" r="14" fill="#b91c1c"/>
+  <circle cx="450" cy="136" r="14" fill="#15803d"/>
+  <g font-size="16" font-weight="700" fill="#1d232b" text-anchor="middle">
+    <text x="70" y="104">藍圖</text><text x="197" y="104">落地</text><text x="323" y="104" fill="#b91c1c">撞牆</text>
+    <text x="450" y="104" fill="#15803d">重談期待</text><text x="577" y="104">報表全綠</text><text x="703" y="104">Cursor</text><text x="830" y="104">交出去</text>
+  </g>
+  <g font-size="14" fill="#5d6875" text-anchor="middle">
+    <text x="70" y="178">報到前</text><text x="70" y="200">16 個元件</text>
+    <text x="197" y="178">只剩 3 塊</text><text x="197" y="200">第一支：登入</text>
+    <text x="323" y="178">一直 flaky</text><text x="323" y="200">進度追不上</text>
+    <text x="450" y="178">從要數量</text><text x="450" y="200">改成先求穩定</text>
+    <text x="577" y="178">重跑把 flaky</text><text x="577" y="200">藏起來了</text>
+    <text x="703" y="178">2025 年 6 月</text><text x="703" y="200">幫忙也幫倒忙</text>
+    <text x="830" y="178">轉做探索式</text><text x="830" y="200">交給開發團隊</text>
+  </g>
+</svg>

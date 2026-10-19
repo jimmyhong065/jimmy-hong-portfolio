@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <rect x="1" y="1" width="898" height="468" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <text x="28" y="44" font-size="20" font-weight="700" fill="#1d232b">報到前的藍圖：16 個元件，最後只留 3 塊</text>
+  <rect x="232" y="66" width="428" height="98" rx="14" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <rect x="28" y="74" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="130" y="102" text-anchor="middle" font-size="14" fill="#8a94a0">腳本</text>
+  <text x="130" y="134" text-anchor="middle" font-size="18" fill="#8a94a0">Katalon</text>
+  <rect x="240" y="74" width="204" height="82" rx="10" fill="#ffffff" stroke="#15803d" stroke-width="1.2"/>
+  <text x="342" y="102" text-anchor="middle" font-size="14" fill="#15803d">① 腳本 · 留下</text>
+  <text x="342" y="134" text-anchor="middle" font-size="19" font-weight="700" fill="#15803d">pytest</text>
+  <rect x="452" y="74" width="204" height="82" rx="10" fill="#ffffff" stroke="#15803d" stroke-width="1.2"/>
+  <text x="554" y="102" text-anchor="middle" font-size="14" fill="#15803d">① 執行 · 留下</text>
+  <text x="554" y="134" text-anchor="middle" font-size="19" font-weight="700" fill="#15803d">Appium 實機</text>
+  <rect x="664" y="74" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="766" y="102" text-anchor="middle" font-size="14" fill="#8a94a0">執行</text>
+  <text x="766" y="134" text-anchor="middle" font-size="18" fill="#8a94a0">雲端裝置</text>
+  <rect x="28" y="170" width="204" height="82" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <text x="130" y="198" text-anchor="middle" font-size="14" fill="#15803d">② CI · 留下</text>
+  <text x="130" y="230" text-anchor="middle" font-size="19" font-weight="700" fill="#15803d">GitHub Actions</text>
+  <rect x="240" y="170" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="342" y="198" text-anchor="middle" font-size="14" fill="#8a94a0">執行輔助</text>
+  <text x="342" y="230" text-anchor="middle" font-size="18" fill="#8a94a0">Proxyman</text>
+  <rect x="452" y="170" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="554" y="198" text-anchor="middle" font-size="14" fill="#8a94a0">執行輔助</text>
+  <text x="554" y="230" text-anchor="middle" font-size="18" fill="#8a94a0">裝置管理平台</text>
+  <rect x="664" y="170" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="766" y="198" text-anchor="middle" font-size="14" fill="#8a94a0">測資</text>
+  <text x="766" y="230" text-anchor="middle" font-size="18" fill="#8a94a0">測資微服務</text>
+  <rect x="28" y="266" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="130" y="294" text-anchor="middle" font-size="14" fill="#8a94a0">測資</text>
+  <text x="130" y="326" text-anchor="middle" font-size="18" fill="#8a94a0">PostgreSQL</text>
+  <rect x="240" y="266" width="204" height="82" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <text x="342" y="294" text-anchor="middle" font-size="14" fill="#15803d">③ 報表 · 留下</text>
+  <text x="342" y="326" text-anchor="middle" font-size="19" font-weight="700" fill="#15803d">ReportPortal</text>
+  <rect x="452" y="266" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="554" y="294" text-anchor="middle" font-size="14" fill="#8a94a0">報表</text>
+  <text x="554" y="326" text-anchor="middle" font-size="18" fill="#8a94a0">Grafana</text>
+  <rect x="664" y="266" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="766" y="294" text-anchor="middle" font-size="14" fill="#8a94a0">通知</text>
+  <text x="766" y="326" text-anchor="middle" font-size="18" fill="#8a94a0">寄信服務</text>
+  <rect x="28" y="362" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="130" y="390" text-anchor="middle" font-size="14" fill="#8a94a0">儲存</text>
+  <text x="130" y="422" text-anchor="middle" font-size="18" fill="#8a94a0">檔案儲存</text>
+  <rect x="240" y="362" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="342" y="390" text-anchor="middle" font-size="14" fill="#8a94a0">管理</text>
+  <text x="342" y="422" text-anchor="middle" font-size="18" fill="#8a94a0">案例管理平台</text>
+  <rect x="452" y="362" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="554" y="390" text-anchor="middle" font-size="14" fill="#8a94a0">其他</text>
+  <text x="554" y="422" text-anchor="middle" font-size="18" fill="#8a94a0">AI 視覺測試</text>
+  <rect x="664" y="362" width="204" height="82" rx="10" fill="#f6f7f9" stroke="#d5dae1" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="766" y="390" text-anchor="middle" font-size="14" fill="#8a94a0">其他</text>
+  <text x="766" y="422" text-anchor="middle" font-size="18" fill="#8a94a0">健康度檢查</text>
+  <text x="450" y="458" text-anchor="middle" font-size="15" fill="#5d6875">① 一台 Mac mini 接實機（pytest＋Appium）　② self-hosted GitHub Actions　③ ReportPortal</text>
+</svg>

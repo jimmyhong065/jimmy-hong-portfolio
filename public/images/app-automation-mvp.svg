@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <rect x="1" y="1" width="798" height="468" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <rect x="250" y="18" width="300" height="34" rx="17" fill="#eef1f5"/>
+  <text x="400" y="41" text-anchor="middle" font-size="15" fill="#1d232b">最小可行版：只留 3 塊</text>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#5d6875"/>
+    </marker>
+  </defs>
+
+  <!-- 觸發 -->
+  <rect x="24" y="84" width="150" height="110" rx="12" fill="#eef4ff"/>
+  <text x="99" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">手動觸發</text>
+  <text x="99" y="142" text-anchor="middle" font-size="13" fill="#1d232b">GitHub Actions</text>
+  <text x="99" y="162" text-anchor="middle" font-size="13" fill="#1d232b">workflow_dispatch</text>
+  <text x="99" y="182" text-anchor="middle" font-size="12" fill="#5d6875">帶版號＋平台</text>
+
+  <path d="M178 139H216" stroke="#5d6875" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Mac mini -->
+  <rect x="222" y="70" width="300" height="250" rx="12" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+  <text x="372" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">① 一台 Mac mini</text>
+  <rect x="242" y="112" width="260" height="34" rx="8" fill="#ffffff" stroke="#cfe8d6"/>
+  <text x="372" y="134" text-anchor="middle" font-size="13" fill="#1d232b">self-hosted runner</text>
+  <rect x="242" y="154" width="260" height="34" rx="8" fill="#ffffff" stroke="#cfe8d6"/>
+  <text x="372" y="176" text-anchor="middle" font-size="13" fill="#1d232b">pytest 腳本 → Appium Server</text>
+  <path d="M372 192V214" stroke="#5d6875" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- 裝置 -->
+  <rect x="246" y="222" width="72" height="80" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="282" y="258" text-anchor="middle" font-size="12" fill="#1d232b">Android</text>
+  <text x="282" y="278" text-anchor="middle" font-size="12" fill="#5d6875">實機</text>
+  <rect x="336" y="222" width="72" height="80" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="372" y="258" text-anchor="middle" font-size="12" fill="#1d232b">Android</text>
+  <text x="372" y="278" text-anchor="middle" font-size="12" fill="#5d6875">實機</text>
+  <rect x="426" y="222" width="72" height="80" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="462" y="258" text-anchor="middle" font-size="12" fill="#1d232b">iPhone</text>
+  <text x="462" y="278" text-anchor="middle" font-size="12" fill="#5d6875">實機</text>
+
+  <path d="M526 195H564" stroke="#5d6875" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="545" y="184" text-anchor="middle" font-size="11" fill="#5d6875">上傳</text>
+
+  <!-- RP -->
+  <rect x="570" y="84" width="206" height="150" rx="12" fill="#fff7ed" stroke="#c2410c" stroke-width="1.5"/>
+  <text x="673" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">② ReportPortal</text>
+  <text x="673" y="142" text-anchor="middle" font-size="13" fill="#1d232b">docker 自架</text>
+  <text x="673" y="166" text-anchor="middle" font-size="13" fill="#1d232b">結果＋截圖＋趨勢</text>
+  <text x="673" y="196" text-anchor="middle" font-size="12" fill="#5d6875">主管、開發</text>
+  <text x="673" y="214" text-anchor="middle" font-size="12" fill="#5d6875">打開就看得懂</text>
+
+  <text x="99" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">③ CI 串起來</text>
+  <text x="99" y="248" text-anchor="middle" font-size="12" fill="#5d6875">一輪 1～2 小時</text>
+
+  <!-- 規模到了再加 -->
+  <rect x="24" y="344" width="752" height="104" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="400" y="372" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6875">規模到了再加（藍圖上有、現在不做）</text>
+  <text x="400" y="400" text-anchor="middle" font-size="13" fill="#5d6875">雲端裝置 · 案例管理平台 · Grafana · 視覺 AI 測試 · 裝置管理平台</text>
+  <text x="400" y="424" text-anchor="middle" font-size="13" fill="#5d6875">檔案儲存 · 寄信通知 · 服務健康檢查 · 測資微服務 · 第二套腳本工具</text>
+</svg>

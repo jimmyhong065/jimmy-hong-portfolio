@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <rect x="1" y="1" width="798" height="338" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <rect x="250" y="18" width="300" height="34" rx="17" fill="#eef1f5"/>
+  <text x="400" y="41" text-anchor="middle" font-size="16" fill="#1d232b">跟主管重談之後，目標換了</text>
+
+  <rect x="24" y="68" width="340" height="248" rx="12" fill="#fef2f2"/>
+  <text x="194" y="108" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="2" fill="#b91c1c">原本的期待</text>
+  <text x="194" y="180" text-anchor="middle" font-size="48" font-weight="900" fill="#b91c1c">要數量</text>
+  <text x="194" y="230" text-anchor="middle" font-size="15" fill="#1d232b">什麼時候覆蓋多少</text>
+  <text x="194" y="258" text-anchor="middle" font-size="15" fill="#1d232b">修 flaky 吃掉寫新測試的時間</text>
+
+  <path d="M376 192H414" stroke="#5d6875" stroke-width="3" stroke-linecap="round"/>
+  <path d="M410 182L424 192L410 202z" fill="#5d6875"/>
+
+  <rect x="436" y="68" width="340" height="248" rx="12" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+  <text x="606" y="108" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="2" fill="#15803d">重談之後</text>
+  <text x="606" y="180" text-anchor="middle" font-size="48" font-weight="900" fill="#15803d">先求穩定</text>
+  <text x="606" y="230" text-anchor="middle" font-size="15" fill="#1d232b">紅燈要可信</text>
+  <text x="606" y="258" text-anchor="middle" font-size="15" fill="#1d232b">綠燈要真的綠</text>
+</svg>
