@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useUpload } from '../../hooks/useUpload'
-import { adminAuthHeader } from '../../lib/adminAuth'
+import { adminFetch } from '../../lib/adminAuth'
 
 async function r2List(cursor) {
   const url = cursor ? `/r2-manage?cursor=${cursor}` : '/r2-manage'
-  const res = await fetch(url, { headers: await adminAuthHeader() })
+  const res = await adminFetch(url)
+  if (!res.ok) throw new Error('R2 list failed')
   return res.json()
 }
 
 async function r2Delete(key) {
-  const res = await fetch('/r2-manage', {
+  const res = await adminFetch('/r2-manage', {
     method: 'DELETE',
-    headers: { ...(await adminAuthHeader()), 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key }),
   })
+  if (!res.ok) throw new Error('R2 delete failed')
   return res.json()
 }
 
@@ -31,17 +33,24 @@ export default function AdminPhotos() {
   const [search, setSearch] = useState('')
   const [copied, setCopied] = useState(null)
   const [deleting, setDeleting] = useState(null)
+  const [actionError, setActionError] = useState(null)
   const [view, setView] = useState('grid')
   const fileInputRef = useRef()
   const { uploading, uploadError, uploadMany } = useUpload()
 
   const load = useCallback(async (nextCursor = null) => {
     setLoading(true)
-    const data = await r2List(nextCursor)
-    setFiles(prev => nextCursor ? [...prev, ...(data.files ?? [])] : (data.files ?? []))
-    setHasMore(data.truncated ?? false)
-    setCursor(data.cursor ?? null)
-    setLoading(false)
+    setActionError(null)
+    try {
+      const data = await r2List(nextCursor)
+      setFiles(prev => nextCursor ? [...prev, ...(data.files ?? [])] : (data.files ?? []))
+      setHasMore(data.truncated ?? false)
+      setCursor(data.cursor ?? null)
+    } catch {
+      setActionError('載入圖片失敗，請稍後再試')
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -58,9 +67,16 @@ export default function AdminPhotos() {
   async function handleDelete(file) {
     if (!confirm(`確定刪除 ${file.key}？`)) return
     setDeleting(file.key)
-    await r2Delete(file.key)
-    setFiles(prev => prev.filter(f => f.key !== file.key))
-    setDeleting(null)
+    setActionError(null)
+    try {
+      const result = await r2Delete(file.key)
+      if (result?.error) throw new Error('R2 delete denied')
+      setFiles(prev => prev.filter(f => f.key !== file.key))
+    } catch {
+      setActionError('刪除失敗，請稍後再試')
+    } finally {
+      setDeleting(null)
+    }
   }
 
   async function handleCopy(url) {
@@ -88,6 +104,7 @@ export default function AdminPhotos() {
       </div>
 
       {uploadError && <p className="text-xs text-red-500 mb-4">{uploadError}</p>}
+      {actionError && <p role="alert" className="text-xs text-red-500 mb-4">{actionError}</p>}
 
       {/* Toolbar */}
       <div className="flex gap-2 mb-4">

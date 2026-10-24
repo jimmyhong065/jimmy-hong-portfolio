@@ -254,7 +254,9 @@ CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
 LANGUAGE sql STABLE
 AS $$
-  SELECT lower(coalesce(auth.jwt() ->> 'email', '')) = 'rbingwork1030@gmail.com'
+  SELECT
+    lower(coalesce(auth.jwt() ->> 'email', '')) = 'rbingwork1030@gmail.com'
+    AND coalesce(auth.jwt() ->> 'aal', 'aal1') = 'aal2'
 $$;
 
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;

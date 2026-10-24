@@ -35,6 +35,7 @@ const {
 
 vi.mock('../../../lib/supabase', () => ({
   supabase: {
+    auth: { getSession: vi.fn().mockResolvedValue({ data: { session: { access_token: 'test-token' } } }) },
     from: vi.fn(() => ({
       select: selectMock,
       eq: eqMock,
@@ -125,12 +126,26 @@ describe('AdminPostEdit — auto-save and preview', () => {
   afterEach(() => {
     vi.useRealTimers()
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   it('shows preview button for existing post', async () => {
     renderEdit('abc')
     await waitFor(() => screen.getByDisplayValue('測試文章'))
     expect(screen.getByRole('button', { name: /預覽/ })).toBeInTheDocument()
+  })
+
+  it.each([
+    ['發送 Email 給所有訂閱者', '/api/email-send'],
+    ['送出通知給所有訂閱者', '/api/push-send'],
+  ])('authenticates the %s admin request', async (label, endpoint) => {
+    singleMock.mockResolvedValue({ data: { ...postFixture, published: true } })
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ sent: 1 }))))
+    renderEdit('abc')
+    fireEvent.click(await screen.findByRole('button', { name: label }))
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(endpoint, expect.anything()))
+    expect(fetch.mock.calls[0][1].headers.get('Authorization')).toBe('Bearer test-token')
+    vi.unstubAllGlobals()
   })
 
   it('does not show preview button for new post', () => {

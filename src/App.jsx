@@ -2,7 +2,9 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
+import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import MfaRequiredRedirect from './components/MfaRequiredRedirect'
 import { initBotDetection } from './lib/botDetection'
 import Home from './pages/Home'
 // 非首頁路由 lazy：把 MarkdownContent / syntax-highlighter 等重依賴移出首屏 chunk
@@ -16,6 +18,8 @@ const FAQ = lazy(() => import('./pages/FAQ'))
 const Saved = lazy(() => import('./pages/Saved'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Login = lazy(() => import('./pages/Login'))
+const MfaVerify = lazy(() => import('./pages/MfaVerify'))
+const MfaSetup = lazy(() => import('./pages/MfaSetup'))
 const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
 const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
@@ -110,6 +114,8 @@ function AppRoutes() {
         <Route path="/faq" element={<HiddenRoute pageKey="faq"><FAQ /></HiddenRoute>} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/mfa/verify" element={<MfaVerify />} />
+        <Route path="/mfa/setup" element={<MfaSetup />} />
         <Route path="/photo" element={<HiddenRoute pageKey="photo"><PhotoHome /></HiddenRoute>} />
         <Route path="/photo/:id" element={<HiddenRoute pageKey="photo"><PhotoDetail /></HiddenRoute>} />
         <Route path="/admin" element={
@@ -149,12 +155,15 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
-        <SiteSettingsProvider>
-          <PushNavigationHandler />
-          <GAPageView />
-          <BotDetection />
-          <AppRoutes />
-        </SiteSettingsProvider>
+        <AuthProvider>
+          <SiteSettingsProvider>
+            <PushNavigationHandler />
+            <MfaRequiredRedirect />
+            <GAPageView />
+            <BotDetection />
+            <AppRoutes />
+          </SiteSettingsProvider>
+        </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
   )

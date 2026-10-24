@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../hooks/useAuth'
+import { mfaDestination } from '../lib/mfa'
 import SEOHead from '../components/SEOHead'
 
 export default function Login() {
@@ -9,17 +11,32 @@ export default function Login() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+  const { refreshAuth } = useAuth()
 
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    if (signInError) {
       setError('帳號或密碼錯誤')
       setLoading(false)
-    } else {
-      navigate('/admin')
+      return
+    }
+
+    try {
+      const nextAuthState = await refreshAuth()
+      if (!nextAuthState.session) {
+        setError('無法確認登入安全狀態，請稍後再試')
+        setLoading(false)
+        return
+      }
+      const returnTo = new URLSearchParams(location.search).get('returnTo')
+      navigate(mfaDestination({ ...nextAuthState, returnTo }))
+    } catch {
+      setError('無法確認登入安全狀態，請稍後再試')
+      setLoading(false)
     }
   }
 

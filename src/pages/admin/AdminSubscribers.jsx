@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import { stripMarkdown } from '../../lib/text'
+import { adminFetch } from '../../lib/adminAuth'
 
 function EmailPreview({ title, excerpt }) {
   const clean = stripMarkdown(excerpt)
@@ -114,18 +115,21 @@ export default function AdminSubscribers() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const token = session?.access_token ?? ''
-      const [subsRes, postsRes] = await Promise.all([
-        fetch('/api/admin/subscribers', {
-          headers: { 'Authorization': `Bearer ${token}` },
-        }).then(r => r.json()),
-        supabase.from('posts').select('slug, title, excerpt').eq('published', true).order('published_at', { ascending: false }),
-      ])
-      setSubscribers(Array.isArray(subsRes) ? subsRes : [])
-      setPosts(postsRes.data ?? [])
-      setLoading(false)
-    })
+    async function load() {
+      try {
+        const [subsRes, postsRes] = await Promise.all([
+          adminFetch('/api/admin/subscribers').then(r => r.json()),
+          supabase.from('posts').select('slug, title, excerpt').eq('published', true).order('published_at', { ascending: false }),
+        ])
+        setSubscribers(Array.isArray(subsRes) ? subsRes : [])
+        setPosts(postsRes.data ?? [])
+      } catch {
+        setSubscribers([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
   }, [])
 
   const confirmedCount = subscribers.filter(s => s.confirmed).length
@@ -137,14 +141,9 @@ export default function AdminSubscribers() {
     setSending(true)
     setResult(null)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) { setResult('請重新登入後再試'); setSending(false); return }
-      const res = await fetch('/api/admin/email-broadcast', {
+      const res = await adminFetch('/api/admin/email-broadcast', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: selectedPost.title, excerpt: selectedPost.excerpt ?? '', slug: selectedPost.slug }),
       })
       const data = await res.json()

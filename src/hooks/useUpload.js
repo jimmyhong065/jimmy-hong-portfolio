@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { adminAuthHeader } from '../lib/adminAuth'
+import { adminFetch } from '../lib/adminAuth'
 
 export function useUpload() {
   const [uploading, setUploading] = useState(false)
@@ -8,9 +8,8 @@ export function useUpload() {
   async function upload(file) {
     const fd = new FormData()
     fd.append('file', file)
-    const res = await fetch('/upload', {
+    const res = await adminFetch('/upload', {
       method: 'POST',
-      headers: await adminAuthHeader(),
       body: fd,
     })
     if (!res.ok) throw new Error('上傳失敗，請重試')
