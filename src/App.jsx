@@ -18,6 +18,7 @@ const Saved = lazy(() => import('./pages/Saved'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Login = lazy(() => import('./pages/Login'))
 const MfaVerify = lazy(() => import('./pages/MfaVerify'))
+const MfaSetup = lazy(() => import('./pages/MfaSetup'))
 const PhotoHome = lazy(() => import('./pages/photo/PhotoHome'))
 const PhotoDetail = lazy(() => import('./pages/photo/PhotoDetail'))
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
@@ -113,6 +114,7 @@ function AppRoutes() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mfa/verify" element={<MfaVerify />} />
+        <Route path="/mfa/setup" element={<MfaSetup />} />
         <Route path="/photo" element={<HiddenRoute pageKey="photo"><PhotoHome /></HiddenRoute>} />
         <Route path="/photo/:id" element={<HiddenRoute pageKey="photo"><PhotoDetail /></HiddenRoute>} />
         <Route path="/admin" element={
