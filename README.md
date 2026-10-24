@@ -95,10 +95,9 @@ Run or copy `supabase/schema.sql` into Supabase SQL Editor when creating a fresh
 ## Content Workflows
 
 - Public reads use Supabase anon access guarded by RLS policies.
-- Admin pages require Supabase Auth and authenticated RLS policies.
-- Subscriber list and broadcast APIs verify the current Supabase user against `ADMIN_EMAIL`.
-- Image uploads require `UPLOAD_SECRET` and write to the `PHOTO_BUCKET` R2 binding.
-- Push and email broadcast endpoints require `PUSH_SECRET` or an authenticated admin session, depending on endpoint.
+- Admin access requires a Supabase `aal2` session and two verified TOTP factors; see [Admin TOTP MFA Runbook](docs/admin-mfa-runbook.md).
+- Admin Pages Functions verify the access token, `ADMIN_EMAIL`, and `aal2` before subscriber, broadcast, upload, or R2 operations.
+- Direct Supabase admin data access is restricted by RLS through `public.is_admin()` after the MFA migration is applied.
 
 ## Notes
 
