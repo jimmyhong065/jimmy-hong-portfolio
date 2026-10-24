@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useUpload } from '../useUpload'
 
 vi.mock('../../lib/supabase', () => ({
@@ -22,7 +22,7 @@ describe('useUpload', () => {
   })
 
   it('uploadOne: calls onSuccess with URL on success', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ url: 'https://r2.example.com/photo.jpg' }),
     })
@@ -41,7 +41,7 @@ describe('useUpload', () => {
   })
 
   it('uploadOne: sets uploadError on failure', async () => {
-    global.fetch = vi.fn().mockResolvedValue({ ok: false })
+    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false })
 
     const { result } = renderHook(() => useUpload())
     const onSuccess = vi.fn()
@@ -57,7 +57,7 @@ describe('useUpload', () => {
   })
 
   it('uploadMany: calls onEachSuccess for each file', async () => {
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
       .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/a.jpg' }) })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/b.jpg' }) })
 
@@ -78,7 +78,7 @@ describe('useUpload', () => {
   })
 
   it('uploadMany: sets fetch Authorization header with session token', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ url: 'https://r2.example.com/a.jpg' }),
     })
@@ -90,14 +90,12 @@ describe('useUpload', () => {
       await result.current.uploadOne(file, () => {})
     })
 
-    expect(fetch).toHaveBeenCalledWith('/upload', expect.objectContaining({
-      method: 'POST',
-      headers: { Authorization: 'Bearer jwt-123' },
-    }))
+    expect(fetch).toHaveBeenCalledWith('/upload', expect.objectContaining({ method: 'POST' }))
+    expect(fetch.mock.calls[0][1].headers.get('Authorization')).toBe('Bearer jwt-123')
   })
 
   it('uploadMany: calls onProgress with incremental count', async () => {
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
       .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/a.jpg' }) })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ url: 'https://r2.example.com/b.jpg' }) })
 
@@ -118,7 +116,7 @@ describe('useUpload', () => {
   })
 
   it('uploadMany: stops on first upload error', async () => {
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
       .mockResolvedValueOnce({ ok: false })
 
     const { result } = renderHook(() => useUpload())

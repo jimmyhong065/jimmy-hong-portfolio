@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
-import { adminAuthHeader } from '../../lib/adminAuth'
+import { adminFetch } from '../../lib/adminAuth'
 import { marked } from 'marked'
 import RichTextEditor from '../../components/RichTextEditor'
 import MarkdownEditorPane from '../../components/MarkdownEditorPane'
@@ -272,12 +272,9 @@ export default function AdminPostEdit() {
     emailSendingRef.current = true
     setEmailResult('sending')
     try {
-      const res = await fetch('/api/email-send', {
+      const res = await adminFetch('/api/email-send', {
         method: 'POST',
-        headers: {
-          ...(await adminAuthHeader()),
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: form.title, excerpt: form.excerpt, slug: form.slug }),
       })
       if (!res.ok) throw new Error()
@@ -294,12 +291,9 @@ export default function AdminPostEdit() {
     pushSendingRef.current = true
     setPushResult('sending')
     try {
-      const res = await fetch('/api/push-send', {
+      const res = await adminFetch('/api/push-send', {
         method: 'POST',
-        headers: {
-          ...(await adminAuthHeader()),
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: form.title,
           excerpt: form.excerpt,

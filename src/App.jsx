@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { SiteSettingsProvider, useSiteSettings } from './contexts/SiteSettingsContext'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import MfaRequiredRedirect from './components/MfaRequiredRedirect'
 import { initBotDetection } from './lib/botDetection'
 import Home from './pages/Home'
 // 非首頁路由 lazy：把 MarkdownContent / syntax-highlighter 等重依賴移出首屏 chunk
@@ -157,6 +158,7 @@ export default function App() {
         <AuthProvider>
           <SiteSettingsProvider>
             <PushNavigationHandler />
+            <MfaRequiredRedirect />
             <GAPageView />
             <BotDetection />
             <AppRoutes />

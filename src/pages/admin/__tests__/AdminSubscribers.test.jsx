@@ -56,6 +56,7 @@ describe('AdminSubscribers', () => {
     renderPage()
     await screen.findByText('alice@example.com')
     expect(screen.getByText(/1.*已確認訂閱者/)).toBeInTheDocument()
+    expect(fetch.mock.calls[0][1].headers.get('Authorization')).toBe('Bearer test-token')
   })
 
   it('shows confirmed and pending status badges', async () => {
