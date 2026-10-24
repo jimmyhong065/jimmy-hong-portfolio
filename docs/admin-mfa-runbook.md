@@ -2,6 +2,7 @@
 
 ## Before rollout
 
+- [ ] Review and apply `supabase/migrations/20261008c_remove_public_faq_submissions_read.sql` in production after authorization. The legacy `auth read submissions` policy grants any signed-in user read access despite the admin policy. Confirm the returned `faq_submissions` policies contain no separate SELECT policy.
 - [ ] Supabase TOTP enrollment, challenge, and verification are enabled.
 - [ ] The admin can sign in with the existing Email and password.
 - [ ] Two independent authenticator locations are available.

@@ -1,4 +1,8 @@
 -- Apply only after two independent TOTP factors have been verified in production.
+-- Defense in depth: an older TO public SELECT policy allowed any signed-in
+-- user to read FAQ submissions and would bypass is_admin() after this change.
+DROP POLICY IF EXISTS "auth read submissions" ON public.faq_submissions;
+
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
 LANGUAGE sql STABLE

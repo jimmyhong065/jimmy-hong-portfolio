@@ -37,9 +37,10 @@ Create `.env.local` with the client-side values needed by Vite:
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
 VITE_VAPID_PUBLIC_KEY=
-VITE_UPLOAD_SECRET=
-VITE_PUSH_SECRET=
 ```
+
+Vite embeds `VITE_` values in client assets. Keep private credentials out of these variables and
+do not pass the obsolete `VITE_UPLOAD_SECRET` or `VITE_PUSH_SECRET` values to a build.
 
 For deployed Cloudflare Pages Functions, configure these environment variables and bindings:
 
@@ -48,8 +49,6 @@ SUPABASE_URL=
 SUPABASE_SERVICE_KEY=
 ADMIN_EMAIL=
 SITE_URL=
-UPLOAD_SECRET=
-PUSH_SECRET=
 VAPID_PUBLIC_KEY=
 VAPID_PRIVATE_KEY_JWK=
 VAPID_SUBJECT=

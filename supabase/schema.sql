@@ -358,6 +358,9 @@ CREATE POLICY "anon insert faq submissions"
   ON faq_submissions FOR INSERT TO anon
   WITH CHECK (true);
 
+-- Remove the legacy TO public SELECT policy, which otherwise bypasses is_admin().
+DROP POLICY IF EXISTS "auth read submissions" ON faq_submissions;
+
 DROP POLICY IF EXISTS "auth full access faq submissions" ON faq_submissions;
 CREATE POLICY "auth full access faq submissions"
   ON faq_submissions FOR ALL TO authenticated
