@@ -132,6 +132,35 @@ it('redirects an unauthenticated visitor to login', async () => {
   expect(await screen.findByTestId('location')).toHaveTextContent('/login')
 })
 
+it('hides an active enrollment immediately when the session disappears during verification', async () => {
+  let resolveVerify
+  challengeAndVerify.mockReturnValueOnce(new Promise(resolve => { resolveVerify = resolve }))
+  const page = renderPage()
+  await startEnrollment('手機')
+  await submitCode('123456')
+  expect(screen.getByDisplayValue('SECRET')).toBeInTheDocument()
+
+  useAuth.mockReturnValue({ ...defaultAuth, session: null })
+  page.rerender(<HelmetProvider><MemoryRouter initialEntries={['/mfa/setup']}>
+    <Location /><Routes><Route path="/mfa/setup" element={<MfaSetup />} /><Route path="*" element={<div>Destination</div>} /></Routes>
+  </MemoryRouter></HelmetProvider>)
+  expect(screen.queryByDisplayValue('SECRET')).not.toBeInTheDocument()
+  await act(async () => resolveVerify({ error: { code: 'mfa_factor_not_found' } }))
+})
+
+it('does not show a previous account enrollment after the active user changes', async () => {
+  const page = renderPage()
+  await startEnrollment('手機')
+  expect(screen.getByDisplayValue('SECRET')).toBeInTheDocument()
+
+  useAuth.mockReturnValue({ ...defaultAuth, session: { user: { id: 'another-admin' } } })
+  page.rerender(<HelmetProvider><MemoryRouter initialEntries={['/mfa/setup']}>
+    <Location /><Routes><Route path="/mfa/setup" element={<MfaSetup />} /><Route path="*" element={<div>Destination</div>} /></Routes>
+  </MemoryRouter></HelmetProvider>)
+  expect(screen.queryByDisplayValue('SECRET')).not.toBeInTheDocument()
+  expect(screen.getByLabelText('驗證器名稱')).toBeInTheDocument()
+})
+
 it('verifies the existing factor before adding a second factor', async () => {
   useAuth.mockReturnValue({
     ...defaultAuth, currentLevel: 'aal1', verifiedFactors: [one],

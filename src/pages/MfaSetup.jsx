@@ -20,6 +20,7 @@ export default function MfaSetup() {
   const [loading, setLoading] = useState(false)
   const [recoveryRequired, setRecoveryRequired] = useState(false)
   const busy = useRef(false)
+  const activeEnrollment = session?.user?.id && enrollment?.ownerId === session.user.id ? enrollment : null
 
   async function refreshSecurity() {
     try {
@@ -64,7 +65,7 @@ export default function MfaSetup() {
       failure = '無法產生驗證器設定，請稍後再試'
       const result = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: name, issuer: 'QA Lens' })
       if (result.error || !result.data?.id || !result.data?.totp?.qr_code || !result.data?.totp?.secret) throw new Error('Enrollment unavailable')
-      setEnrollment(result.data)
+      setEnrollment({ ...result.data, ownerId: session.user.id })
     } catch {
       setError(failure)
     } finally {
@@ -75,7 +76,7 @@ export default function MfaSetup() {
 
   async function verifyEnrollment(event) {
     event.preventDefault()
-    if (busy.current || !session || !enrollment || recoveryRequired) return
+    if (busy.current || !session || !activeEnrollment || recoveryRequired) return
     if (!/^[0-9]{6}$/.test(code)) return setError('請輸入六位數驗證碼')
     busy.current = true
     setLoading(true)
@@ -83,7 +84,7 @@ export default function MfaSetup() {
     try {
       let result
       try {
-        result = await supabase.auth.mfa.challengeAndVerify({ factorId: enrollment.id, code })
+        result = await supabase.auth.mfa.challengeAndVerify({ factorId: activeEnrollment.id, code })
       } catch (verificationError) {
         handleVerificationError(verificationError)
         return
@@ -144,16 +145,18 @@ export default function MfaSetup() {
   }
 
   async function copySecret() {
+    if (!activeEnrollment) return
     try {
-      await navigator.clipboard.writeText(enrollment.totp.secret)
+      await navigator.clipboard.writeText(activeEnrollment.totp.secret)
       setNotice('已複製設定金鑰，完成後請清除剪貼簿')
     } catch {
       setError('無法複製，請手動輸入設定金鑰')
     }
   }
 
-  if (!authReady && !loading) return <div className="min-h-screen bg-gray-50" />
-  if (!loading && !recoveryRequired && !authError && (!session || (verifiedFactors.length > 0 && currentLevel !== 'aal2'))) {
+  if (!authReady) return <div className="min-h-screen bg-gray-50" />
+  if (!session) return <Navigate to="/login" replace />
+  if (!loading && !recoveryRequired && !authError && verifiedFactors.length > 0 && currentLevel !== 'aal2') {
     return <Navigate to={mfaDestination({ session, currentLevel, verifiedFactors, returnTo })} replace />
   }
   const securityUnavailable = recoveryRequired || Boolean(authError)
@@ -165,10 +168,10 @@ export default function MfaSetup() {
         <h1 className="text-lg font-bold mb-2">設定雙重驗證</h1>
         <p className="text-sm text-gray-500 mb-6">請準備兩個獨立的驗證器，例如手機及另一台裝置或密碼管理工具。請勿只在同一支手機保存兩份。</p>
         {notice && <p role="status" className="text-sm text-gray-600 mb-4">{notice}</p>}
-        {!securityUnavailable && (enrollment ? <form onSubmit={verifyEnrollment}>
-          <img src={enrollment.totp.qr_code} alt="TOTP QR Code" className="w-56 max-w-full mx-auto mb-4" />
+        {!securityUnavailable && (activeEnrollment ? <form onSubmit={verifyEnrollment}>
+          <img src={activeEnrollment.totp.qr_code} alt="TOTP QR Code" className="w-56 max-w-full mx-auto mb-4" />
           <label htmlFor="mfa-secret" className="block text-sm mb-2">手動設定金鑰</label>
-          <input id="mfa-secret" value={enrollment.totp.secret} readOnly className="w-full min-w-0 border rounded-lg px-3 py-2 text-sm" />
+          <input id="mfa-secret" value={activeEnrollment.totp.secret} readOnly className="w-full min-w-0 border rounded-lg px-3 py-2 text-sm" />
           <button type="button" onClick={copySecret} disabled={loading} className="text-sm underline mt-2 mb-4">複製設定金鑰</button>
           <label htmlFor="setup-code" className="block text-sm mb-2">六位數驗證碼</label>
           <input id="setup-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={event => setCode(event.target.value)} disabled={loading} className="w-full border rounded-lg px-4 py-2.5 mb-4 text-sm" />
