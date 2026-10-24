@@ -43,3 +43,35 @@ it('keeps the photo visible when deletion is denied by MFA', async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent('刪除失敗')
   expect(screen.getAllByText('test.png')).not.toHaveLength(0)
 })
+
+it('does not treat an error status with a harmless JSON body as a successful delete', async () => {
+  vi.spyOn(window, 'confirm').mockReturnValue(true)
+  fetch.mockImplementation(async (_url, init) => new Response(JSON.stringify(
+    init?.method === 'DELETE'
+      ? {}
+      : { files: [{ key: 'test.png', url: 'https://example.com/test.png', size: 20 }] },
+  ), { status: init?.method === 'DELETE' ? 500 : 200 }))
+  render(<AdminPhotos />)
+  await screen.findAllByText('test.png')
+  fireEvent.click(screen.getAllByRole('button', { name: '刪除' })[0])
+  expect(await screen.findByRole('alert')).toHaveTextContent('刪除失敗')
+  expect(screen.getAllByText('test.png')).not.toHaveLength(0)
+})
+
+it('keeps the photo visible when the delete error has an empty body', async () => {
+  vi.spyOn(window, 'confirm').mockReturnValue(true)
+  fetch.mockImplementation(async (_url, init) => init?.method === 'DELETE'
+    ? new Response(null, { status: 500 })
+    : Response.json({ files: [{ key: 'test.png', url: 'https://example.com/test.png', size: 20 }] }))
+  render(<AdminPhotos />)
+  await screen.findAllByText('test.png')
+  fireEvent.click(screen.getAllByRole('button', { name: '刪除' })[0])
+  expect(await screen.findByRole('alert')).toHaveTextContent('刪除失敗')
+  expect(screen.getAllByText('test.png')).not.toHaveLength(0)
+})
+
+it('reports a failed listing even when the server returns harmless JSON', async () => {
+  fetch.mockResolvedValue(new Response('{}', { status: 500 }))
+  render(<AdminPhotos />)
+  expect(await screen.findByRole('alert')).toHaveTextContent('載入圖片失敗')
+})

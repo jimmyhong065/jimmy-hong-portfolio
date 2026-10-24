@@ -5,6 +5,7 @@ import { adminFetch } from '../../lib/adminAuth'
 async function r2List(cursor) {
   const url = cursor ? `/r2-manage?cursor=${cursor}` : '/r2-manage'
   const res = await adminFetch(url)
+  if (!res.ok) throw new Error('R2 list failed')
   return res.json()
 }
 
@@ -14,6 +15,7 @@ async function r2Delete(key) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key }),
   })
+  if (!res.ok) throw new Error('R2 delete failed')
   return res.json()
 }
 
