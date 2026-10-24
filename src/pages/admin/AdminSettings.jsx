@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useUpload } from '../../hooks/useUpload'
+import MfaFactorManager from '../../components/MfaFactorManager'
 import KeywordInput from '../../components/KeywordInput'
 import { SVG_MAP, ICON_KEYS, FALLBACK_TABS } from '../../components/NavIconMap'
 import { applyTheme } from '../../lib/theme'
@@ -632,6 +633,7 @@ export default function AdminSettings() {
           </button>
         </div>
       </form>
+      <MfaFactorManager />
     </div>
   )
 }
