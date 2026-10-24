@@ -84,14 +84,14 @@ export default function MfaSetup() {
       let result
       try {
         result = await supabase.auth.mfa.challengeAndVerify({ factorId: enrollment.id, code })
-      } catch {
-        setError('驗證碼錯誤或已過期，請輸入目前顯示的代碼')
+      } catch (verificationError) {
+        handleVerificationError(verificationError)
         return
       } finally {
         setCode('')
       }
       if (result.error) {
-        setError('驗證碼錯誤或已過期，請輸入目前顯示的代碼')
+        handleVerificationError(result.error)
         return
       }
       setEnrollment(null)
@@ -100,6 +100,16 @@ export default function MfaSetup() {
     } finally {
       busy.current = false
       setLoading(false)
+    }
+  }
+
+  function handleVerificationError(verificationError) {
+    if (verificationError?.code === 'mfa_factor_not_found') {
+      setEnrollment(null)
+      setNotice(null)
+      setError('此設定已失效，請重新產生 QR Code')
+    } else {
+      setError('驗證碼錯誤或已過期，請輸入目前顯示的代碼')
     }
   }
 
