@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 430" font-family="'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif">
+  <rect x="1" y="1" width="638" height="428" rx="16" fill="#ffffff" stroke="#e2e7ed" stroke-width="2"/>
+  <text x="40" y="44" font-size="20" font-weight="700" fill="#5d6875">帽帽的習性</text>
+  <text x="372" y="44" font-size="20" font-weight="700" fill="#2563eb">對應的 QA 工作</text>
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa4b1"/></marker></defs>
+  <rect x="28" y="66" width="240" height="54" rx="12" fill="#f5f7fa" stroke="#c3cad3" stroke-width="2"/>
+  <text x="148" y="101" text-anchor="middle" font-size="22" font-weight="700" fill="#1d232b">1. 推公仔</text>
+  <path d="M280 93H350" stroke="#9aa4b1" stroke-width="3" marker-end="url(#ah)"/>
+  <rect x="360" y="66" width="252" height="54" rx="12" fill="#eff4ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="486" y="101" text-anchor="middle" font-size="22" font-weight="700" fill="#1d4ed8">破壞性測試</text>
+  <rect x="28" y="138" width="240" height="54" rx="12" fill="#f5f7fa" stroke="#c3cad3" stroke-width="2"/>
+  <text x="148" y="173" text-anchor="middle" font-size="22" font-weight="700" fill="#1d232b">2. 鑽沙發底下</text>
+  <path d="M280 165H350" stroke="#9aa4b1" stroke-width="3" marker-end="url(#ah)"/>
+  <rect x="360" y="138" width="252" height="54" rx="12" fill="#eff4ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="486" y="173" text-anchor="middle" font-size="22" font-weight="700" fill="#1d4ed8">探索式測試</text>
+  <rect x="28" y="210" width="240" height="54" rx="12" fill="#f5f7fa" stroke="#c3cad3" stroke-width="2"/>
+  <text x="148" y="245" text-anchor="middle" font-size="22" font-weight="700" fill="#1d232b">3. 巡同一個點</text>
+  <path d="M280 237H350" stroke="#9aa4b1" stroke-width="3" marker-end="url(#ah)"/>
+  <rect x="360" y="210" width="252" height="54" rx="12" fill="#eff4ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="486" y="245" text-anchor="middle" font-size="22" font-weight="700" fill="#1d4ed8">回歸測試</text>
+  <rect x="28" y="282" width="240" height="54" rx="12" fill="#f5f7fa" stroke="#c3cad3" stroke-width="2"/>
+  <text x="148" y="317" text-anchor="middle" font-size="22" font-weight="700" fill="#1d232b">4. 半夜跑酷</text>
+  <path d="M280 309H350" stroke="#9aa4b1" stroke-width="3" marker-end="url(#ah)"/>
+  <rect x="360" y="282" width="252" height="54" rx="12" fill="#eff4ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="486" y="317" text-anchor="middle" font-size="22" font-weight="700" fill="#1d4ed8">時間邊界</text>
+  <rect x="28" y="354" width="240" height="54" rx="12" fill="#f5f7fa" stroke="#c3cad3" stroke-width="2"/>
+  <text x="148" y="389" text-anchor="middle" font-size="22" font-weight="700" fill="#1d232b">5. 碗沒滿就叫</text>
+  <path d="M280 381H350" stroke="#9aa4b1" stroke-width="3" marker-end="url(#ah)"/>
+  <rect x="360" y="354" width="252" height="54" rx="12" fill="#eff4ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="486" y="389" text-anchor="middle" font-size="22" font-weight="700" fill="#1d4ed8">bug 回報</text>
+</svg>
