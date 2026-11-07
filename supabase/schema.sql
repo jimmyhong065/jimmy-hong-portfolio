@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS announcements (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title      text NOT NULL,
   content    text,
+  link       text,
   active     boolean DEFAULT true,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()

@@ -172,7 +172,7 @@ export default function Home() {
               <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">最新消息</p>
               <div className="flex flex-col divide-y divide-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
                 {announcements.slice(0, 3).map(a => (
-                  <a key={a.id} href="/blog" className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
+                  <a key={a.id} href={a.link || '/blog'} className="flex items-start gap-4 px-6 py-5 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
                     <span className="mt-2 flex-shrink-0 w-1 h-1 rounded-full bg-gray-900" />
                     <div>
                       <div className="flex items-baseline gap-2 mb-0.5">

@@ -7,7 +7,7 @@ export default function AdminAnnouncementEdit() {
   const navigate = useNavigate()
   const isNew = id === 'new'
 
-  const [form, setForm] = useState({ title: '', content: '', active: true })
+  const [form, setForm] = useState({ title: '', content: '', link: '', active: true })
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function AdminAnnouncementEdit() {
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
-    const payload = { title: form.title, content: form.content, active: form.active }
+    const payload = { title: form.title, content: form.content, link: form.link?.trim() || null, active: form.active }
     if (isNew) {
       await supabase.from('announcements').insert(payload)
     } else {
@@ -47,6 +47,11 @@ export default function AdminAnnouncementEdit() {
         <div>
           <label className="text-xs text-gray-500 mb-1 block">內容</label>
           <textarea name="content" value={form.content} onChange={handleChange} rows={4}
+            className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">連結（留空則連到 /blog）</label>
+          <input name="link" value={form.link || ''} onChange={handleChange} placeholder="/course/course-app-pytest"
             className="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400" />
         </div>
         <label className="flex items-center gap-2 cursor-pointer">
