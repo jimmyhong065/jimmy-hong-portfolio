@@ -68,12 +68,17 @@ function PushNavigationHandler() {
   return null
 }
 
-// 手動送 GA4 page_view，排除 /admin 後台流量
+function isAdminAnalyticsPath(path) {
+  return path === '/admin' || path.startsWith('/admin/')
+    || path === '/login' || path === '/mfa' || path.startsWith('/mfa/')
+}
+
+// 手動送 GA4 page_view，只統計公開頁面
 function GAPageView() {
   const location = useLocation()
   useEffect(() => {
     if (typeof window.gtag !== 'function') return
-    if (location.pathname.startsWith('/admin')) return
+    if (isAdminAnalyticsPath(location.pathname)) return
     // 延一個 tick，讓 Helmet 先更新 document.title
     const t = setTimeout(() => {
       window.gtag('event', 'page_view', {
@@ -87,12 +92,13 @@ function GAPageView() {
   return null
 }
 
-// 一次性啟動真人/bot 偵測，後台 /admin 不計（自己人）
+// 真人/bot 偵測只在公開頁面啟用
 function BotDetection() {
+  const location = useLocation()
   useEffect(() => {
-    if (window.location.pathname.startsWith('/admin')) return
+    if (isAdminAnalyticsPath(location.pathname)) return
     return initBotDetection()
-  }, [])
+  }, [location.pathname])
   return null
 }
 
